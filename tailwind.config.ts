@@ -189,6 +189,8 @@ const config: Config = {
         'bubble-in': 'bubble-in 0.4s cubic-bezier(0.16,1,0.3,1) both',
         'grow-x': 'grow-x 0.9s cubic-bezier(0.16,1,0.3,1) both',
         'grow-y': 'grow-y 0.8s cubic-bezier(0.16,1,0.3,1) both',
+        scan: 'scan 3s ease-in-out infinite',
+        float: 'float 4s ease-in-out infinite',
       },
     },
   },

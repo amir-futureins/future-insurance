@@ -44,7 +44,7 @@ export default function HeroControlCenter() {
         className="pointer-events-none absolute -top-4 end-10 z-20 hidden animate-float items-center gap-1 rounded-full border border-sky-300 bg-sky-50 px-3 py-1.5 text-[11.5px] font-bold text-sky-900 shadow-lg lg:flex"
         style={{ animationDelay: '0.7s' }}
       >
-        🤖 98.2% דיוק סריקה
+        🤖 סריקה חכמה ומדויקת
       </span>
 
       {/* main pass card */}
