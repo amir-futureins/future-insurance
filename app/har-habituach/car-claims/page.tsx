@@ -3,6 +3,7 @@ import { Car, FileText, ShieldCheck, ArrowLeft } from 'lucide-react';
 import { whatsappHref } from '@/lib/content';
 import PageHero from '@/components/PageHero';
 import { HeroCarHistoryCard } from '@/components/verticals/HeroCards';
+import GovDataCta from '@/components/GovDataCta';
 import VideoBlock from '@/components/VideoBlock';
 import FaqSection from '@/components/FaqSection';
 
@@ -52,6 +53,13 @@ export default function CarClaimsPage() {
         primary={{ href: '#steps', label: 'למדריך המלא' }}
         secondary={{ href: whatsappHref(), label: 'נעזור לכם בהוצאה', external: true }}
         visual={<HeroCarHistoryCard />}
+      />
+
+      <GovDataCta
+        heading="רוצים את דוח העבר הביטוחי שלכם? נפיק אותו ב-2 דקות"
+        buttonLabel="הפקת דוח עבר ביטוחי ב-2 דקות"
+        topic="car_claims_gov"
+        modalTitle="הפקת דוח עבר ביטוחי לרכב"
       />
 
       <section id="steps" className="mx-auto w-full max-w-container scroll-mt-24 px-6 py-14 md:px-10 md:py-16">

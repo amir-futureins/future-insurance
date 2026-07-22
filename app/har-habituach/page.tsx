@@ -4,6 +4,19 @@ import { whatsappHref } from '@/lib/content';
 import { HAR_FAQ, AGENCY_ARTICLES } from '@/lib/agency';
 import PolicyChecker from '@/components/verticals/PolicyChecker';
 import PageHero from '@/components/PageHero';
+import BenefitMarquee from '@/components/BenefitMarquee';
+import GovDataCta from '@/components/GovDataCta';
+
+const SAVINGS_BENEFITS = [
+  { emoji: '💸', text: 'חיסכון מאות ₪ בחודש' },
+  { emoji: '🔍', text: 'זיהוי כפל ביטוח' },
+  { emoji: '📋', text: 'איחוד לתיק אחד חכם' },
+  { emoji: '🚗', text: 'עבר ביטוחי לרכב' },
+  { emoji: '🏛️', text: 'בדיקה מול הר הביטוח' },
+  { emoji: '🆓', text: 'בדיקה חינם' },
+  { emoji: '⚡', text: 'דוח תוך 2 דקות' },
+  { emoji: '🤝', text: 'ליווי סוכן מורשה' },
+];
 import { HeroHarCard } from '@/components/verticals/HeroCards';
 import VideoBlock from '@/components/VideoBlock';
 import FaqSection from '@/components/FaqSection';
@@ -79,6 +92,15 @@ export default function HarHabituachPage() {
           ))}
         </div>
       </PageHero>
+
+      <BenefitMarquee items={SAVINGS_BENEFITS} accent="#8A6220" />
+
+      <GovDataCta
+        heading="גלו בדיוק מה יש לכם בהר הביטוח — ואיפה משלמים כפול"
+        buttonLabel="הפקת דוח הר הביטוח ב-2 דקות"
+        topic="har_gov_report"
+        modalTitle="הפקת דוח הר הביטוח"
+      />
 
       <div className="px-6 pt-8 md:px-10">
         <PolicyChecker />

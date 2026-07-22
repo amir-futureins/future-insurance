@@ -23,6 +23,9 @@ interface LeadPayload {
   consent?: boolean;
   /** flows that query in the user's name (e.g. Har-Habituach) require the ID. */
   idRequired?: boolean;
+  /** gov-data flows also collect date of birth + ID issue date (YYYY-MM-DD). */
+  dob?: string;
+  issueDate?: string;
 }
 
 const PHONE_RE = /^05\d{8}$/;
@@ -81,10 +84,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: 'validation_failed', fields }, { status: 422 });
   }
 
+  const dob = (body.dob ?? '').trim().slice(0, 10) || null;
+  const issueDate = (body.issueDate ?? '').trim().slice(0, 10) || null;
+
   const lead = {
     name,
     phone,
     id: id || null,
+    dob,
+    issueDate,
     topic,
     consent: true,
     source: 'website',
@@ -93,12 +101,14 @@ export async function POST(req: NextRequest) {
     userAgent: req.headers.get('user-agent') ?? null,
   };
 
-  // Secure log — PII masked so raw phone/ID never hit the log stream.
+  // Secure log — PII masked (raw phone/ID/dates never hit the log stream).
   console.info('[leads] new lead', {
     topic,
     name: name.charAt(0) + '…',
     phone: mask(phone, 3),
     id: id ? mask(id, 2) : null,
+    dob: dob ? 'provided' : null,
+    issueDate: issueDate ? 'provided' : null,
     consent: true,
   });
 

@@ -5,8 +5,21 @@ import { HEALTH_FAQ, relatedArticles, EXPERT_TIPS, AGENCY_REVIEWS } from '@/lib/
 import HealthCalculator from '@/components/verticals/HealthCalculator';
 import PageHero from '@/components/PageHero';
 import { HeroHealthCard } from '@/components/verticals/HeroCards';
+import BenefitMarquee from '@/components/BenefitMarquee';
+import BounceLeadCta from '@/components/BounceLeadCta';
 import VideoBlock from '@/components/VideoBlock';
 import FaqSection from '@/components/FaqSection';
+
+const HEALTH_BENEFITS = [
+  { emoji: '🏥', text: 'ניתוחים פרטיים ללא תורים' },
+  { emoji: '🌍', text: 'השתלות וטיפולים בחו״ל' },
+  { emoji: '💊', text: 'תרופות מחוץ לסל' },
+  { emoji: '🎗️', text: 'כיסוי למחלות קשות' },
+  { emoji: '👨‍⚕️', text: 'רופא אונליין' },
+  { emoji: '🔍', text: 'בדיקת כפילויות חינם' },
+  { emoji: '🛡️', text: 'ליווי סוכן מורשה' },
+  { emoji: '⚡', text: 'הצטרפות מהירה' },
+];
 import ArticleGrid from '@/components/ArticleGrid';
 import ExpertTips from '@/components/ExpertTips';
 import SuccessCarousel from '@/components/SuccessCarousel';
@@ -59,10 +72,22 @@ export default function HealthPage() {
         visual={<HeroHealthCard />}
       />
 
+      <BenefitMarquee items={HEALTH_BENEFITS} accent="#16A34A" />
+
       {/* calculator */}
       <div className="px-6 md:px-10">
         <HealthCalculator />
       </div>
+
+      <BounceLeadCta
+        heading="משלמים יותר מדי על ביטוח הבריאות?"
+        sub="בדיקה חינם מגלה כפילויות והתאמות — ולרוב חוסכת מאות שקלים בחודש."
+        label="הוזלת ביטוח בריאות עכשיו"
+        vertical="health"
+        title="הוזלת ביטוח הבריאות שלכם"
+        subtitle="נבדוק כפילויות ונתאים כיסוי חכם — סוכן מורשה יחזור אליכם ללא עלות."
+        gradient="linear-gradient(135deg, #0F766E, #16A34A)"
+      />
 
       {/* duplication guide */}
       <section className="mx-auto w-full max-w-container px-6 py-14 md:px-10 md:py-16">
