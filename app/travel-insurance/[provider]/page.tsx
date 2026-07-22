@@ -1,11 +1,15 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { ShieldCheck, ArrowLeft, Star, Check, MessageCircle } from 'lucide-react';
+import { ShieldCheck, ArrowLeft, Star, Check } from 'lucide-react';
 import { getProvider } from '@/lib/providers';
 import { getBrand, BRANDS, type BrandConfig } from '@/lib/brands';
 import { whatsappHref } from '@/lib/content';
+import { IMG, unsplash } from '@/lib/images';
 import PageHero from '@/components/PageHero';
+import BrandEmblem from '@/components/travel/BrandEmblem';
 import BrandCalculator from '@/components/travel/BrandCalculator';
+import FloatingPurchaseCTA from '@/components/FloatingPurchaseCTA';
 import FaqSection from '@/components/FaqSection';
 
 /** Branded travel-carrier landing pages: /travel-insurance/{passportcard,harel,clal,migdal}. */
@@ -112,6 +116,15 @@ export default function BrandPage({ params }: { params: { provider: string } }) 
     <main>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
+      {/* prominent brand emblem (stylized wordmark — see BrandEmblem for the real-logo swap) */}
+      <div className="mx-auto flex max-w-container items-center justify-center gap-3 px-6 pt-6 md:justify-start md:px-10">
+        <BrandEmblem slug={brand.slug} variant="lg" />
+        <div className="text-center md:text-start">
+          <div className="text-[19px] font-extrabold text-ink">ביטוח נסיעות {brand.name}</div>
+          <div className="text-[13px] text-muted">{brand.appBadge.title}</div>
+        </div>
+      </div>
+
       <PageHero
         icon={ShieldCheck}
         eyebrow={`ביטוח נסיעות · ${brand.name}`}
@@ -130,6 +143,36 @@ export default function BrandPage({ params }: { params: { provider: string } }) 
       <div className="px-6 md:px-10">
         <BrandCalculator brand={brand} />
       </div>
+
+      {/* rich perks with imagery */}
+      <section className="mx-auto w-full max-w-container px-6 py-14 md:px-10 md:py-16">
+        <div className="mx-auto max-w-2xl text-center">
+          <span className="eyebrow text-[13px]">היתרונות של {brand.name}</span>
+          <h2 className="mt-2 text-[clamp(24px,5vw,30px)] font-bold leading-tight text-ink">
+            למה כדאי לבחור בביטוח הנסיעות של {brand.name}?
+          </h2>
+        </div>
+        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+          {brand.perks.map((perk) => (
+            <article key={perk.title} className="glass group flex h-full flex-col overflow-hidden">
+              <div className="relative h-40">
+                <Image
+                  src={unsplash(IMG[perk.img], 700, 60)}
+                  alt=""
+                  fill
+                  sizes="(max-width: 768px) 100vw, 380px"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0" style={{ background: `linear-gradient(to top, ${brand.accent}cc, transparent 62%)` }} />
+              </div>
+              <div className="flex flex-1 flex-col p-5">
+                <h3 className="text-[16px] font-bold text-ink">{perk.title}</h3>
+                <p className="mt-1.5 text-[14px] leading-relaxed text-muted">{perk.text}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
 
       {/* ratings + reviews */}
       <section className="mx-auto w-full max-w-container px-6 py-14 md:px-10 md:py-16">
@@ -243,6 +286,8 @@ export default function BrandPage({ params }: { params: { provider: string } }) 
           החברות מוזכרים לצורך השוואה ומידע. השירות בכפוף להסכמת המשתמש ולתקנון האתר.
         </p>
       </div>
+
+      <FloatingPurchaseCTA slug={brand.slug} name={brand.name} accent={brand.accent} />
     </main>
   );
 }

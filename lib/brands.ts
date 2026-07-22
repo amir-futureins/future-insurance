@@ -1,4 +1,5 @@
 import type { PriceableProviderId } from '@/lib/calculator';
+import type { ImageKey } from '@/lib/images';
 
 /**
  * Rich config for the branded travel landing pages (/travel-insurance/[slug]).
@@ -43,6 +44,7 @@ export interface BrandConfig {
   accent2: string;
   passTitle: string;
   appBadge: { emoji: string; title: string; text: string };
+  perks: { img: ImageKey; title: string; text: string }[];
   ratingScore: number;
   ratingCount: string;
   reviews: BrandReview[];
@@ -76,6 +78,11 @@ export const BRANDS: Record<BrandConfig['slug'], BrandConfig> = {
       title: 'כרטיס PassportCard',
       text: 'תשלום ישיר לספק הרפואי בחו״ל — בלי הוצאות מהכיס ובלי החזרים.',
     },
+    perks: [
+      { img: 'usa', title: 'תשלום ישיר — בלי הוצאות מהכיס', text: 'הכרטיס משלם ישירות לבית החולים או לרופא בחו״ל. אתם לא מוציאים כסף ולא ממתינים חודשים להחזר — יתרון קריטי בארה״ב.' },
+      { img: 'flight', title: 'רופא אונליין באפליקציה', text: 'ייעוץ רפואי מרחוק דרך האפליקציה ומוקד תמיכה בעברית, כדי לקבל מענה מהיר עוד לפני שמגיעים למרפאה.' },
+      { img: 'passport', title: 'כיסוי מוביל ליעדים יקרים', text: 'כיסוי רפואי גבוה שמתאים במיוחד לארה״ב ולמדינות עם עלויות רפואיות גבוהות — ראש שקט לאורך כל הנסיעה.' },
+    ],
     ratingScore: 4.9,
     ratingCount: '1,900+',
     reviews: [
@@ -108,6 +115,11 @@ export const BRANDS: Record<BrandConfig['slug'], BrandConfig> = {
       title: 'שירות חירום מיידי',
       text: 'מוקד רפואי ואפליקציית שירות זמינים 24/7 מכל מקום בעולם.',
     },
+    perks: [
+      { img: 'europe', title: 'רשת רופאים נרחבת', text: 'גישה לרשת ספקים רפואיים גדולה, במיוחד באירופה — כך מקבלים טיפול מהיר ואיכותי בכל מקום.' },
+      { img: 'family', title: 'כיסוי משפחתי מלא', text: 'חבילות משפחתיות משתלמות עם רופא אונליין וכיסוי לכל בני המשפחה — שקט נפשי לטיול המשפחתי.' },
+      { img: 'airport', title: 'מוקד חירום 24/7 בעברית', text: 'מענה אנושי בעברית מסביב לשעון ואפליקציית שירות שמלווה אתכם מרגע היציאה ועד החזרה.' },
+    ],
     ratingScore: 4.8,
     ratingCount: '2,300+',
     reviews: [
@@ -140,6 +152,11 @@ export const BRANDS: Record<BrandConfig['slug'], BrandConfig> = {
       title: 'מדיפ״ס — תשלום מהיר',
       text: 'טיפול ותשלום תביעות רפואיות במהירות, ישירות מול הספק בחו״ל.',
     },
+    perks: [
+      { img: 'asia', title: 'טיפול ותשלום מהירים', text: 'מנגנון לטיפול מהיר בתביעות רפואיות בחו״ל, לרוב ישירות מול הספק — פחות בירוקרטיה, פחות המתנה.' },
+      { img: 'beach', title: 'מחיר משתלם', text: 'תמחור אטרקטיבי לפרופילים סטנדרטיים — כיסוי טוב במחיר נוח, בדיוק למה שצריך.' },
+      { img: 'roadtrip', title: 'כיסוי סטנדרטי מקיף', text: 'חבילה מקיפה לנסיעות קצרות וסטנדרטיות, עם אפשרות להרחבות לפי הצורך.' },
+    ],
     ratingScore: 4.7,
     ratingCount: '1,400+',
     reviews: [
@@ -172,6 +189,11 @@ export const BRANDS: Record<BrandConfig['slug'], BrandConfig> = {
       title: 'רופא בשיחת וידאו 24/7',
       text: 'ייעוץ רפואי בעברית בשיחת וידאו, מכל מקום בעולם ובכל שעה.',
     },
+    perks: [
+      { img: 'mountains', title: 'כיסוי מקיף ואיתן', text: 'פוליסה חזקה שמתאימה במיוחד לטיולים ארוכים, סבב עולם ויעדים מרובים — בלי דאגות.' },
+      { img: 'aurora', title: 'רופא בשיחת וידאו 24/7', text: 'ייעוץ רפואי בעברית בשיחת וידאו בכל שעה, מכל מקום — נוח במיוחד כשלא רוצים ללכת למרפאה זרה.' },
+      { img: 'flight', title: 'מתאים גם לבני 60+', text: 'פתרונות מותאמים לגילאים מבוגרים יותר ולשהייה ממושכת בחו״ל, עם כיסוי רחב ואמין.' },
+    ],
     ratingScore: 4.8,
     ratingCount: '1,600+',
     reviews: [

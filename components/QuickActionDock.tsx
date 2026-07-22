@@ -16,6 +16,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { whatsappHref, SITE } from '@/lib/content';
+import BrandEmblem from '@/components/travel/BrandEmblem';
 
 /**
  * QuickActionDock — a route-aware branded conversion dock pinned to the (RTL)
@@ -34,6 +35,8 @@ interface Action {
   fg?: string;
   initials?: string;
   icon?: LucideIcon;
+  /** travel-carrier slug — renders a white-circle BrandEmblem instead of an icon. */
+  emblem?: string;
   external?: boolean;
 }
 
@@ -55,10 +58,10 @@ const CALL: Action = {
 };
 
 const TRAVEL: Action[] = [
-  { key: 'pc', tooltip: 'PassportCard — רכישה דיגיטלית מיידית ➔', href: '/travel-insurance/passportcard', bg: '#E10600', initials: 'PC' },
-  { key: 'harel', tooltip: 'הראל — רכישה דיגיטלית מיידית ➔', href: '/travel-insurance/harel', bg: '#004B93', initials: 'הר' },
-  { key: 'clal', tooltip: 'כלל — רכישה דיגיטלית מיידית ➔', href: '/travel-insurance/clal', bg: '#002D62', initials: 'כל' },
-  { key: 'migdal', tooltip: 'מגדל — רכישה דיגיטלית מיידית ➔', href: '/travel-insurance/migdal', bg: '#001E50', initials: 'מג' },
+  { key: 'pc', tooltip: 'רכישה מהירה בפספורטקארד ➔', href: '/travel-insurance/passportcard', bg: '#E10600', emblem: 'passportcard' },
+  { key: 'harel', tooltip: 'רכישה מהירה בהראל ➔', href: '/travel-insurance/harel', bg: '#004B93', emblem: 'harel' },
+  { key: 'clal', tooltip: 'רכישה מהירה בכלל ➔', href: '/travel-insurance/clal', bg: '#002D62', emblem: 'clal' },
+  { key: 'migdal', tooltip: 'רכישה מהירה במגדל ➔', href: '/travel-insurance/migdal', bg: '#001E50', emblem: 'migdal' },
 ];
 
 function actionsFor(pathname: string): Action[] {
@@ -87,17 +90,21 @@ function actionsFor(pathname: string): Action[] {
 }
 
 function Badge({ a }: { a: Action }) {
-  const inner = a.initials ? (
+  const isEmblem = Boolean(a.emblem);
+  const inner = isEmblem ? (
+    <BrandEmblem slug={a.emblem as string} />
+  ) : a.icon ? (
+    <a.icon className="h-5 w-5 text-white" aria-hidden />
+  ) : a.initials ? (
     <span className="text-[13px] font-extrabold" style={{ color: a.fg ?? '#ffffff' }}>
       {a.initials}
     </span>
-  ) : a.icon ? (
-    <a.icon className="h-5 w-5 text-white" aria-hidden />
   ) : null;
 
-  const cls =
-    'group relative grid h-12 w-12 place-items-center rounded-full shadow-md ring-1 ring-black/5 transition-transform duration-150 hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-deep';
-  const style = { backgroundColor: a.bg } as CSSProperties;
+  const cls = isEmblem
+    ? 'group relative block rounded-full transition-transform duration-150 hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-deep'
+    : 'group relative grid h-12 w-12 place-items-center rounded-full shadow-md ring-1 ring-black/5 transition-transform duration-150 hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-deep';
+  const style = isEmblem ? undefined : ({ backgroundColor: a.bg } as CSSProperties);
   const tip = (
     <span className="pointer-events-none absolute right-full top-1/2 z-10 me-3 -translate-y-1/2 whitespace-nowrap rounded-lg bg-navy-deep px-3 py-1.5 text-[12px] font-bold text-white opacity-0 shadow-lg transition-all duration-200 group-hover:me-2 group-hover:opacity-100 group-focus-visible:opacity-100">
       {a.tooltip}
