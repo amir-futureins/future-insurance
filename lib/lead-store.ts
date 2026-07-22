@@ -18,6 +18,8 @@ export interface StoredLead {
   name: string;
   phone: string; // 05XXXXXXXX
   nid: string | null; // full national ID (masked at the view layer)
+  dob: string | null; // date of birth (YYYY-MM-DD)
+  issueDate: string | null; // ID issue date (YYYY-MM-DD)
   topic: string;
   source: string; // display source derived from topic
   status: LeadStatus;

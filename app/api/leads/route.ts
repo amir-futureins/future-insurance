@@ -23,7 +23,9 @@ interface LeadPayload {
   consent?: unknown;
   idRequired?: unknown;
   dob?: unknown;
+  dateOfBirth?: unknown; // alias for dob
   issueDate?: unknown;
+  idIssueDate?: unknown; // alias for issueDate
   /** honeypot — a hidden field real users never fill; bots do. Must stay empty. */
   company?: unknown;
 }
@@ -94,6 +96,13 @@ function esc(s: string): string {
   );
 }
 
+/** YYYY-MM-DD → DD/MM/YYYY (or "—" when absent). */
+function displayDate(iso: string | null): string {
+  if (!iso) return '—';
+  const [y, m, d] = iso.split('-');
+  return y && m && d ? `${d}/${m}/${y}` : iso;
+}
+
 /** Rich RTL HTML notification with one-click WhatsApp + call buttons. */
 function buildEmailHtml(l: LeadRecord): string {
   const wa = `https://wa.me/${toIntlPhone(l.phone)}?text=${encodeURIComponent(
@@ -108,6 +117,8 @@ function buildEmailHtml(l: LeadRecord): string {
   <table style="width:100%;border-collapse:separate;border-spacing:0 6px">
     ${row('שם מלא', esc(l.name))}
     ${row('תעודת זהות', l.id ? esc(l.id) : '—')}
+    ${row('תאריך לידה', esc(displayDate(l.dob)))}
+    ${row('תאריך הנפקת ת.ז', esc(displayDate(l.issueDate)))}
     ${row('טלפון', `<span dir="ltr">${esc(l.phone)}</span>`)}
     ${row('מקור הפנייה', esc(l.source))}
     ${row('התקבל בתאריך', esc(new Date(l.createdAt).toLocaleString('he-IL')))}
@@ -157,6 +168,8 @@ async function saveToCrm(l: LeadRecord): Promise<void> {
     name: l.name,
     phone: l.phone,
     nid: l.id,
+    dob: l.dob,
+    issueDate: l.issueDate,
     topic: l.topic,
     source: l.source,
     status: 'new',
@@ -223,8 +236,8 @@ export async function POST(req: NextRequest) {
   const topic = str(body.topic, 40).trim() || 'general';
   const consent = body.consent === true;
   const idRequired = body.idRequired === true;
-  const dobStr = str(body.dob, 10).trim();
-  const issueStr = str(body.issueDate, 10).trim();
+  const dobStr = str(body.dob ?? body.dateOfBirth, 10).trim();
+  const issueStr = str(body.issueDate ?? body.idIssueDate, 10).trim();
 
   const fields = new Set<string>();
   if (name.length < 2) fields.add('name');

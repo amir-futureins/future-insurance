@@ -32,6 +32,8 @@ interface Lead {
   id: string | number;
   name: string;
   nid: string; // masked national ID
+  dob: string; // date of birth (YYYY-MM-DD or '')
+  issueDate: string; // ID issue date (YYYY-MM-DD or '')
   phone: string; // full (fabricated) Israeli mobile — needed for outreach
   date: string; // ISO
   source: string;
@@ -39,18 +41,18 @@ interface Lead {
 }
 
 const SAMPLE: Lead[] = [
-  { id: 1, name: 'דנה כהן', nid: '•••••4821', phone: '052-555-4417', date: '2026-07-22', source: 'הר הביטוח', status: 'new' },
-  { id: 2, name: 'אורי לוי', nid: '•••••1093', phone: '054-555-8820', date: '2026-07-22', source: 'חו״ל', status: 'new' },
-  { id: 3, name: 'מיכל ברק', nid: '•••••7756', phone: '050-555-2231', date: '2026-07-21', source: 'בריאות', status: 'progress' },
-  { id: 4, name: 'יוסי אברהם', nid: '•••••3388', phone: '053-555-9910', date: '2026-07-21', source: 'משכנתא', status: 'progress' },
-  { id: 5, name: 'נועה שמש', nid: '•••••6642', phone: '052-555-7003', date: '2026-07-20', source: 'פנסיה', status: 'closed' },
-  { id: 6, name: 'איתי רון', nid: '•••••2215', phone: '058-555-4456', date: '2026-07-20', source: 'חו״ל', status: 'new' },
-  { id: 7, name: 'שירה פלד', nid: '•••••9081', phone: '050-555-1198', date: '2026-07-19', source: 'הר הביטוח', status: 'progress' },
-  { id: 8, name: 'עומר גל', nid: '•••••5527', phone: '054-555-6674', date: '2026-07-19', source: 'בריאות', status: 'closed' },
-  { id: 9, name: 'טל אביב', nid: '•••••4409', phone: '052-555-3352', date: '2026-07-18', source: 'משכנתא', status: 'new' },
-  { id: 10, name: 'רותם דהן', nid: '•••••8134', phone: '053-555-2290', date: '2026-07-18', source: 'פנסיה', status: 'progress' },
-  { id: 11, name: 'גיא מור', nid: '•••••1760', phone: '058-555-5541', date: '2026-07-17', source: 'הר הביטוח', status: 'closed' },
-  { id: 12, name: 'ליאת נחום', nid: '•••••6318', phone: '050-555-8827', date: '2026-07-17', source: 'חו״ל', status: 'new' },
+  { id: 1, name: 'דנה כהן', nid: '•••••4821', dob: '1988-03-14', issueDate: '2012-06-01', phone: '052-555-4417', date: '2026-07-22', source: 'הר הביטוח', status: 'new' },
+  { id: 2, name: 'אורי לוי', nid: '•••••1093', dob: '1979-11-02', issueDate: '2004-09-20', phone: '054-555-8820', date: '2026-07-22', source: 'חו״ל', status: 'new' },
+  { id: 3, name: 'מיכל ברק', nid: '•••••7756', dob: '1995-07-25', issueDate: '2016-02-11', phone: '050-555-2231', date: '2026-07-21', source: 'בריאות', status: 'progress' },
+  { id: 4, name: 'יוסי אברהם', nid: '•••••3388', dob: '1966-01-09', issueDate: '1998-05-30', phone: '053-555-9910', date: '2026-07-21', source: 'משכנתא', status: 'progress' },
+  { id: 5, name: 'נועה שמש', nid: '•••••6642', dob: '1990-09-18', issueDate: '2011-12-04', phone: '052-555-7003', date: '2026-07-20', source: 'פנסיה', status: 'closed' },
+  { id: 6, name: 'איתי רון', nid: '•••••2215', dob: '2000-04-22', issueDate: '2021-08-15', phone: '058-555-4456', date: '2026-07-20', source: 'חו״ל', status: 'new' },
+  { id: 7, name: 'שירה פלד', nid: '•••••9081', dob: '1983-12-07', issueDate: '2007-03-19', phone: '050-555-1198', date: '2026-07-19', source: 'הר הביטוח', status: 'progress' },
+  { id: 8, name: 'עומר גל', nid: '•••••5527', dob: '1974-06-30', issueDate: '2001-10-25', phone: '054-555-6674', date: '2026-07-19', source: 'בריאות', status: 'closed' },
+  { id: 9, name: 'טל אביב', nid: '•••••4409', dob: '1992-02-13', issueDate: '2013-07-08', phone: '052-555-3352', date: '2026-07-18', source: 'משכנתא', status: 'new' },
+  { id: 10, name: 'רותם דהן', nid: '•••••8134', dob: '1986-10-05', issueDate: '2009-04-17', phone: '053-555-2290', date: '2026-07-18', source: 'פנסיה', status: 'progress' },
+  { id: 11, name: 'גיא מור', nid: '•••••1760', dob: '1998-08-28', issueDate: '2019-01-22', phone: '058-555-5541', date: '2026-07-17', source: 'הר הביטוח', status: 'closed' },
+  { id: 12, name: 'ליאת נחום', nid: '•••••6318', dob: '1971-05-16', issueDate: '1996-11-03', phone: '050-555-8827', date: '2026-07-17', source: 'חו״ל', status: 'new' },
 ];
 
 const STATUS_META: Record<Status, { label: string; badge: string; dot: string }> = {
@@ -123,8 +125,17 @@ export default function AdminLeadsDashboard({ initialLeads }: { initialLeads?: L
     );
 
   const exportCsv = () => {
-    const header = ['שם', 'ת.ז', 'טלפון', 'תאריך', 'מקור', 'סטטוס'];
-    const rows = filtered.map((l) => [l.name, l.nid, l.phone, fmtDate(l.date), l.source, STATUS_META[l.status].label]);
+    const header = ['שם', 'ת.ז', 'תאריך לידה', 'תאריך הנפקה', 'טלפון', 'תאריך', 'מקור', 'סטטוס'];
+    const rows = filtered.map((l) => [
+      l.name,
+      l.nid,
+      l.dob ? fmtDate(l.dob) : '',
+      l.issueDate ? fmtDate(l.issueDate) : '',
+      l.phone,
+      fmtDate(l.date),
+      l.source,
+      STATUS_META[l.status].label,
+    ]);
     const csv = [header, ...rows].map((r) => r.map((c) => `"${c}"`).join(',')).join('\n');
     const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -263,11 +274,13 @@ export default function AdminLeadsDashboard({ initialLeads }: { initialLeads?: L
       {/* table */}
       <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[820px] text-start text-[14px]">
+          <table className="w-full min-w-[980px] text-start text-[14px]">
             <thead>
               <tr className="border-b border-slate-200 bg-slate-50/80 text-[12.5px] font-bold uppercase tracking-wide text-muted">
                 <th className="px-5 py-3.5 text-start">שם מלא</th>
                 <th className="px-5 py-3.5 text-start">ת.ז</th>
+                <th className="px-5 py-3.5 text-start">תאריך לידה</th>
+                <th className="px-5 py-3.5 text-start">תאריך הנפקה</th>
                 <th className="px-5 py-3.5 text-start">טלפון</th>
                 <th className="px-5 py-3.5 text-start">תאריך</th>
                 <th className="px-5 py-3.5 text-start">מקור</th>
@@ -289,6 +302,12 @@ export default function AdminLeadsDashboard({ initialLeads }: { initialLeads?: L
                     <td className="whitespace-nowrap px-5 py-3.5 font-bold text-ink">{l.name}</td>
                     <td className="whitespace-nowrap px-5 py-3.5 font-mono text-[13px] text-muted" dir="ltr">
                       {l.nid}
+                    </td>
+                    <td className="whitespace-nowrap px-5 py-3.5 text-[13px] tabular-nums text-ink/80" dir="ltr">
+                      {l.dob ? fmtDate(l.dob) : '—'}
+                    </td>
+                    <td className="whitespace-nowrap px-5 py-3.5 text-[13px] tabular-nums text-ink/80" dir="ltr">
+                      {l.issueDate ? fmtDate(l.issueDate) : '—'}
                     </td>
                     <td className="whitespace-nowrap px-5 py-3.5 font-mono text-[13px] text-muted" dir="ltr">
                       {l.phone}
@@ -347,7 +366,7 @@ export default function AdminLeadsDashboard({ initialLeads }: { initialLeads?: L
               })}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-5 py-12 text-center text-[14px] text-muted">
+                  <td colSpan={9} className="px-5 py-12 text-center text-[14px] text-muted">
                     לא נמצאו לידים תואמים לסינון.
                   </td>
                 </tr>

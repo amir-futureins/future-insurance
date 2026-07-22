@@ -23,6 +23,8 @@ export default async function AdminLeadsPage() {
     id: l.id,
     name: l.name,
     nid: l.nid ? '•••••' + l.nid.slice(-4) : '—',
+    dob: l.dob ?? '',
+    issueDate: l.issueDate ?? '',
     phone: fmtPhone(l.phone),
     date: l.createdAt.slice(0, 10),
     source: l.source,
