@@ -1,56 +1,66 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { ShieldCheck, ArrowLeft } from 'lucide-react';
+import { ShieldCheck, ArrowLeft, Star, Check, MessageCircle } from 'lucide-react';
 import { getProvider } from '@/lib/providers';
-import type { PriceableProviderId } from '@/lib/calculator';
-import { whatsappHref, FAQ_ITEMS } from '@/lib/content';
+import { getBrand, BRANDS, type BrandConfig } from '@/lib/brands';
+import { whatsappHref } from '@/lib/content';
 import PageHero from '@/components/PageHero';
+import BrandCalculator from '@/components/travel/BrandCalculator';
 import FaqSection from '@/components/FaqSection';
-import VideoBlock from '@/components/VideoBlock';
 
-/** Branded travel-carrier sub-pages: /travel-insurance/{passportcard,harel,clal,migdal}. */
-const BRANDS = {
-  passportcard: { id: 'passportcard', accent: '#E10600', label: 'PassportCard' },
-  harel: { id: 'harel', accent: '#004B93', label: 'הראל' },
-  clal: { id: 'clal', accent: '#002D62', label: 'כלל' },
-  migdal: { id: 'migdal', accent: '#001E50', label: 'מגדל' },
-} as const satisfies Record<string, { id: PriceableProviderId; accent: string; label: string }>;
-
-type Slug = keyof typeof BRANDS;
-
+/** Branded travel-carrier landing pages: /travel-insurance/{passportcard,harel,clal,migdal}. */
 export function generateStaticParams() {
   return Object.keys(BRANDS).map((provider) => ({ provider }));
 }
 
 export function generateMetadata({ params }: { params: { provider: string } }): Metadata {
-  const b = BRANDS[params.provider as Slug];
+  const b = getBrand(params.provider);
   if (!b) return {};
-  const p = getProvider(b.id);
   return {
-    title: `ביטוח נסיעות ${b.label} — השוואה, מחיר ורכישה דיגיטלית`,
-    description: `${p.tagline}. השוו את ביטוח הנסיעות של ${b.label} מול החברות המובילות, קבלו מחיר תוך שניות ורכשו פוליסה מיידית — בליווי סוכן מורשה.`,
-    keywords: [`ביטוח נסיעות ${b.label}`, `${b.label} ביטוח נסיעות`, 'ביטוח נסיעות לחו״ל', 'השוואת ביטוח נסיעות'],
+    title: `ביטוח נסיעות ${b.name} — מחשבון מחיר, השוואה ורכישה דיגיטלית 2026`,
+    description: `ביטוח נסיעות ${b.name}: מחשבון עלות יומית, השוואה מול החברות המובילות, ביקורות ומדריכים — ורכישה דיגיטלית מיידית בליווי סוכן מורשה.`,
+    keywords: [`ביטוח נסיעות ${b.name}`, `${b.name} ביטוח נסיעות`, `ביטוח נסיעות ${b.name} מחיר`, 'ביטוח נסיעות לחו״ל', 'השוואת ביטוח נסיעות'],
     alternates: { canonical: `/travel-insurance/${params.provider}` },
   };
 }
 
-function BrandCard({ slug }: { slug: Slug }) {
-  const b = BRANDS[slug];
-  const p = getProvider(b.id);
+function Stars({ score, size = 'h-4 w-4' }: { score: number; size?: string }) {
+  return (
+    <span className="inline-flex items-center gap-0.5" aria-label={`דירוג ${score} מתוך 5`}>
+      {[1, 2, 3, 4, 5].map((i) => (
+        <Star key={i} className={`${size} ${i <= Math.round(score) ? 'fill-gold text-gold' : 'fill-navy/10 text-navy/20'}`} aria-hidden />
+      ))}
+    </span>
+  );
+}
+
+function BrandPass({ brand }: { brand: BrandConfig }) {
+  const p = getProvider(brand.providerId);
   return (
     <div className="glass-elevated relative mx-auto w-full max-w-md overflow-hidden">
-      <div className="flex items-center justify-between px-5 py-4 text-white" style={{ backgroundColor: b.accent }}>
-        <span className="text-[17px] font-extrabold tracking-tight">{b.label}</span>
-        <ShieldCheck className="h-5 w-5" aria-hidden />
+      <div className="flex items-center justify-between px-5 py-4 text-white" style={{ backgroundColor: brand.accent }}>
+        <span className="text-[17px] font-extrabold tracking-tight">{brand.name}</span>
+        <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 text-[12px] font-bold">
+          <Star className="h-3.5 w-3.5 fill-current" aria-hidden />
+          {brand.ratingScore}
+        </span>
       </div>
       <div className="p-5 sm:p-6">
-        <div className="text-[12.5px] font-semibold text-muted">מתאים במיוחד ל: {p.bestFor}</div>
-        <ul className="mt-3 space-y-2.5">
-          {p.features.slice(0, 4).map((f) => {
+        {/* signature feature */}
+        <div className="flex items-start gap-3 rounded-2xl p-3.5" style={{ backgroundColor: `color-mix(in srgb, ${brand.accent} 8%, white)`, boxShadow: `inset 0 0 0 1px color-mix(in srgb, ${brand.accent} 20%, transparent)` }}>
+          <span className="text-[26px] leading-none" aria-hidden>{brand.appBadge.emoji}</span>
+          <div>
+            <div className="text-[14px] font-extrabold text-ink">{brand.appBadge.title}</div>
+            <div className="mt-0.5 text-[12.5px] leading-snug text-muted">{brand.appBadge.text}</div>
+          </div>
+        </div>
+
+        <ul className="mt-4 space-y-2">
+          {p.features.slice(0, 3).map((f) => {
             const Icon = f.icon;
             return (
-              <li key={f.text} className="flex items-center gap-2.5 text-[14px] text-ink/90">
-                <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md text-white" style={{ backgroundColor: b.accent }}>
+              <li key={f.text} className="flex items-center gap-2.5 text-[13.5px] text-ink/90">
+                <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md text-white" style={{ backgroundColor: brand.accent }}>
                   <Icon className="h-3.5 w-3.5" aria-hidden />
                 </span>
                 {f.text}
@@ -58,30 +68,44 @@ function BrandCard({ slug }: { slug: Slug }) {
             );
           })}
         </ul>
+
+        {/* barcode strip */}
+        <div className="mt-4 border-t border-dashed border-navy/15 pt-3">
+          <div className="flex h-9 items-end gap-[3px]" aria-hidden>
+            {Array.from({ length: 30 }).map((_, i) => (
+              <span key={i} className="w-[3px] rounded-sm bg-ink" style={{ height: `${45 + ((i * 41) % 55)}%` }} />
+            ))}
+          </div>
+          <div className="mt-1.5 flex items-center justify-between text-[11px] text-faint">
+            <span className="num">NO. {brand.slug.toUpperCase()}-2026</span>
+            <span>FUTURE • כרטיס נסיעה</span>
+          </div>
+        </div>
+
         <a
-          href={`/api/go/${slug}`}
+          href={`/api/go/${brand.slug}`}
           target="_blank"
           rel="noopener noreferrer sponsored"
-          className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-navy-deep px-4 py-3 text-[15px] font-extrabold text-white shadow-lg transition-transform hover:-translate-y-0.5"
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-[15px] font-extrabold text-white shadow-lg transition-transform hover:-translate-y-0.5"
+          style={{ backgroundColor: brand.accent }}
         >
           רכישה דיגיטלית מיידית
           <ArrowLeft className="h-4 w-4" aria-hidden />
         </a>
-        <p className="mt-2 text-center text-[11px] text-faint">מעבר לרכישה מאובטחת באתר החברה</p>
       </div>
     </div>
   );
 }
 
 export default function BrandPage({ params }: { params: { provider: string } }) {
-  const b = BRANDS[params.provider as Slug];
-  if (!b) notFound();
-  const p = getProvider(b.id);
-  const faq = FAQ_ITEMS.slice(0, 5);
+  const brand = getBrand(params.provider);
+  if (!brand) notFound();
+  const p = getProvider(brand.providerId);
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+    mainEntity: brand.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
   };
 
   return (
@@ -90,57 +114,135 @@ export default function BrandPage({ params }: { params: { provider: string } }) 
 
       <PageHero
         icon={ShieldCheck}
-        eyebrow={`ביטוח נסיעות · ${b.label}`}
+        eyebrow={`ביטוח נסיעות · ${brand.name}`}
         title={
           <>
-            ביטוח נסיעות <span style={{ color: b.accent }}>{b.label}</span> — מחיר ורכישה מיידית
+            ביטוח נסיעות <span style={{ color: brand.accent }}>{brand.name}</span> — מחיר ורכישה מיידית
           </>
         }
-        subtitle={`${p.tagline} — השוו את ${b.label} מול PassportCard, הראל, מגדל וכלל, קבלו מחיר תוך שניות ורכשו פוליסה דיגיטלית מיידית בליווי סוכן מורשה.`}
-        badges={['✈️ פוליסה מיידית', '🌍 כיסוי עולמי', '📱 כרטיס דיגיטלי']}
-        primary={{ href: '/travel-insurance#calculator', label: 'להשוואת מחיר' }}
+        subtitle={`${p.tagline} — מחשבון עלות יומית, השוואה מול החברות המובילות ורכישה דיגיטלית מיידית בליווי סוכן מורשה.`}
+        badges={['✈️ פוליסה מיידית', `${brand.appBadge.emoji} ${brand.appBadge.title}`, '📱 כרטיס דיגיטלי']}
+        primary={{ href: '#calculator', label: 'למחשבון המחיר' }}
         secondary={{ href: whatsappHref(), label: 'ייעוץ מהיר בוואטסאפ', external: true }}
-        visual={<BrandCard slug={params.provider as Slug} />}
+        visual={<BrandPass brand={brand} />}
       />
 
+      <div className="px-6 md:px-10">
+        <BrandCalculator brand={brand} />
+      </div>
+
+      {/* ratings + reviews */}
       <section className="mx-auto w-full max-w-container px-6 py-14 md:px-10 md:py-16">
         <div className="mx-auto max-w-2xl text-center">
-          <span className="eyebrow text-[13px]">למה {b.label}?</span>
-          <h2 className="mt-2 text-[clamp(24px,5vw,30px)] font-bold leading-tight text-ink">
-            היתרונות של ביטוח הנסיעות של {b.label}
-          </h2>
-          <p className="mt-3 text-[16px] leading-relaxed text-muted">
-            השוואה שקופה מול החברות המובילות עוזרת לכם לבחור נכון. הנה מה שמייחד את {b.label} — ואיך משיגים
-            את המחיר הטוב ביותר.
+          <div className="flex items-center justify-center gap-2">
+            <Stars score={brand.ratingScore} size="h-5 w-5" />
+            <span className="text-[20px] font-extrabold text-ink">{brand.ratingScore}/5</span>
+          </div>
+          <p className="mt-1.5 text-[14px] text-muted">
+            מבוסס על {brand.ratingCount} ביקורות · <span className="font-semibold text-faint">נתוני המחשה</span>
           </p>
+          <h2 className="mt-4 text-[clamp(22px,5vw,28px)] font-bold leading-tight text-ink">
+            למה לקוחות בוחרים ב{brand.name}?
+          </h2>
         </div>
-        <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2">
-          {p.features.map((f) => {
-            const Icon = f.icon;
-            return (
-              <div key={f.text} className="glass flex items-start gap-3 p-5">
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl text-white" style={{ backgroundColor: b.accent }}>
-                  <Icon className="h-5 w-5" aria-hidden />
+        <div className="mt-9 grid grid-cols-1 gap-6 md:grid-cols-2">
+          {brand.reviews.map((r) => (
+            <div key={r.name} className="glass flex h-full flex-col p-6">
+              <div className="flex items-center gap-3">
+                <span className="grid h-11 w-11 place-items-center rounded-full text-[14px] font-extrabold text-white shadow" style={{ background: `linear-gradient(135deg, ${r.from}, ${r.to})` }} aria-hidden>
+                  {r.initials}
                 </span>
-                <p className="text-[15px] font-medium leading-relaxed text-ink/90">{f.text}</p>
+                <div className="min-w-0">
+                  <div className="text-[15px] font-extrabold text-ink">{r.name}</div>
+                  <div className="flex items-center gap-1.5 text-[12px] text-muted">
+                    {r.city}
+                    <Stars score={5} size="h-3 w-3" />
+                    <span className="rounded-full bg-slate-100 px-1.5 text-[10px] font-semibold text-faint">לדוגמה</span>
+                  </div>
+                </div>
               </div>
-            );
-          })}
+              <blockquote className="mt-3 flex-1 text-[14px] leading-relaxed text-ink/90">״{r.text}״</blockquote>
+            </div>
+          ))}
         </div>
       </section>
 
-      <VideoBlock
-        title={`איך בוחרים נכון ביטוח נסיעות של ${b.label}?`}
-        subtitle={`מומחה מסביר מתי ${b.label} הכי משתלמת, מה חשוב לבדוק בפוליסה, ואיך משלבים הרחבות בלי לשלם מיותר.`}
-        points={['התאמת הכיסוי ליעד ולפרופיל', 'מתי כדאי להרחיב (ספורט / מצב רפואי)', 'השוואת מחיר מול החברות האחרות']}
-        href={whatsappHref()}
-      />
+      {/* comparison: brand direct vs Future VIP */}
+      <section className="mx-auto w-full max-w-container px-6 pb-4 md:px-10">
+        <div className="mx-auto max-w-2xl text-center">
+          <span className="eyebrow text-[13px]">השוואה שקופה</span>
+          <h2 className="mt-2 text-[clamp(22px,5vw,28px)] font-bold leading-tight text-ink">
+            {brand.name} ישירות מול {brand.name} דרך Future
+          </h2>
+          <p className="mt-3 text-[15px] leading-relaxed text-muted">אותו מחיר בדיוק — ההבדל הוא בשירות, בהשוואה ובליווי.</p>
+        </div>
+        <div className="mt-8 glass overflow-hidden p-1.5">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[520px] border-collapse text-center">
+              <thead>
+                <tr className="border-b border-navy/10">
+                  <th scope="col" className="p-4 text-start text-[13px] font-semibold text-muted">מה בודקים</th>
+                  <th scope="col" className="p-4 text-[14px] font-extrabold text-ink">ישירות ב{brand.name}</th>
+                  <th scope="col" className="rounded-t-xl bg-gold-tint p-4 text-[14px] font-extrabold text-gold-deep">דרך Future</th>
+                </tr>
+              </thead>
+              <tbody>
+                {brand.compare.map((row) => (
+                  <tr key={row.label} className="border-b border-navy/[0.06] last:border-0">
+                    <td className="p-4 text-start text-[14px] font-medium text-ink">{row.label}</td>
+                    <td className="p-4 text-[13.5px] text-muted">{row.direct}</td>
+                    <td className="bg-gold-tint/40 p-4 text-[13.5px] font-bold text-ink">
+                      <span className="inline-flex items-center gap-1.5">
+                        <Check className="h-4 w-4 text-harel-green" aria-hidden />
+                        {row.future}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* SEO articles */}
+      <section className="mx-auto w-full max-w-container px-6 py-14 md:px-10 md:py-16">
+        <div className="mx-auto max-w-2xl text-center">
+          <span className="eyebrow text-[13px]">כתבות ומידע מקצועי</span>
+          <h2 className="mt-2 text-[clamp(22px,5vw,28px)] font-bold leading-tight text-ink">מדריכי {brand.name}</h2>
+        </div>
+        <div className="mt-9 grid grid-cols-1 gap-6 sm:grid-cols-3">
+          {brand.articles.map((a, i) => (
+            <article key={a.title} className="glass group flex h-full flex-col overflow-hidden transition-transform duration-300 hover:-translate-y-2">
+              <div className="relative h-28" style={{ background: `linear-gradient(135deg, ${brand.accent}, ${i % 2 ? brand.accent2 : '#0F2141'})` }}>
+                <span className="absolute bottom-2 start-3 rounded-full bg-white/85 px-2.5 py-0.5 text-[11px] font-bold text-ink">{a.tag}</span>
+              </div>
+              <div className="flex flex-1 flex-col p-5">
+                <h3 className="text-[15.5px] font-bold leading-snug text-ink">{a.title}</h3>
+                <div className="mt-auto flex items-center gap-2 pt-4 text-[12px] font-medium text-faint">
+                  <span>סוכן מורשה</span>
+                  <span>·</span>
+                  <span>{a.read} קריאה</span>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
 
       <FaqSection
-        title={`שאלות ותשובות — ביטוח נסיעות ${b.label}`}
-        subtitle="הכיסויים, המחיר והרכישה הדיגיטלית — כל מה שחשוב לדעת."
-        items={faq}
+        title={`שאלות ותשובות — ביטוח נסיעות ${brand.name}`}
+        subtitle="הכיסויים, המחיר, התביעות והרכישה הדיגיטלית — כל מה שחשוב לדעת."
+        items={brand.faq}
       />
+
+      {/* independence / anti-impersonation note */}
+      <div className="mx-auto max-w-container px-6 pb-12 md:px-10">
+        <p className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-center text-[12px] leading-relaxed text-slate-600">
+          אתר עצמאי של סוכנות ביטוח מורשה (״Future Insurance״) — אינו האתר הרשמי של {brand.name}. שמות
+          החברות מוזכרים לצורך השוואה ומידע. השירות בכפוף להסכמת המשתמש ולתקנון האתר.
+        </p>
+      </div>
     </main>
   );
 }

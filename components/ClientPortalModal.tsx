@@ -84,6 +84,11 @@ export default function ClientPortalModal({ open, onClose }: { open: boolean; on
     }
     setError(null);
     setPhase('sending');
+    fetch('/api/leads', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: 'בקשת אזור אישי', phone: p, topic: 'client_portal', consent }),
+    }).catch(() => undefined);
     timer.current = window.setTimeout(() => setPhase('sent'), 700);
   };
 

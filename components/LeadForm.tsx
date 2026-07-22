@@ -146,7 +146,26 @@ export default function LeadForm({
       vertical,
       ...(extraField ? { [extraField.name]: extra || 'לא צוין' } : {}),
     });
-    submitTimer.current = window.setTimeout(() => setPhase('done'), 700);
+    // Best-effort POST to the unified intake; the WhatsApp/call handoff on the
+    // success step is the real conversion, so a network hiccup never blocks it.
+    const post = fetch('/api/leads', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: name.trim(),
+        phone: normalized,
+        id: idField ? idValue : undefined,
+        topic: vertical,
+        consent,
+        idRequired: idField,
+        ...(extraField ? { [extraField.name]: extra || undefined } : {}),
+      }),
+    }).catch(() => undefined);
+    // Keep the "submitting" state smooth (min ~650ms) regardless of network speed.
+    const minDelay = new Promise<void>((resolve) => {
+      submitTimer.current = window.setTimeout(resolve, 650);
+    });
+    Promise.all([post, minDelay]).then(() => setPhase('done'));
   };
 
   const field =
