@@ -15,18 +15,39 @@ export const metadata: Metadata = {
   title: 'פנסיה, קרן השתלמות וקופת גמל — סימולטור צמיחת הון',
   description:
     'מרכז פיננסי לפנסיה, קרן השתלמות וקופת גמל. סימולטור ריבית דריבית עם גרף צמיחה חי, בדיקת דמי ניהול והתאמת מסלול השקעה — לחיסכון מקסימלי לפרישה.',
-  keywords: ['פנסיה', 'קרן השתלמות', 'קופת גמל', 'ריבית דריבית', 'מחשבון פנסיה', 'דמי ניהול'],
+  keywords: [
+    'פנסיה',
+    'קרן השתלמות',
+    'קופת גמל',
+    'ביטוח השקעות',
+    'ריבית דריבית',
+    'מחשבון פנסיה',
+    'הוזלת דמי ניהול',
+  ],
   alternates: { canonical: '/finance' },
 };
 
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: FINANCE_FAQ.map((f) => ({
-    '@type': 'Question',
-    name: f.q,
-    acceptedAnswer: { '@type': 'Answer', text: f.a },
-  })),
+  '@graph': [
+    {
+      '@type': 'FAQPage',
+      mainEntity: FINANCE_FAQ.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    },
+    {
+      '@type': 'FinancialProduct',
+      name: 'פנסיה, קרן השתלמות וקופת גמל',
+      category: 'חיסכון פנסיוני והשקעות',
+      description:
+        'מסלולי חיסכון פנסיוני והשקעות — פנסיה, קרן השתלמות וקופת גמל, עם התאמת מסלול השקעה והוזלת דמי ניהול לחיסכון מקסימלי לפרישה.',
+      areaServed: 'IL',
+      provider: { '@id': 'https://futureins.co.il/#organization' },
+    },
+  ],
 };
 
 const PRODUCTS = [

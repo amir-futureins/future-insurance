@@ -6,8 +6,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      // API + affiliate redirect handlers should never be crawled/indexed.
-      disallow: ['/api/'],
+      // API, affiliate redirects, and the internal admin tool are never crawled.
+      disallow: ['/api/', '/admin/'],
     },
     sitemap: `${SITE.url}/sitemap.xml`,
     host: SITE.url,
