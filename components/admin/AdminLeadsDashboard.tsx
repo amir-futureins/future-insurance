@@ -29,7 +29,7 @@ import {
  * ------------------------------------------------------------------ */
 type Status = 'new' | 'progress' | 'closed';
 interface Lead {
-  id: number;
+  id: string | number;
   name: string;
   nid: string; // masked national ID
   phone: string; // full (fabricated) Israeli mobile — needed for outreach
@@ -86,8 +86,9 @@ function waHref(lead: Lead): string {
   return `https://wa.me/${toIntlPhone(lead.phone)}?text=${encodeURIComponent(msg)}`;
 }
 
-export default function AdminLeadsDashboard() {
-  const [leads, setLeads] = useState<Lead[]>(SAMPLE);
+export default function AdminLeadsDashboard({ initialLeads }: { initialLeads?: Lead[] }) {
+  const isLive = Boolean(initialLeads && initialLeads.length > 0);
+  const [leads, setLeads] = useState<Lead[]>(isLive ? (initialLeads as Lead[]) : SAMPLE);
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | Status>('all');
   const [sourceFilter, setSourceFilter] = useState<'all' | string>('all');
@@ -112,7 +113,7 @@ export default function AdminLeadsDashboard() {
   }, [leads]);
 
   /** Status management — click a badge to advance New → In-Progress → Closed. */
-  const cycleStatus = (id: number) =>
+  const cycleStatus = (id: string | number) =>
     setLeads((prev) =>
       prev.map((l) =>
         l.id === id
@@ -143,14 +144,22 @@ export default function AdminLeadsDashboard() {
 
   return (
     <div className="mx-auto w-full max-w-[95%] px-4 py-8 md:py-10">
-      {/* demo / security notice */}
+      {/* live / demo + security notice */}
       <div className="mb-6 flex items-start gap-3 rounded-2xl border border-amber-300/60 bg-amber-50/70 p-4 text-[13px] text-amber-900">
         <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" aria-hidden />
-        <p className="leading-relaxed">
-          <strong>ממשק הדגמה.</strong> הנתונים כאן להמחשה בלבד — אין עדיין שמירת לידים בבסיס נתונים.
-          לפני עלייה לאוויר יש לחבר את הטבלה למאגר האמיתי ולהגן על המסך מאחורי הזדהות (אימות) — כרגע
-          המסך אינו מוגן. מספרי הטלפון בטווח 555 בדיוני.
-        </p>
+        {isLive ? (
+          <p className="leading-relaxed">
+            <strong>מחובר למאגר הלידים החי.</strong> הטבלה מציגה לידים אמיתיים שנקלטו מהאתר. שימו לב:
+            המסך עדיין <strong>אינו מוגן מאחורי הזדהות</strong> — יש להוסיף אימות לפני חשיפה חיצונית,
+            ולעבור לבסיס נתונים מתמשך (הנתונים נשמרים כרגע בקובץ מקומי בלבד).
+          </p>
+        ) : (
+          <p className="leading-relaxed">
+            <strong>ממשק הדגמה.</strong> עדיין לא נקלטו לידים — מוצגים נתוני הדגמה. לידים חדשים מהאתר
+            יופיעו כאן אוטומטית. לפני עלייה לאוויר יש להגן על המסך מאחורי הזדהות (אימות) — כרגע המסך
+            אינו מוגן. מספרי הטלפון בהדגמה בטווח 555 בדיוני.
+          </p>
+        )}
       </div>
 
       {/* header */}
@@ -350,7 +359,7 @@ export default function AdminLeadsDashboard() {
           <span>
             מציג {filtered.length} מתוך {leads.length} לידים
           </span>
-          <span>נתוני הדגמה</span>
+          <span>{isLive ? 'נתונים חיים' : 'נתוני הדגמה'}</span>
         </div>
       </div>
     </div>

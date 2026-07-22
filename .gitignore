@@ -26,3 +26,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local CRM lead store (dev/local persistence — use a real DB in prod)
+.data/
