@@ -14,6 +14,7 @@ import MarketTicker from '@/components/MarketTicker';
 import AiAssistantWidget from '@/components/AiAssistantWidget';
 import ExitIntentPopup from '@/components/ExitIntentPopup';
 import SocialProofToast from '@/components/SocialProofToast';
+import StickyLeftGovCTA from '@/components/StickyLeftGovCTA';
 import HarDisclaimer from '@/components/HarDisclaimer';
 import './globals.css';
 
@@ -112,6 +113,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <AiAssistantWidget />
           <ExitIntentPopup />
           <SocialProofToast />
+          <StickyLeftGovCTA />
         </LeadModalProvider>
       </body>
     </html>
