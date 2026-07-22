@@ -188,21 +188,21 @@ export default function AiAssistantWidget() {
   return (
     <div className="no-print">
       {/* trigger + nudge bubble */}
-      <div className="fixed bottom-36 start-4 z-[55] lg:bottom-24 lg:start-5">
+      <div className="fixed bottom-36 start-4 z-[55] lg:bottom-6 lg:start-5">
         {!open && bubble ? (
-          <div className="absolute bottom-full mb-3 start-0 animate-bubble-in">
+          <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 animate-bubble-in">
             <button
               type="button"
               onClick={() => {
                 setOpen(true);
                 dismissBubble();
               }}
-              className="relative block w-max max-w-[230px] rounded-2xl bg-white px-3.5 py-2.5 text-start text-[13px] font-semibold text-ink shadow-2xl ring-1 ring-navy/10 transition-colors hover:bg-gold-tint"
+              className="relative block w-max max-w-[220px] rounded-2xl bg-white px-3.5 py-2.5 text-start text-[13px] font-semibold text-ink shadow-2xl ring-1 ring-navy/10 transition-colors hover:bg-gold-tint"
             >
               💬 צריכים עזרה בבחירת ביטוח?
               <span
                 aria-hidden
-                className="absolute -bottom-1.5 start-7 h-3 w-3 rotate-45 bg-white ring-1 ring-navy/10"
+                className="absolute -right-1.5 top-1/2 h-3 w-3 -translate-y-1/2 rotate-45 bg-white ring-1 ring-navy/10"
               />
             </button>
             <button
