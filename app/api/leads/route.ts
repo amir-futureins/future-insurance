@@ -133,6 +133,21 @@ function buildEmailHtml(l: LeadRecord): string {
 </div>`;
 }
 
+/** fetch with a hard timeout so a slow/hung webhook can never block forever. */
+async function fetchWithTimeout(
+  url: string,
+  opts: RequestInit,
+  ms = 8000,
+): Promise<Response> {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), ms);
+  try {
+    return await fetch(url, { ...opts, signal: ctrl.signal });
+  } finally {
+    clearTimeout(t);
+  }
+}
+
 /** Channel 1 — admin e-mail via the Resend REST API (no SDK dependency). */
 async function sendEmail(l: LeadRecord): Promise<void> {
   const key = process.env.RESEND_API_KEY;
@@ -143,7 +158,7 @@ async function sendEmail(l: LeadRecord): Promise<void> {
   const from = process.env.LEADS_FROM_EMAIL || 'Future Insurance <leads@futureins.co.il>';
   const to = process.env.ADMIN_EMAIL || process.env.LEADS_TO_EMAIL || 'amir@il-ins.co.il';
   console.info(`[leads] email: POST → Resend (to=${to})`);
-  const res = await fetch('https://api.resend.com/emails', {
+  const res = await fetchWithTimeout('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -170,22 +185,26 @@ async function sendToSheets(l: LeadRecord): Promise<void> {
     console.warn('[leads] sheets: SKIPPED — GOOGLE_SHEETS_WEBHOOK_URL is not set in process.env');
     return;
   }
+  // Optional fields fall back to "-" so empty cells read cleanly in the sheet.
+  const id = l.id || '-';
+  const dob = l.dob || '-';
+  const issueDate = l.issueDate || '-';
   const payload = {
     timestamp: l.createdAt,
     name: l.name,
     fullName: l.name,
-    id: l.id ?? '',
-    idNumber: l.id ?? '',
-    dob: l.dob ?? '',
-    dateOfBirth: l.dob ?? '',
-    issueDate: l.issueDate ?? '',
-    idIssueDate: l.issueDate ?? '',
+    id,
+    idNumber: id,
+    dob,
+    dateOfBirth: dob,
+    issueDate,
+    idIssueDate: issueDate,
     phone: l.phone,
     source: l.source,
     status: 'חדש',
   };
   console.info(`[leads] sheets: POST → ${url.slice(0, 52)}… (source=${l.source})`);
-  const res = await fetch(url, {
+  const res = await fetchWithTimeout(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -217,7 +236,7 @@ async function saveToCrm(l: LeadRecord): Promise<void> {
 async function forwardWebhook(l: LeadRecord): Promise<void> {
   const url = process.env.LEADS_WEBHOOK_URL;
   if (!url) return;
-  const res = await fetch(url, {
+  const res = await fetchWithTimeout(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(l),
@@ -226,12 +245,12 @@ async function forwardWebhook(l: LeadRecord): Promise<void> {
 }
 
 /**
- * Fan out to every channel with strict, isolated error handling: one channel
- * failing never blocks the others or the user's request (all best-effort).
+ * Notify the EXTERNAL channels (email / Sheets / webhook) with strict, isolated
+ * error handling: one failing never affects the others. Each fetch is
+ * timeout-bounded. Runs in the background so the user's response is immediate.
  */
-async function dispatchLead(l: LeadRecord): Promise<void> {
+async function dispatchExternal(l: LeadRecord): Promise<void> {
   const channels: Array<[string, () => Promise<void>]> = [
-    ['crm', () => saveToCrm(l)],
     ['email', () => sendEmail(l)],
     ['sheets', () => sendToSheets(l)],
     ['webhook', () => forwardWebhook(l)],
@@ -240,7 +259,7 @@ async function dispatchLead(l: LeadRecord): Promise<void> {
   const summary = results
     .map((r, i) => `${channels[i][0]}:${r.status === 'fulfilled' ? 'ok' : 'FAIL'}`)
     .join(' ');
-  console.info(`[leads] dispatch summary → ${summary}`);
+  console.info(`[leads] external dispatch → ${summary}`);
   results.forEach((r, i) => {
     if (r.status === 'rejected') {
       const reason = r.reason instanceof Error ? r.reason.message : String(r.reason);
@@ -293,11 +312,13 @@ export async function POST(req: NextRequest) {
   if ((idRequired || id) && !isValidIsraeliId(id)) fields.add('id');
   if (!consent) fields.add('consent'); // hard requirement — no consent, no lead.
 
-  // Date-of-birth: validated when supplied or when the flow requires the ID
-  // (gov-data flows). Must be a real, past date with a plausible adult age.
+  // dob / issueDate are OPTIONAL at the API level — only the form that actually
+  // renders these inputs (GovDataModal) enforces them client-side. Here we only
+  // validate their FORMAT when a value is present, so a form without date fields
+  // (e.g. LeadForm with idField) never 422s on dates it doesn't collect.
   const now = new Date();
   let dob: string | null = null;
-  if (dobStr || idRequired) {
+  if (dobStr) {
     const d = parseDate(dobStr);
     if (!d || d > now || yearsBetween(d, now) < 18 || yearsBetween(d, now) > 120) {
       fields.add('dob');
@@ -308,7 +329,7 @@ export async function POST(req: NextRequest) {
 
   // ID issue date: a real, past date that is strictly after the date of birth.
   let issueDate: string | null = null;
-  if (issueStr || idRequired) {
+  if (issueStr) {
     const iss = parseDate(issueStr);
     const d = parseDate(dobStr);
     if (!iss || iss > now || (d && iss <= d)) {
@@ -348,7 +369,19 @@ export async function POST(req: NextRequest) {
     consent: true,
   });
 
-  await dispatchLead(record);
+  // Durable channel first (fast, local) — the lead is stored before we respond,
+  // so it is never lost even if the external channels are slow or fail.
+  try {
+    await saveToCrm(record);
+    console.info('[leads] crm: ok');
+  } catch (e) {
+    console.error('[leads] ✗ crm failed:', e instanceof Error ? e.message : e);
+  }
+
+  // External channels (email / Sheets / webhook) fire in the background with
+  // bounded timeouts, so the user gets an immediate success response while
+  // dispatch happens in parallel. (No next/after in 14.2 → in-process.)
+  void dispatchExternal(record).catch((e) => console.error('[leads] dispatch error', e));
 
   return NextResponse.json({ ok: true, message: SUCCESS }, { status: 200 });
 }

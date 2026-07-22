@@ -6,6 +6,7 @@ import { trackEvent } from '@/lib/gtm';
 import { WHATSAPP, SITE } from '@/lib/content';
 import { isValidIsraeliId, sanitizeId } from '@/lib/israeli-id';
 import { submitLead } from '@/lib/submit-lead';
+import { useBodyScrollLock } from '@/lib/use-body-scroll-lock';
 import ConsentCheckbox from '@/components/ConsentCheckbox';
 
 /**
@@ -76,16 +77,15 @@ export default function GovDataModal({
       }
     };
     document.addEventListener('keydown', onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
     const t = window.setTimeout(() => firstRef.current?.focus(), 60);
     return () => {
       document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = prev;
       window.clearTimeout(t);
       if (timer.current) window.clearTimeout(timer.current);
     };
   }, [open, onClose]);
+
+  useBodyScrollLock(open);
 
   if (!open) return null;
 
@@ -125,9 +125,9 @@ export default function GovDataModal({
   const waHref = `https://wa.me/${WHATSAPP.phone}?text=${encodeURIComponent('היי, השארתי פרטים לבדיקת הר הביטוח.')}`;
 
   return (
-    <div className="fixed inset-0 z-[85] flex items-end justify-center p-0 sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-labelledby="gov-title">
-      <button type="button" aria-label="סגירה" onClick={onClose} className="absolute inset-0 bg-navy-deep/50 backdrop-blur-sm" />
-      <div ref={dialogRef} className="glass-elevated relative flex max-h-[92vh] w-full max-w-md animate-toast-in flex-col overflow-hidden rounded-b-none rounded-t-glass-lg sm:rounded-glass-lg">
+    <div className="fixed inset-0 z-[85] flex items-center justify-center overflow-y-auto p-4" role="dialog" aria-modal="true" aria-labelledby="gov-title">
+      <button type="button" aria-label="סגירה" onClick={onClose} className="fixed inset-0 bg-navy-deep/50 backdrop-blur-sm" />
+      <div ref={dialogRef} className="glass-elevated relative my-auto flex max-h-[90vh] w-full max-w-md animate-toast-in flex-col overflow-hidden rounded-glass-lg">
         <button type="button" onClick={onClose} aria-label="סגירה" className="absolute end-4 top-4 z-10 grid h-9 w-9 place-items-center rounded-full bg-navy/[0.05] text-muted transition-colors hover:bg-navy/10 hover:text-ink">
           <X className="h-4 w-4" aria-hidden />
         </button>

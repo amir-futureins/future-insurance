@@ -7,6 +7,7 @@ import { WHATSAPP, SITE } from '@/lib/content';
 import ConsentCheckbox from '@/components/ConsentCheckbox';
 import { isValidIsraeliId, sanitizeId } from '@/lib/israeli-id';
 import { submitLead } from '@/lib/submit-lead';
+import { useBodyScrollLock } from '@/lib/use-body-scroll-lock';
 
 export interface LeadFormExtraField {
   label: string;
@@ -101,12 +102,9 @@ export default function LeadForm({
       }
     };
     document.addEventListener('keydown', onKey);
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
     const t = window.setTimeout(() => nameRef.current?.focus(), 60);
     return () => {
       document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = prevOverflow;
       window.clearTimeout(t);
       if (submitTimer.current) window.clearTimeout(submitTimer.current);
       lastFocused.current?.focus?.();
@@ -117,6 +115,8 @@ export default function LeadForm({
   useEffect(() => {
     if (open && phase === 'done') doneRef.current?.focus();
   }, [open, phase]);
+
+  useBodyScrollLock(open);
 
   if (!open) return null;
 
@@ -180,7 +180,7 @@ export default function LeadForm({
 
   return (
     <div
-      className="fixed inset-0 z-[80] flex items-end justify-center p-0 sm:items-center sm:p-4"
+      className="fixed inset-0 z-[80] flex items-center justify-center overflow-y-auto p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="leadform-title"
@@ -189,11 +189,11 @@ export default function LeadForm({
         type="button"
         aria-label="סגירה"
         onClick={onClose}
-        className="absolute inset-0 bg-navy-deep/45 backdrop-blur-sm"
+        className="fixed inset-0 bg-navy-deep/45 backdrop-blur-sm"
       />
       <div
         ref={dialogRef}
-        className="glass-elevated relative w-full max-w-md animate-toast-in overflow-hidden rounded-b-none rounded-t-glass-lg p-6 sm:rounded-glass-lg sm:p-7"
+        className="glass-elevated relative my-auto max-h-[90vh] w-full max-w-md animate-toast-in overflow-y-auto rounded-glass-lg p-6 sm:p-7"
       >
         <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-recommend-highlight" />
         <button

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { X, Lock, ArrowLeft, Loader2, CheckCircle2, Phone } from 'lucide-react';
 import { whatsappHref, SITE } from '@/lib/content';
 import { submitLead } from '@/lib/submit-lead';
+import { useBodyScrollLock } from '@/lib/use-body-scroll-lock';
 import ConsentCheckbox from '@/components/ConsentCheckbox';
 
 /**
@@ -59,16 +60,15 @@ export default function ClientPortalModal({ open, onClose }: { open: boolean; on
       }
     };
     document.addEventListener('keydown', onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
     const t = window.setTimeout(() => inputRef.current?.focus(), 60);
     return () => {
       document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = prev;
       window.clearTimeout(t);
       if (timer.current) window.clearTimeout(timer.current);
     };
   }, [open, onClose]);
+
+  useBodyScrollLock(open);
 
   if (!open) return null;
 
@@ -104,15 +104,15 @@ export default function ClientPortalModal({ open, onClose }: { open: boolean; on
 
   return (
     <div
-      className="fixed inset-0 z-[85] flex items-end justify-center p-0 sm:items-center sm:p-4"
+      className="fixed inset-0 z-[85] flex items-center justify-center overflow-y-auto p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="portal-title"
     >
-      <button type="button" aria-label="סגירה" onClick={onClose} className="absolute inset-0 bg-navy-deep/45 backdrop-blur-sm" />
+      <button type="button" aria-label="סגירה" onClick={onClose} className="fixed inset-0 bg-navy-deep/45 backdrop-blur-sm" />
       <div
         ref={dialogRef}
-        className="glass-elevated relative w-full max-w-sm animate-toast-in overflow-hidden rounded-b-none rounded-t-glass-lg p-6 sm:rounded-glass-lg"
+        className="glass-elevated relative my-auto max-h-[90vh] w-full max-w-sm animate-toast-in overflow-y-auto rounded-glass-lg p-6"
       >
         <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-recommend-highlight" />
         <button

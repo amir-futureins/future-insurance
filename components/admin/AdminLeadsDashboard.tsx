@@ -17,6 +17,7 @@ import {
   ShieldCheck,
   HeartPulse,
   Home,
+  Tag,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -69,8 +70,9 @@ const SOURCE_META: Record<string, { emoji: string; Icon: LucideIcon; badge: stri
   בריאות: { emoji: '🩺', Icon: HeartPulse, badge: 'bg-emerald-50 text-emerald-700 ring-emerald-200' },
   משכנתא: { emoji: '🏠', Icon: Home, badge: 'bg-indigo-50 text-indigo-700 ring-indigo-200' },
   פנסיה: { emoji: '📈', Icon: TrendingUp, badge: 'bg-fuchsia-50 text-fuchsia-700 ring-fuchsia-200' },
+  כללי: { emoji: '📋', Icon: Tag, badge: 'bg-slate-100 text-slate-600 ring-slate-200' },
 };
-const SOURCE_ORDER = ['חו״ל', 'הר הביטוח', 'בריאות', 'משכנתא', 'פנסיה'];
+const SOURCE_ORDER = ['חו״ל', 'הר הביטוח', 'בריאות', 'משכנתא', 'פנסיה', 'כללי'];
 
 function fmtDate(iso: string): string {
   const [y, m, d] = iso.split('-');
