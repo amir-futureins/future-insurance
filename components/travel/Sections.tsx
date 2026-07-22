@@ -68,7 +68,7 @@ export function TrustBar() {
           <a
             href={SITE.phoneHref}
             aria-label={SITE.phoneCta}
-            className="hidden items-center gap-2 rounded-xl bg-cta-fill px-3.5 py-2 text-[14px] font-bold text-navy-deep shadow-md shadow-black/25 transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[0_0_18px_rgba(212,162,74,0.65)] sm:inline-flex"
+            className="hidden h-fit shrink-0 items-center gap-2 whitespace-nowrap rounded-xl bg-cta-fill px-3.5 py-2 text-[14px] font-bold text-navy-deep shadow-md shadow-black/25 transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[0_0_18px_rgba(212,162,74,0.65)] sm:inline-flex"
           >
             <Phone className="h-4 w-4" aria-hidden />
             {SITE.phoneCta}
@@ -77,7 +77,7 @@ export function TrustBar() {
             href={whatsappHref()}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden animate-pulse-glow rounded-xl bg-cta-fill px-4 py-2 text-[14px] font-extrabold text-navy-deep shadow-lg transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[0_0_24px_rgba(212,162,74,0.8)] md:inline-block"
+            className="hidden h-fit shrink-0 animate-pulse-glow whitespace-nowrap rounded-xl bg-cta-fill px-4 py-2 text-[14px] font-extrabold text-navy-deep shadow-lg transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[0_0_24px_rgba(212,162,74,0.8)] md:inline-block"
           >
             ייעוץ חינם
           </a>
