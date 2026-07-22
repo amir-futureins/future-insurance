@@ -13,9 +13,12 @@ import {
   Percent,
   Search,
   Zap,
+  Plane,
+  ArrowLeft,
   type LucideIcon,
 } from 'lucide-react';
 import { whatsappHref, SITE } from '@/lib/content';
+import { BRANDS } from '@/lib/brands';
 import BrandEmblem from '@/components/travel/BrandEmblem';
 
 /**
@@ -124,12 +127,51 @@ function Badge({ a }: { a: Action }) {
   );
 }
 
+const TRAVEL_SLUGS = ['passportcard', 'harel', 'clal', 'migdal'] as const;
+
+/** A dock button whose hover/focus reveals a glass flyout of the 4 travel brands. */
+function TravelFlyout() {
+  return (
+    <div className="group/travel relative">
+      <button
+        type="button"
+        aria-label="ביטוח נסיעות — רכישה מהירה"
+        aria-haspopup="menu"
+        className="relative grid h-12 w-12 place-items-center rounded-full bg-gradient-to-br from-[#1e3a70] to-navy-deep text-white shadow-md ring-1 ring-black/5 transition-transform duration-150 hover:scale-110 group-focus-within/travel:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-deep"
+      >
+        <Plane className="h-5 w-5 -rotate-45" aria-hidden />
+      </button>
+      <div className="pointer-events-none absolute right-full top-1/2 z-20 -translate-y-1/2 pr-3 opacity-0 transition-all duration-200 group-hover/travel:pointer-events-auto group-hover/travel:opacity-100 group-focus-within/travel:pointer-events-auto group-focus-within/travel:opacity-100">
+        <div className="w-60 overflow-hidden rounded-2xl border border-white/50 bg-white/90 p-2 shadow-2xl backdrop-blur-xl">
+          <div className="flex items-center gap-1.5 px-2 pb-1.5 pt-1 text-[11px] font-bold text-faint">
+            <Plane className="h-3.5 w-3.5 -rotate-45" aria-hidden />
+            ביטוח נסיעות — רכישה מהירה
+          </div>
+          {TRAVEL_SLUGS.map((slug) => (
+            <Link
+              key={slug}
+              href={`/travel-insurance/${slug}`}
+              className="flex items-center gap-2.5 rounded-xl px-2 py-1.5 transition-colors hover:bg-slate-100 focus-visible:bg-slate-100 focus-visible:outline-none"
+            >
+              <BrandEmblem slug={slug} variant="sm" />
+              <span className="flex-1 text-start text-[14px] font-bold text-ink">{BRANDS[slug].name}</span>
+              <ArrowLeft className="h-4 w-4 text-faint" aria-hidden />
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function QuickActionDock() {
   const pathname = usePathname() ?? '/';
   // The main travel hub ships its own purchase dock (SideActionDock).
   if (pathname === '/travel-insurance') return null;
 
   const actions = actionsFor(pathname);
+  // Travel sub-pages already list the brand emblems; show the flyout elsewhere.
+  const showTravelFlyout = !pathname.startsWith('/travel-insurance');
 
   return (
     <div className="no-print fixed top-1/2 z-40 hidden -translate-y-1/2 lg:block" style={{ insetInlineStart: '0.75rem' }}>
@@ -138,6 +180,7 @@ export default function QuickActionDock() {
           <Zap className="h-3 w-3" aria-hidden />
           מהיר
         </span>
+        {showTravelFlyout ? <TravelFlyout /> : null}
         {actions.map((a) => (
           <Badge key={a.key} a={a} />
         ))}

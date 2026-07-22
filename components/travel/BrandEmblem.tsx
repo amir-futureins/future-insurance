@@ -21,12 +21,17 @@ export default function BrandEmblem({
   className = '',
 }: {
   slug: string;
-  variant?: 'dock' | 'lg';
+  variant?: 'dock' | 'lg' | 'sm';
   className?: string;
 }) {
   const e = EMBLEM[slug];
   if (!e) return null;
-  const dims = variant === 'lg' ? 'h-16 w-16 text-[15px]' : 'h-12 w-12 text-[12px]';
+  const dims =
+    variant === 'lg'
+      ? 'h-16 w-16 text-[15px]'
+      : variant === 'sm'
+        ? 'h-9 w-9 text-[11px]'
+        : 'h-12 w-12 text-[12px]';
   return (
     <span
       className={`relative grid shrink-0 place-items-center rounded-full bg-white ${dims} ${className}`}
@@ -38,7 +43,7 @@ export default function BrandEmblem({
       </span>
       {e.accent2 ? (
         <span
-          className={`absolute rounded-full ${variant === 'lg' ? 'bottom-2 h-1.5 w-6' : 'bottom-1.5 h-1 w-4'}`}
+          className={`absolute rounded-full ${variant === 'lg' ? 'bottom-2 h-1.5 w-6' : variant === 'sm' ? 'bottom-1 h-0.5 w-3' : 'bottom-1.5 h-1 w-4'}`}
           style={{ backgroundColor: e.accent2 }}
         />
       ) : null}
