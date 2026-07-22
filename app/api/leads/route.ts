@@ -135,7 +135,7 @@ async function sendEmail(l: LeadRecord): Promise<void> {
   const key = process.env.RESEND_API_KEY;
   if (!key) return; // not configured — skip quietly
   const from = process.env.LEADS_FROM_EMAIL || 'Future Insurance <leads@futureins.co.il>';
-  const to = process.env.LEADS_TO_EMAIL || 'amir@il-ins.co.il';
+  const to = process.env.ADMIN_EMAIL || process.env.LEADS_TO_EMAIL || 'amir@il-ins.co.il';
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
@@ -149,14 +149,34 @@ async function sendEmail(l: LeadRecord): Promise<void> {
   if (!res.ok) throw new Error(`resend_${res.status}`);
 }
 
-/** Channel 2 — Google Sheets (Apps Script webhook). */
+/**
+ * Channel 2 — Google Sheets (Apps Script web-app webhook).
+ * Sends the canonical 8-field lead schema. Each aliased field is sent under BOTH
+ * names so the Apps Script matches whichever header it uses (a header-driven
+ * script simply ignores the unused alias).
+ */
 async function sendToSheets(l: LeadRecord): Promise<void> {
   const url = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
   if (!url) return; // not configured — skip quietly
+  const payload = {
+    timestamp: l.createdAt,
+    name: l.name,
+    fullName: l.name,
+    id: l.id ?? '',
+    idNumber: l.id ?? '',
+    dob: l.dob ?? '',
+    dateOfBirth: l.dob ?? '',
+    issueDate: l.issueDate ?? '',
+    idIssueDate: l.issueDate ?? '',
+    phone: l.phone,
+    source: l.source,
+    status: 'חדש',
+  };
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(l),
+    body: JSON.stringify(payload),
+    redirect: 'follow', // Apps Script exec URLs 302 to googleusercontent.com
   });
   if (!res.ok) throw new Error(`sheets_${res.status}`);
 }
