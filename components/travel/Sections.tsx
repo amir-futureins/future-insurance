@@ -5,6 +5,7 @@ import { FAQ_ITEMS, SITE, whatsappHref } from '@/lib/content';
 import { Reveal } from './ui';
 import MegaMenu from '@/components/MegaMenu';
 import ClientPortalButton from '@/components/ClientPortalButton';
+import ContactButton from '@/components/ContactButton';
 
 // Agency-wide navigation across all verticals (mobile strip).
 const NAV_LINKS = [
@@ -63,6 +64,7 @@ export function TrustBar() {
         <MegaMenu />
 
         <div className="flex items-center gap-2.5">
+          {/* glowing gold CTA cluster */}
           <a
             href={SITE.phoneHref}
             aria-label={SITE.phoneCta}
@@ -79,6 +81,9 @@ export function TrustBar() {
           >
             ייעוץ חינם
           </a>
+          <ContactButton />
+          {/* divider then "אזור אישי" pinned to the far-left of the action bar */}
+          <span className="mx-0.5 hidden h-6 w-px bg-white/15 sm:block" aria-hidden />
           <ClientPortalButton />
         </div>
       </div>
