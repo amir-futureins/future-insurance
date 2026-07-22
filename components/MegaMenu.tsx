@@ -58,7 +58,7 @@ const PILL =
 
 export default function MegaMenu() {
   return (
-    <nav className="hidden items-center gap-0.5 xl:flex" aria-label="ניווט ראשי">
+    <nav className="hidden items-center justify-center gap-0.5 xl:flex xl:flex-1" aria-label="ניווט ראשי">
       {MENU.map((item) =>
         item.children ? (
           <div key={item.href} className="group relative">

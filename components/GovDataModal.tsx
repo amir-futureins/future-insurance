@@ -47,6 +47,7 @@ export default function GovDataModal({
   const [dob, setDob] = useState('');
   const [issueDate, setIssueDate] = useState('');
   const [phone, setPhone] = useState('');
+  const [company, setCompany] = useState(''); // honeypot — stays empty for humans
   const [consent, setConsent] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -109,7 +110,7 @@ export default function GovDataModal({
     const post = fetch('/api/leads', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: name.trim(), phone: normPhone, id: idVal, dob, issueDate, topic, consent, idRequired: true }),
+      body: JSON.stringify({ name: name.trim(), phone: normPhone, id: idVal, dob, issueDate, topic, consent, idRequired: true, company }),
     }).catch(() => undefined);
     const minDelay = new Promise<void>((r) => { timer.current = window.setTimeout(r, 900); });
     Promise.all([post, minDelay]).then(() => setPhase('done'));
@@ -141,6 +142,11 @@ export default function GovDataModal({
             <p className="mt-2 text-[13.5px] leading-relaxed text-muted">{subtitle}</p>
 
             <form onSubmit={submit} className="mt-5 space-y-3" noValidate>
+              {/* honeypot — off-screen; real users never fill it, bots do */}
+              <div aria-hidden className="pointer-events-none absolute -left-[9999px] h-0 w-0 overflow-hidden">
+                <label htmlFor="gd-company">Company</label>
+                <input id="gd-company" name="company" value={company} onChange={(e) => setCompany(e.target.value)} tabIndex={-1} autoComplete="off" />
+              </div>
               <div>
                 <label htmlFor="gd-name" className="mb-1 block text-[13px] font-semibold text-ink">שם פרטי ומשפחה</label>
                 <input id="gd-name" ref={firstRef} value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" className={field} placeholder="ישראל ישראלי" />

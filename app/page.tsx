@@ -35,11 +35,25 @@ export const metadata: Metadata = {
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'InsuranceAgency',
+  '@id': `${SITE.url}/#organization`,
   name: SITE.name,
+  alternateName: SITE.nameHe,
   url: SITE.url,
-  areaServed: 'IL',
+  logo: `${SITE.url}/new-logo.png`,
+  image: `${SITE.url}/opengraph-image`,
+  telephone: '+972-52-842-2884',
+  priceRange: '₪₪',
+  areaServed: { '@type': 'Country', name: 'Israel' },
+  address: { '@type': 'PostalAddress', addressCountry: 'IL' },
   inLanguage: 'he-IL',
-  knowsAbout: ['ביטוח נסיעות', 'ביטוח בריאות', 'ביטוח חיים', 'ביטוח משכנתא'],
+  knowsAbout: [
+    'ביטוח נסיעות לחו״ל',
+    'ביטוח בריאות',
+    'ביטוח חיים',
+    'ביטוח משכנתא',
+    'הר הביטוח',
+    'בדיקת עבר ביטוחי',
+  ],
 };
 
 export default function HomePage() {

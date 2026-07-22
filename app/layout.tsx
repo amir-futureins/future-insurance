@@ -39,6 +39,23 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
   alternates: { canonical: '/' },
   icons: { icon: '/new-logo.png', apple: '/new-logo.png' },
+  // Sitewide OG/Twitter defaults. The share image is supplied by the
+  // app/opengraph-image.tsx file convention (overridable per-route).
+  openGraph: {
+    type: 'website',
+    locale: 'he_IL',
+    url: SITE_URL,
+    siteName: 'Future Insurance',
+    title: 'Future Insurance — ביטוח לעתיד שלך',
+    description:
+      'חנות ביטוח אחת לכל הצרכים — ביטוח נסיעות לחו״ל, בריאות, פיננסים והר הביטוח במקום אחד, עם מחשבונים חכמים והשוואת חברות.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Future Insurance — ביטוח לעתיד שלך',
+    description:
+      'כל הביטוחים במקום אחד — השוואה שקופה, מחשבונים חכמים וליווי סוכן מורשה.',
+  },
 };
 
 export const viewport: Viewport = {

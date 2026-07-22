@@ -35,10 +35,10 @@ const FOOTER_LINKS = [
 export function TrustBar() {
   return (
     <header className="no-print sticky top-0 z-40 border-b-2 border-gold bg-gradient-to-b from-navy to-navy-deep shadow-lg shadow-navy/30">
-      <div className="mx-auto flex max-w-container items-center justify-between px-5 py-2.5 md:px-10">
+      <div className="mx-auto flex max-w-container items-center justify-between gap-4 px-5 py-2 md:px-10">
         <Link
           href="/"
-          className="flex items-center gap-2.5"
+          className="flex shrink-0 items-center gap-2.5"
           aria-label="Future Insurance — סוכנות הביטוח החכמה"
         >
           <span className="grid place-items-center rounded-xl bg-white p-1.5 shadow-sm ring-1 ring-gold/30">
@@ -52,10 +52,10 @@ export function TrustBar() {
             />
           </span>
           <span className="leading-tight">
-            <span className="block text-[18px] font-extrabold tracking-tight text-white">
+            <span className="block whitespace-nowrap text-[18px] font-extrabold tracking-tight text-white">
               Future <span className="text-gold">Insurance</span>
             </span>
-            <span className="block text-[10px] font-medium text-white/60">
+            <span className="block whitespace-nowrap text-[10px] font-medium text-white/60">
               סוכנות הביטוח החכמה
             </span>
           </span>

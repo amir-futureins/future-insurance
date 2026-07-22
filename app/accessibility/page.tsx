@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: 'הצהרת נגישות',
   description: 'הצהרת הנגישות של Future Insurance בהתאם לתקן הישראלי ולתקנות הנגישות.',
   alternates: { canonical: '/accessibility' },
+  robots: { index: false, follow: true },
 };
 
 export default function AccessibilityStatement() {

@@ -47,6 +47,7 @@ export default function LeadForm({
   const [phone, setPhone] = useState('');
   const [extra, setExtra] = useState('');
   const [idValue, setIdValue] = useState('');
+  const [company, setCompany] = useState(''); // honeypot — stays empty for humans
   const [consent, setConsent] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const nameRef = useRef<HTMLInputElement>(null);
@@ -158,6 +159,7 @@ export default function LeadForm({
         topic: vertical,
         consent,
         idRequired: idField,
+        company, // honeypot
         ...(extraField ? { [extraField.name]: extra || undefined } : {}),
       }),
     }).catch(() => undefined);
@@ -220,6 +222,18 @@ export default function LeadForm({
             ) : null}
 
             <form onSubmit={handleSubmit} className="mt-5 space-y-3" noValidate>
+              {/* honeypot — off-screen; real users never fill it, bots do */}
+              <div aria-hidden className="pointer-events-none absolute -left-[9999px] h-0 w-0 overflow-hidden">
+                <label htmlFor="lf-company">Company</label>
+                <input
+                  id="lf-company"
+                  name="company"
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </div>
               <div>
                 <label htmlFor="lf-name" className="mb-1 block text-[13px] font-semibold text-ink">
                   שם מלא

@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   description:
     'תקנון האתר, תנאי השימוש ומדיניות הפרטיות של Future Insurance — הרשאה לשאילתא בהר הביטוח, מסירת מידע לחברות ביטוח מורשות, דיוור שיווקי ופטור מאחריות.',
   alternates: { canonical: '/terms' },
+  robots: { index: false, follow: true },
 };
 
 const UPDATED = '22 ביולי 2026';
