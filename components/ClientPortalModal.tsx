@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { X, Lock, ArrowLeft, Loader2, CheckCircle2, Phone } from 'lucide-react';
 import { whatsappHref, SITE } from '@/lib/content';
+import { submitLead } from '@/lib/submit-lead';
 import ConsentCheckbox from '@/components/ConsentCheckbox';
 
 /**
@@ -84,12 +85,18 @@ export default function ClientPortalModal({ open, onClose }: { open: boolean; on
     }
     setError(null);
     setPhase('sending');
-    fetch('/api/leads', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: 'בקשת אזור אישי', phone: p, topic: 'client_portal', consent }),
-    }).catch(() => undefined);
-    timer.current = window.setTimeout(() => setPhase('sent'), 700);
+    const minDelay = new Promise<void>((r) => { timer.current = window.setTimeout(r, 700); });
+    Promise.all([
+      submitLead({ name: 'בקשת אזור אישי', phone: p, topic: 'client_portal', consent }),
+      minDelay,
+    ]).then(([result]) => {
+      if (result.ok || result.kind === 'network') {
+        setPhase('sent');
+      } else {
+        setError(result.message);
+        setPhase('form');
+      }
+    });
   };
 
   const field =

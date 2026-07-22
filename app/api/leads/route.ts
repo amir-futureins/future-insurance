@@ -17,8 +17,11 @@ export const runtime = 'nodejs';
 
 interface LeadPayload {
   name?: unknown;
+  fullName?: unknown; // alias for name
   phone?: unknown;
+  phoneNumber?: unknown; // alias for phone
   id?: unknown;
+  idNumber?: unknown; // alias for id
   topic?: unknown;
   consent?: unknown;
   idRequired?: unknown;
@@ -133,9 +136,13 @@ function buildEmailHtml(l: LeadRecord): string {
 /** Channel 1 — admin e-mail via the Resend REST API (no SDK dependency). */
 async function sendEmail(l: LeadRecord): Promise<void> {
   const key = process.env.RESEND_API_KEY;
-  if (!key) return; // not configured — skip quietly
+  if (!key) {
+    console.warn('[leads] email: SKIPPED — RESEND_API_KEY is not set in process.env');
+    return;
+  }
   const from = process.env.LEADS_FROM_EMAIL || 'Future Insurance <leads@futureins.co.il>';
   const to = process.env.ADMIN_EMAIL || process.env.LEADS_TO_EMAIL || 'amir@il-ins.co.il';
+  console.info(`[leads] email: POST → Resend (to=${to})`);
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
@@ -146,6 +153,8 @@ async function sendEmail(l: LeadRecord): Promise<void> {
       html: buildEmailHtml(l),
     }),
   });
+  const bodyText = await res.text().catch(() => '');
+  console.info(`[leads] email: response ${res.status} · ${bodyText.slice(0, 100)}`);
   if (!res.ok) throw new Error(`resend_${res.status}`);
 }
 
@@ -157,7 +166,10 @@ async function sendEmail(l: LeadRecord): Promise<void> {
  */
 async function sendToSheets(l: LeadRecord): Promise<void> {
   const url = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
-  if (!url) return; // not configured — skip quietly
+  if (!url) {
+    console.warn('[leads] sheets: SKIPPED — GOOGLE_SHEETS_WEBHOOK_URL is not set in process.env');
+    return;
+  }
   const payload = {
     timestamp: l.createdAt,
     name: l.name,
@@ -172,12 +184,15 @@ async function sendToSheets(l: LeadRecord): Promise<void> {
     source: l.source,
     status: 'חדש',
   };
+  console.info(`[leads] sheets: POST → ${url.slice(0, 52)}… (source=${l.source})`);
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
     redirect: 'follow', // Apps Script exec URLs 302 to googleusercontent.com
   });
+  const bodyText = await res.text().catch(() => '');
+  console.info(`[leads] sheets: response ${res.status} · ${bodyText.slice(0, 100)}`);
   if (!res.ok) throw new Error(`sheets_${res.status}`);
 }
 
@@ -222,8 +237,15 @@ async function dispatchLead(l: LeadRecord): Promise<void> {
     ['webhook', () => forwardWebhook(l)],
   ];
   const results = await Promise.allSettled(channels.map(([, run]) => run()));
+  const summary = results
+    .map((r, i) => `${channels[i][0]}:${r.status === 'fulfilled' ? 'ok' : 'FAIL'}`)
+    .join(' ');
+  console.info(`[leads] dispatch summary → ${summary}`);
   results.forEach((r, i) => {
-    if (r.status === 'rejected') console.error(`[leads] channel "${channels[i][0]}" failed:`, r.reason);
+    if (r.status === 'rejected') {
+      const reason = r.reason instanceof Error ? r.reason.message : String(r.reason);
+      console.error(`[leads] ✗ channel "${channels[i][0]}" failed:`, reason);
+    }
   });
 }
 
@@ -240,8 +262,12 @@ export async function POST(req: NextRequest) {
   try {
     body = (await req.json()) as LeadPayload;
   } catch {
+    console.error('[leads] ✗ invalid JSON body');
     return NextResponse.json({ ok: false, error: 'invalid_json' }, { status: 400 });
   }
+
+  // Log incoming payload KEYS only (never PII values) for field-name debugging.
+  console.info('[leads] ← incoming payload keys:', Object.keys(body ?? {}).join(', ') || '(none)');
 
   // Honeypot: pretend success so the bot moves on, but drop the lead silently.
   if (str(body.company, 100).trim() !== '') {
@@ -250,9 +276,10 @@ export async function POST(req: NextRequest) {
   }
 
   // Coerce every field through `str` — a non-string payload can never throw now.
-  const name = str(body.name, 80).trim();
-  const phone = str(body.phone, 20).replace(/[\s-]/g, '');
-  const id = str(body.id, 20).replace(/\D/g, '');
+  // Accept common field-name aliases so a form never fails on naming alone.
+  const name = str(body.name ?? body.fullName, 80).trim();
+  const phone = str(body.phone ?? body.phoneNumber, 20).replace(/[\s-]/g, '');
+  const id = str(body.id ?? body.idNumber, 20).replace(/\D/g, '');
   const topic = str(body.topic, 40).trim() || 'general';
   const consent = body.consent === true;
   const idRequired = body.idRequired === true;

@@ -5,6 +5,7 @@ import { X, ShieldCheck, Loader2, CheckCircle2, Radar, Phone, ArrowLeft } from '
 import { trackEvent } from '@/lib/gtm';
 import { WHATSAPP, SITE } from '@/lib/content';
 import { isValidIsraeliId, sanitizeId } from '@/lib/israeli-id';
+import { submitLead } from '@/lib/submit-lead';
 import ConsentCheckbox from '@/components/ConsentCheckbox';
 
 /**
@@ -107,13 +108,16 @@ export default function GovDataModal({
     setError(null);
     setPhase('submitting');
     trackEvent('generate_lead', { vertical: topic });
-    const post = fetch('/api/leads', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: name.trim(), phone: normPhone, id: idVal, dob, issueDate, topic, consent, idRequired: true, company }),
-    }).catch(() => undefined);
+    const payload = { name: name.trim(), phone: normPhone, id: idVal, dob, issueDate, topic, consent, idRequired: true, company };
     const minDelay = new Promise<void>((r) => { timer.current = window.setTimeout(r, 900); });
-    Promise.all([post, minDelay]).then(() => setPhase('done'));
+    Promise.all([submitLead(payload), minDelay]).then(([result]) => {
+      if (result.ok || result.kind === 'network') {
+        setPhase('done'); // success — or transient blip; WhatsApp handoff still works
+      } else {
+        setError(result.message); // 422 / 429 — let the user fix and retry
+        setPhase('form');
+      }
+    });
   };
 
   const field = 'glass-chip w-full rounded-xl px-4 py-3 text-[15px] text-ink placeholder:text-faint focus:outline-none focus-visible:ring-2 focus-visible:ring-gold';

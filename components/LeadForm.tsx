@@ -6,6 +6,7 @@ import { trackEvent } from '@/lib/gtm';
 import { WHATSAPP, SITE } from '@/lib/content';
 import ConsentCheckbox from '@/components/ConsentCheckbox';
 import { isValidIsraeliId, sanitizeId } from '@/lib/israeli-id';
+import { submitLead } from '@/lib/submit-lead';
 
 export interface LeadFormExtraField {
   label: string;
@@ -147,27 +148,31 @@ export default function LeadForm({
       vertical,
       ...(extraField ? { [extraField.name]: extra || 'לא צוין' } : {}),
     });
-    // Best-effort POST to the unified intake; the WhatsApp/call handoff on the
-    // success step is the real conversion, so a network hiccup never blocks it.
-    const post = fetch('/api/leads', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: name.trim(),
-        phone: normalized,
-        id: idField ? idValue : undefined,
-        topic: vertical,
-        consent,
-        idRequired: idField,
-        company, // honeypot
-        ...(extraField ? { [extraField.name]: extra || undefined } : {}),
-      }),
-    }).catch(() => undefined);
+    // POST to the unified intake. Validation (422) / rate-limit (429) are shown
+    // to the user; a transient network/5xx blip falls through to the success step
+    // (the WhatsApp/call handoff is the real conversion, never block it).
+    const payload = {
+      name: name.trim(),
+      phone: normalized,
+      id: idField ? idValue : undefined,
+      topic: vertical,
+      consent,
+      idRequired: idField,
+      company, // honeypot
+      ...(extraField ? { [extraField.name]: extra || undefined } : {}),
+    };
     // Keep the "submitting" state smooth (min ~650ms) regardless of network speed.
     const minDelay = new Promise<void>((resolve) => {
       submitTimer.current = window.setTimeout(resolve, 650);
     });
-    Promise.all([post, minDelay]).then(() => setPhase('done'));
+    Promise.all([submitLead(payload), minDelay]).then(([result]) => {
+      if (result.ok || result.kind === 'network') {
+        setPhase('done');
+      } else {
+        setError(result.message);
+        setPhase('form');
+      }
+    });
   };
 
   const field =
