@@ -49,7 +49,7 @@ export default function StickyLeftGovCTA() {
 
   return (
     <>
-      <div className="no-print fixed bottom-28 left-0 z-40 animate-nudge-x">
+      <div className="no-print fixed bottom-28 left-0 z-40 hidden animate-nudge-x md:block">
         <button
           type="button"
           onClick={() => setOpen(true)}

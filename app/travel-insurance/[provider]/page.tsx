@@ -116,29 +116,80 @@ export default function BrandPage({ params }: { params: { provider: string } }) 
     <main>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      {/* prominent brand emblem (stylized wordmark — see BrandEmblem for the real-logo swap) */}
-      <div className="mx-auto flex max-w-container items-center justify-center gap-3 px-6 pt-6 md:justify-start md:px-10">
-        <BrandEmblem slug={brand.slug} variant="lg" />
-        <div className="text-center md:text-start">
-          <div className="text-[19px] font-extrabold text-ink">ביטוח נסיעות {brand.name}</div>
-          <div className="text-[13px] text-muted">{brand.appBadge.title}</div>
+      {/* ============ MOBILE-ONLY converting above-the-fold (md:hidden) ============ */}
+      <section className="px-4 pt-4 md:hidden">
+        <div className="overflow-hidden rounded-3xl shadow-xl ring-1 ring-black/5">
+          <div className="flex items-center gap-3 px-4 py-3.5 text-white" style={{ backgroundColor: brand.accent }}>
+            <BrandEmblem slug={brand.slug} variant="sm" />
+            <div className="min-w-0">
+              <div className="text-[15px] font-extrabold leading-tight">ביטוח נסיעות {brand.name}</div>
+              <div className="truncate text-[12px] opacity-90">{brand.appBadge.title}</div>
+            </div>
+            <span className="ms-auto inline-flex shrink-0 items-center gap-1 rounded-full bg-white/20 px-2 py-1 text-[12px] font-bold">
+              <Star className="h-3 w-3 fill-current" aria-hidden />
+              {brand.ratingScore}
+            </span>
+          </div>
+          <div className="bg-white p-4">
+            {/* tidy 2×2 tag grid instead of scattered badges */}
+            <div className="grid grid-cols-2 gap-2">
+              {['✈️ פוליסה מיידית', '📱 כרטיס דיגיטלי', `${brand.appBadge.emoji} ${brand.appBadge.title}`, '🛟 ליווי סוכן מורשה'].map(
+                (tag) => (
+                  <span
+                    key={tag}
+                    className="truncate rounded-xl bg-slate-50 px-3 py-2 text-center text-[12.5px] font-bold text-ink ring-1 ring-slate-100"
+                  >
+                    {tag}
+                  </span>
+                ),
+              )}
+            </div>
+            {/* ONE big buy button → affiliate deep-link (/api/go → AFFILIATE_*) */}
+            <a
+              href={`/api/go/${brand.slug}`}
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              className="mt-3.5 flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-4 text-[17px] font-extrabold text-white shadow-lg transition-transform active:scale-[0.98]"
+              style={{ backgroundColor: brand.accent, boxShadow: `0 12px 28px -8px ${brand.accent}` }}
+            >
+              קליק לרכישה מיידית 🚀
+            </a>
+            <a
+              href="#calculator"
+              className="mt-2.5 block text-center text-[13px] font-bold text-muted underline underline-offset-2"
+            >
+              למחשבון המחיר והשוואת חברות
+            </a>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <PageHero
-        icon={ShieldCheck}
-        eyebrow={`ביטוח נסיעות · ${brand.name}`}
-        title={
-          <>
-            ביטוח נסיעות <span style={{ color: brand.accent }}>{brand.name}</span> — מחיר ורכישה מיידית
-          </>
-        }
-        subtitle={`${p.tagline} — מחשבון עלות יומית, השוואה מול החברות המובילות ורכישה דיגיטלית מיידית בליווי סוכן מורשה.`}
-        badges={['✈️ פוליסה מיידית', `${brand.appBadge.emoji} ${brand.appBadge.title}`, '📱 כרטיס דיגיטלי']}
-        primary={{ href: '#calculator', label: 'למחשבון המחיר' }}
-        secondary={{ href: whatsappHref(), label: 'ייעוץ מהיר בוואטסאפ', external: true }}
-        visual={<BrandPass brand={brand} />}
-      />
+      {/* ============ DESKTOP / TABLET hero (unchanged; hidden on mobile) ============ */}
+      <div className="hidden md:block">
+        {/* prominent brand emblem (stylized wordmark — see BrandEmblem for the real-logo swap) */}
+        <div className="mx-auto flex max-w-container items-center justify-center gap-3 px-6 pt-6 md:justify-start md:px-10">
+          <BrandEmblem slug={brand.slug} variant="lg" />
+          <div className="text-center md:text-start">
+            <div className="text-[19px] font-extrabold text-ink">ביטוח נסיעות {brand.name}</div>
+            <div className="text-[13px] text-muted">{brand.appBadge.title}</div>
+          </div>
+        </div>
+
+        <PageHero
+          icon={ShieldCheck}
+          eyebrow={`ביטוח נסיעות · ${brand.name}`}
+          title={
+            <>
+              ביטוח נסיעות <span style={{ color: brand.accent }}>{brand.name}</span> — מחיר ורכישה מיידית
+            </>
+          }
+          subtitle={`${p.tagline} — מחשבון עלות יומית, השוואה מול החברות המובילות ורכישה דיגיטלית מיידית בליווי סוכן מורשה.`}
+          badges={['✈️ פוליסה מיידית', `${brand.appBadge.emoji} ${brand.appBadge.title}`, '📱 כרטיס דיגיטלי']}
+          primary={{ href: '#calculator', label: 'למחשבון המחיר' }}
+          secondary={{ href: whatsappHref(), label: 'ייעוץ מהיר בוואטסאפ', external: true }}
+          visual={<BrandPass brand={brand} />}
+        />
+      </div>
 
       <div className="px-6 md:px-10">
         <BrandCalculator brand={brand} />

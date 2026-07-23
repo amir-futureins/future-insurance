@@ -190,7 +190,8 @@ export default function AiAssistantWidget() {
       {/* trigger + nudge bubble */}
       <div className="fixed bottom-36 start-4 z-[55] lg:bottom-6 lg:start-5">
         {!open && bubble ? (
-          <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 animate-bubble-in">
+          // Desktop-only nudge — on mobile this popup covered the main CTAs.
+          <div className="absolute right-full mr-3 top-1/2 hidden -translate-y-1/2 animate-bubble-in md:block">
             <button
               type="button"
               onClick={() => {
