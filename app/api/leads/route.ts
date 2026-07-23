@@ -369,8 +369,7 @@ export async function POST(req: NextRequest) {
     consent: true,
   });
 
-  // Durable channel first (fast, local) — the lead is stored before we respond,
-  // so it is never lost even if the external channels are slow or fail.
+  // Local CRM store (best-effort; no-op on a read-only serverless FS like Vercel).
   try {
     await saveToCrm(record);
     console.info('[leads] crm: ok');
@@ -378,10 +377,11 @@ export async function POST(req: NextRequest) {
     console.error('[leads] ✗ crm failed:', e instanceof Error ? e.message : e);
   }
 
-  // External channels (email / Sheets / webhook) fire in the background with
-  // bounded timeouts, so the user gets an immediate success response while
-  // dispatch happens in parallel. (No next/after in 14.2 → in-process.)
-  void dispatchExternal(record).catch((e) => console.error('[leads] dispatch error', e));
+  // AWAIT the external channels (email / Sheets / webhook) before responding.
+  // On Vercel serverless, un-awaited "background" work is frozen the moment the
+  // response is sent — so a fire-and-forget dispatch silently drops the lead.
+  // Each channel is timeout-bounded (8s) so this can't hang the request.
+  await dispatchExternal(record);
 
   return NextResponse.json({ ok: true, message: SUCCESS }, { status: 200 });
 }

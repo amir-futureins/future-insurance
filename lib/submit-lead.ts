@@ -24,11 +24,17 @@ const FIELD_HE: Record<string, string> = {
 };
 
 export async function submitLead(payload: Record<string, unknown>): Promise<LeadSubmitResult> {
+  // Hard client-side timeout so a hung/slow request can never leave the form
+  // spinner stuck forever on a flaky mobile connection — it resolves to
+  // `network` and the form falls through to the WhatsApp/call handoff.
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 15000);
   try {
     const res = await fetch('/api/leads', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
+      signal: ctrl.signal,
     });
     if (res.ok) return { ok: true };
 
@@ -51,5 +57,7 @@ export async function submitLead(payload: Record<string, unknown>): Promise<Lead
     return { ok: false, kind: 'network' };
   } catch {
     return { ok: false, kind: 'network' };
+  } finally {
+    clearTimeout(timer);
   }
 }

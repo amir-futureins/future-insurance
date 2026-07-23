@@ -283,6 +283,30 @@ details[open] .faq-chevron {
 
 /* ---- Accessibility & performance --------------------------------- */
 
+/* Sticky-safe horizontal overflow guard (clip doesn't create a scroll
+   container, so the sticky navbar keeps working). Prevents any stray-wide
+   element from causing sideways page scroll on mobile. */
+body {
+  overflow-x: clip;
+}
+
+/* Mobile paint budget: the ambient blurred-orb pulses and animated box-shadows
+   are cheap on desktop but cause continuous repaints (scroll jank) on mid/low-
+   end phones. Freeze the paint-heavy infinite animations ≤640px; the site keeps
+   its full motion on larger screens. */
+@media (max-width: 640px) {
+  .animate-orb-pulse,
+  .animate-pulse-glow,
+  .animate-float-y,
+  .animate-drift-slow,
+  .animate-drift-slower,
+  .animate-twinkle,
+  .animate-dash-flow,
+  .animate-sheen {
+    animation: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

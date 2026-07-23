@@ -21,7 +21,7 @@ export default function FloatingPurchaseCTA({
 }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="no-print fixed bottom-24 left-1/2 z-[60] -translate-x-1/2 lg:bottom-8">
+    <div className="no-print fixed bottom-8 left-1/2 z-[60] hidden -translate-x-1/2 lg:block">
       <button
         type="button"
         onClick={() => setOpen(true)}

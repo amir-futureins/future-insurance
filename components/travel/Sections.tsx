@@ -4,20 +4,9 @@ import { Phone, Scale, Zap, Headset, ChevronDown, Sparkles } from 'lucide-react'
 import { FAQ_ITEMS, SITE, whatsappHref } from '@/lib/content';
 import { Reveal } from './ui';
 import MegaMenu from '@/components/MegaMenu';
+import MobileNav from '@/components/MobileNav';
 import ClientPortalButton from '@/components/ClientPortalButton';
 import ContactButton from '@/components/ContactButton';
-
-// Agency-wide navigation across all verticals (mobile strip).
-const NAV_LINKS = [
-  { href: '/', label: 'בית' },
-  { href: '/travel-insurance', label: 'חו״ל' },
-  { href: '/har-habituach', label: 'הר הביטוח' },
-  { href: '/finance', label: 'פנסיה וגמל' },
-  { href: '/health', label: 'בריאות' },
-  { href: '/life', label: 'חיים' },
-  { href: '/mortgage', label: 'משכנתא' },
-  { href: '/business-insurance', label: 'עסק' },
-];
 
 // Footer product links (fuller labels).
 const FOOTER_LINKS = [
@@ -64,46 +53,35 @@ export function TrustBar() {
         <MegaMenu />
 
         <div className="flex items-center gap-2.5">
-          {/* glowing gold CTA cluster */}
-          <a
-            href={SITE.phoneHref}
-            aria-label={SITE.phoneCta}
-            className="hidden h-fit shrink-0 items-center gap-2 whitespace-nowrap rounded-xl bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 px-3.5 py-2 text-[14px] font-bold text-navy-deep shadow-[0_0_15px_rgba(251,191,36,0.6)] ring-1 ring-amber-300/50 transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[0_0_22px_rgba(251,191,36,0.85)] sm:inline-flex"
-          >
-            <Phone className="h-4 w-4" aria-hidden />
-            {SITE.phoneCta}
-          </a>
-          <a
-            href={whatsappHref()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden h-fit shrink-0 whitespace-nowrap rounded-xl bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 px-4 py-2 text-[14px] font-extrabold text-navy-deep shadow-[0_0_15px_rgba(251,191,36,0.6)] ring-1 ring-amber-300/50 transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[0_0_22px_rgba(251,191,36,0.85)] md:inline-block"
-          >
-            ייעוץ חינם
-          </a>
-          <ContactButton />
-          {/* divider then "אזור אישי" pinned to the far-left of the action bar */}
-          <span className="mx-0.5 hidden h-6 w-px bg-white/15 sm:block" aria-hidden />
-          <ClientPortalButton />
+          {/* desktop action cluster — xl only (below xl the hamburger takes over) */}
+          <div className="hidden items-center gap-2.5 xl:flex">
+            {/* glowing gold CTA cluster */}
+            <a
+              href={SITE.phoneHref}
+              aria-label={SITE.phoneCta}
+              className="inline-flex h-fit shrink-0 items-center gap-2 whitespace-nowrap rounded-xl bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 px-3.5 py-2 text-[14px] font-bold text-navy-deep shadow-[0_0_15px_rgba(251,191,36,0.6)] ring-1 ring-amber-300/50 transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[0_0_22px_rgba(251,191,36,0.85)]"
+            >
+              <Phone className="h-4 w-4" aria-hidden />
+              {SITE.phoneCta}
+            </a>
+            <a
+              href={whatsappHref()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block h-fit shrink-0 whitespace-nowrap rounded-xl bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 px-4 py-2 text-[14px] font-extrabold text-navy-deep shadow-[0_0_15px_rgba(251,191,36,0.6)] ring-1 ring-amber-300/50 transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[0_0_22px_rgba(251,191,36,0.85)]"
+            >
+              ייעוץ חינם
+            </a>
+            <ContactButton />
+            {/* divider then "אזור אישי" pinned to the far-left of the action bar */}
+            <span className="mx-0.5 h-6 w-px bg-white/15" aria-hidden />
+            <ClientPortalButton />
+          </div>
+
+          {/* mobile/tablet hamburger — full nav (incl. sub-categories) + actions */}
+          <MobileNav />
         </div>
       </div>
-
-      {/* mobile/tablet nav — the desktop nav is xl-only, so surface the
-          vertical links here as a horizontal scroll strip below xl */}
-      <nav
-        className="hide-scroll flex gap-2 overflow-x-auto border-t border-white/10 px-4 pb-2.5 pt-1 xl:hidden"
-        aria-label="ניווט מהיר"
-      >
-        {NAV_LINKS.map((l) => (
-          <a
-            key={l.href}
-            href={l.href}
-            className="shrink-0 rounded-lg bg-white/5 px-3 py-1.5 text-[13px] font-bold text-white transition-colors hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-bright"
-          >
-            {l.label}
-          </a>
-        ))}
-      </nav>
     </header>
   );
 }
