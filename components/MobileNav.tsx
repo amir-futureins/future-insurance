@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
-import { Menu, X, ChevronDown, Phone, MessageCircle } from 'lucide-react';
+import { Menu, X, ChevronDown, Phone, MessageCircle, LogIn } from 'lucide-react';
 import { NAV_MENU } from '@/lib/nav';
 import { SITE, whatsappHref } from '@/lib/content';
 import { useBodyScrollLock } from '@/lib/use-body-scroll-lock';
@@ -137,6 +137,17 @@ export default function MobileNav() {
                 חייגו
               </a>
             </div>
+
+            <a
+              href="/admin/leads"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={close}
+              className="flex items-center justify-center gap-2 border-t border-white/10 px-4 py-3.5 text-[13.5px] font-bold text-white/70 transition-colors hover:bg-white/5 hover:text-white"
+            >
+              <LogIn className="h-4 w-4" aria-hidden />
+              כניסת סוכנים
+            </a>
           </div>
         </div>,
           document.body,

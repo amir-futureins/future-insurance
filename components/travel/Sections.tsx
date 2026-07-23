@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Phone, Scale, Zap, Headset, ChevronDown, Sparkles } from 'lucide-react';
+import { Phone, Scale, Zap, Headset, ChevronDown, Sparkles, LogIn } from 'lucide-react';
 import { FAQ_ITEMS, SITE, whatsappHref } from '@/lib/content';
 import { Reveal } from './ui';
 import MegaMenu from '@/components/MegaMenu';
@@ -59,7 +59,7 @@ export function TrustBar() {
             <a
               href={SITE.phoneHref}
               aria-label={SITE.phoneCta}
-              className="inline-flex h-fit shrink-0 items-center gap-2 whitespace-nowrap rounded-xl bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 px-3.5 py-2 text-[14px] font-bold text-navy-deep shadow-[0_0_15px_rgba(251,191,36,0.6)] ring-1 ring-amber-300/50 transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[0_0_22px_rgba(251,191,36,0.85)]"
+              className="hidden h-fit shrink-0 items-center gap-2 whitespace-nowrap rounded-xl bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 px-3.5 py-2 text-[14px] font-bold text-navy-deep shadow-[0_0_15px_rgba(251,191,36,0.6)] ring-1 ring-amber-300/50 transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[0_0_22px_rgba(251,191,36,0.85)] 2xl:inline-flex"
             >
               <Phone className="h-4 w-4" aria-hidden />
               {SITE.phoneCta}
@@ -73,9 +73,19 @@ export function TrustBar() {
               ייעוץ חינם
             </a>
             <ContactButton />
-            {/* divider then "אזור אישי" pinned to the far-left of the action bar */}
+            {/* divider then "אזור אישי" + staff "כניסת סוכנים" at the far-left */}
             <span className="mx-0.5 h-6 w-px bg-white/15" aria-hidden />
             <ClientPortalButton />
+            <a
+              href="/admin/leads"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="כניסת סוכנים — אזור ניהול"
+              className="inline-flex h-fit shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl border border-white/15 bg-white/5 px-3.5 py-2 text-[14px] font-bold text-white/90 transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-bright"
+            >
+              <LogIn className="h-4 w-4" aria-hidden />
+              כניסת סוכנים
+            </a>
           </div>
 
           {/* mobile/tablet hamburger — full nav (incl. sub-categories) + actions */}
