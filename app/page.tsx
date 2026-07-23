@@ -70,18 +70,18 @@ export default function HomePage() {
       <HomeActionHub />
 
       {/* ---- MOBILE-ONLY travel quick-buy banner (md:hidden) ---- */}
-      <section className="px-4 pt-4 md:hidden">
-        <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-navy to-navy-deep p-5 shadow-xl ring-1 ring-white/10">
-          <div className="flex items-center gap-1.5 text-[12px] font-bold text-gold-bright">
+      <section className="px-4 pt-3.5 md:hidden">
+        <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white/85 p-4 shadow-lg backdrop-blur-sm">
+          <div className="flex items-center gap-1.5 text-[12px] font-bold text-gold-deep">
             <span aria-hidden>✈️</span> ביטוח נסיעות לחו״ל
           </div>
-          <h2 className="mt-1 text-[21px] font-extrabold leading-tight text-white">
+          <h2 className="mt-1 text-[19px] font-extrabold leading-tight text-ink">
             רכישה מהירה אונליין — בחרו חברה
           </h2>
-          <p className="mt-1 text-[13px] leading-snug text-white/70">
+          <p className="mt-1 text-[12.5px] leading-snug text-muted">
             פוליסה דיגיטלית מיידית · השוואת מחירים · ליווי סוכן מורשה
           </p>
-          <div className="mt-4 grid grid-cols-2 gap-2.5">
+          <div className="mt-3.5 grid grid-cols-2 gap-2.5">
             {[
               ['passportcard', 'PassportCard'],
               ['harel', 'הראל'],
@@ -91,11 +91,11 @@ export default function HomePage() {
               <Link
                 key={slug}
                 href={`/travel-insurance/${slug}`}
-                className="flex items-center gap-2.5 rounded-2xl bg-white/10 p-2.5 ring-1 ring-white/15 transition-colors active:bg-white/20"
+                className="flex items-center gap-2.5 rounded-2xl border border-slate-200 bg-slate-50 p-2.5 transition-colors active:bg-slate-100"
               >
                 <BrandEmblem slug={slug} variant="sm" />
-                <span className="flex-1 text-start text-[14px] font-bold text-white">{label}</span>
-                <ArrowLeft className="h-4 w-4 shrink-0 text-white/60" aria-hidden />
+                <span className="flex-1 text-start text-[14px] font-bold text-ink">{label}</span>
+                <ArrowLeft className="h-4 w-4 shrink-0 text-faint" aria-hidden />
               </Link>
             ))}
           </div>

@@ -71,43 +71,50 @@ const ACTIONS: Action[] = [
   },
 ];
 
+// Light + airy on mobile, deep-navy on desktop (desktop must stay unchanged).
 const CARD =
-  'group flex flex-col items-center rounded-2xl border border-white/10 bg-white/5 p-4 text-center transition-all duration-200 hover:-translate-y-1 hover:bg-white/10 hover:ring-1 hover:ring-gold/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-bright md:items-start md:p-5 md:text-start';
+  'group flex flex-col items-center rounded-2xl border border-slate-200 bg-white p-3 text-center transition-all duration-200 hover:-translate-y-1 hover:ring-1 hover:ring-gold/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-bright md:border-white/10 md:bg-white/5 md:p-5 md:hover:bg-white/10 md:items-start md:text-start';
 
 export default function HomeActionHub() {
   const [form, setForm] = useState<FormCfg | null>(null);
 
   return (
-    <section className="mx-auto w-full max-w-container px-4 pt-6 md:px-10 md:pt-10">
-      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-navy to-navy-deep p-5 shadow-xl md:p-8">
-        {/* decorative floating orbs */}
-        <div aria-hidden className="pointer-events-none absolute -top-10 end-[-3rem] h-40 w-40 rounded-full bg-glow-gold opacity-40 blur-3xl" />
-        <div aria-hidden className="pointer-events-none absolute bottom-[-4rem] start-[-3rem] h-48 w-48 rounded-full bg-glow-navy opacity-40 blur-3xl" />
+    <section className="mx-auto w-full max-w-container px-4 pt-5 md:px-10 md:pt-10">
+      <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white/85 p-4 shadow-lg backdrop-blur-sm md:border-white/10 md:bg-gradient-to-br md:from-navy md:to-navy-deep md:p-8 md:shadow-xl">
+        {/* decorative floating orbs — desktop only (keeps mobile clean & light) */}
+        <div aria-hidden className="pointer-events-none absolute -top-10 end-[-3rem] hidden h-40 w-40 rounded-full bg-glow-gold opacity-40 blur-3xl md:block" />
+        <div aria-hidden className="pointer-events-none absolute bottom-[-4rem] start-[-3rem] hidden h-48 w-48 rounded-full bg-glow-navy opacity-40 blur-3xl md:block" />
 
         <div className="relative">
           <div className="text-center md:text-start">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[12px] font-bold text-gold-bright ring-1 ring-white/15">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-gold-tint px-3 py-1 text-[12px] font-bold text-gold-deep ring-1 ring-gold/25 md:bg-white/10 md:text-gold-bright md:ring-white/15">
               ⚡ מרכז פעולה מהיר
             </span>
-            <h2 className="mt-3 text-[clamp(22px,5.5vw,30px)] font-extrabold leading-tight text-white">
+            <h2 className="mt-2.5 text-[clamp(20px,5.2vw,30px)] font-extrabold leading-tight text-ink md:mt-3 md:text-white">
               מה תרצה לעשות היום?
             </h2>
-            <p className="mt-1.5 text-[14px] leading-snug text-white/65">בחרו פעולה — ונטפל בזה עבורכם תוך דקות.</p>
+            <p className="mt-1 text-[13.5px] leading-snug text-muted md:mt-1.5 md:text-[14px] md:text-white/65">
+              בחרו פעולה — ונטפל בזה עבורכם תוך דקות.
+            </p>
           </div>
 
-          <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <div className="mt-4 grid grid-cols-2 gap-2.5 md:mt-6 md:gap-3 lg:grid-cols-4">
             {ACTIONS.map((a, i) => {
               const inner = (
                 <>
                   <span
-                    className="grid h-14 w-14 shrink-0 animate-float place-items-center rounded-2xl text-white ring-1 ring-white/20"
+                    className="grid h-12 w-12 shrink-0 animate-float place-items-center rounded-2xl text-white ring-1 ring-white/20 md:h-14 md:w-14"
                     style={{ backgroundColor: a.accent, animationDelay: `${i * 0.45}s`, boxShadow: `0 10px 24px -8px ${a.accent}` }}
                   >
-                    <a.Icon className="h-7 w-7" aria-hidden />
+                    <a.Icon className="h-6 w-6 md:h-7 md:w-7" aria-hidden />
                   </span>
-                  <span className="mt-3 block text-[15px] font-extrabold leading-tight text-white">{a.label}</span>
-                  <span className="mt-1 block text-[12.5px] leading-snug text-white/60">{a.sub}</span>
-                  <span className="mt-2 inline-flex items-center gap-1 text-[12.5px] font-bold text-gold-bright">
+                  <span className="mt-2.5 block text-[14px] font-extrabold leading-tight text-ink md:mt-3 md:text-[15px] md:text-white">
+                    {a.label}
+                  </span>
+                  <span className="mt-0.5 block text-[12px] leading-snug text-muted md:mt-1 md:text-[12.5px] md:text-white/60">
+                    {a.sub}
+                  </span>
+                  <span className="mt-1.5 inline-flex items-center gap-1 text-[12px] font-bold text-gold-deep md:mt-2 md:text-[12.5px] md:text-gold-bright">
                     {a.href ? 'לרכישה מיידית' : 'להשארת פרטים'}
                     <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" aria-hidden />
                   </span>

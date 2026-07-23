@@ -21,6 +21,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { NAV_MENU } from '@/lib/nav';
+import SocialLinks from '@/components/SocialLinks';
 
 /** Elegant per-category icons for the mobile drawer. */
 const NAV_ICON: Record<string, LucideIcon> = {
@@ -175,16 +176,19 @@ export default function MobileNav() {
               </a>
             </div>
 
-            <a
-              href="/admin/leads"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={close}
-              className="flex items-center justify-center gap-2 border-t border-white/10 px-4 py-3.5 text-[13.5px] font-bold text-white/70 transition-colors hover:bg-white/5 hover:text-white"
-            >
-              <LogIn className="h-4 w-4" aria-hidden />
-              כניסת סוכנים
-            </a>
+            <div className="flex items-center justify-between gap-3 border-t border-white/10 px-4 py-3.5">
+              <a
+                href="/admin/leads"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={close}
+                className="inline-flex items-center gap-2 text-[13.5px] font-bold text-white/70 transition-colors hover:text-white"
+              >
+                <LogIn className="h-4 w-4" aria-hidden />
+                כניסת סוכנים
+              </a>
+              <SocialLinks variant="drawer" />
+            </div>
           </div>
         </div>,
           document.body,

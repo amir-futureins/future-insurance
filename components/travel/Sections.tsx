@@ -5,6 +5,7 @@ import { FAQ_ITEMS, SITE, whatsappHref } from '@/lib/content';
 import { Reveal } from './ui';
 import MegaMenu from '@/components/MegaMenu';
 import MobileNav from '@/components/MobileNav';
+import SocialLinks from '@/components/SocialLinks';
 import ClientPortalButton from '@/components/ClientPortalButton';
 import ContactButton from '@/components/ContactButton';
 
@@ -236,8 +237,9 @@ export function SiteFooter() {
             </a>
           ))}
         </nav>
-        <div className="mt-6 flex flex-col gap-3 border-t border-navy/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-6 flex flex-col gap-4 border-t border-navy/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-[12px] text-faint">© {SITE.name} · futureins.co.il · כל הזכויות שמורות</p>
+          <SocialLinks variant="footer" />
           <nav className="flex flex-wrap gap-x-4 gap-y-1.5" aria-label="קישורים משפטיים">
             <a href="/terms" className="text-[12px] font-semibold text-muted transition-colors hover:text-gold-deep">
               תקנון ותנאי שימוש
