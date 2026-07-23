@@ -172,6 +172,14 @@ const config: Config = {
           '0%, 100%': { transform: 'translateX(0)' },
           '50%': { transform: 'translateX(5px)' },
         },
+        'drawer-in': {
+          from: { transform: 'translateX(100%)' },
+          to: { transform: 'translateX(0)' },
+        },
+        'fade-in': {
+          from: { opacity: '0' },
+          to: { opacity: '1' },
+        },
       },
       animation: {
         breathe: 'breathe 2.4s ease-in-out infinite',
@@ -195,6 +203,9 @@ const config: Config = {
         'grow-y': 'grow-y 0.8s cubic-bezier(0.16,1,0.3,1) both',
         scan: 'scan 3s ease-in-out infinite',
         float: 'float 4s ease-in-out infinite',
+        'nudge-x': 'nudge-x 2.6s ease-in-out infinite',
+        'drawer-in': 'drawer-in 0.32s cubic-bezier(0.16,1,0.3,1) both',
+        'fade-in': 'fade-in 0.25s ease-out both',
       },
     },
   },

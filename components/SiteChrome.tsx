@@ -14,6 +14,7 @@ import AiAssistantWidget from '@/components/AiAssistantWidget';
 import ExitIntentPopup from '@/components/ExitIntentPopup';
 import SocialProofToast from '@/components/SocialProofToast';
 import StickyLeftGovCTA from '@/components/StickyLeftGovCTA';
+import AffiliateClickTracker from '@/components/AffiliateClickTracker';
 import HarDisclaimer from '@/components/HarDisclaimer';
 
 /**
@@ -53,6 +54,7 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
       <ExitIntentPopup />
       <SocialProofToast />
       <StickyLeftGovCTA />
+      <AffiliateClickTracker />
     </>
   );
 }

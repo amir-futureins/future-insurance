@@ -88,7 +88,7 @@ export default function TravelInsuranceHub() {
         />
         <div className="relative mx-auto grid max-w-container items-center gap-10 px-6 pb-24 pt-12 md:px-10 md:pb-28 md:pt-16 lg:grid-cols-[1.1fr_0.9fr]">
           {/* copy — first in DOM, lands at the reading-start (right) */}
-          <div>
+          <div className="min-w-0">
             <div className="mb-4 flex w-fit animate-badge-drop items-center gap-2 rounded-full border border-gold/50 bg-gold-tint px-3.5 py-1.5 text-[12.5px] font-bold text-navy shadow-sm">
               <span className="animate-breathe" aria-hidden>🔥</span>
               חדש ב-Future Fly: השוואת פוליסות דינמית ב-10 שניות
@@ -98,7 +98,7 @@ export default function TravelInsuranceHub() {
               ביטוח נסיעות לחו״ל
             </span>
 
-            <h1 className="mt-5 text-[clamp(30px,7vw,44px)] font-extrabold leading-[1.12] tracking-[-0.015em] text-ink">
+            <h1 className="mt-5 break-words text-[clamp(23px,6.2vw,44px)] font-extrabold leading-[1.14] tracking-[-0.015em] text-ink">
               הכיסוי הנכון לנסיעה שלכם,{' '}
               <span className="text-gold-deep">בלי לבזבז זמן וכסף</span>
             </h1>

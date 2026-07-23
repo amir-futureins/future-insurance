@@ -12,6 +12,7 @@ import { SITE, whatsappHref } from '@/lib/content';
 import { VERTICALS, AGENT, AGENCY_REVIEWS, AGENCY_ARTICLES } from '@/lib/agency';
 import { Reveal } from '@/components/travel/ui';
 import HomeHero from '@/components/HomeHero';
+import HomeActionHub from '@/components/HomeActionHub';
 import BrandEmblem from '@/components/travel/BrandEmblem';
 import VideoBlock from '@/components/VideoBlock';
 import ArticleGrid from '@/components/ArticleGrid';
@@ -64,6 +65,9 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+
+      {/* ---- "מה תרצה לעשות היום?" quick-action hub (mobile + desktop) ---- */}
+      <HomeActionHub />
 
       {/* ---- MOBILE-ONLY travel quick-buy banner (md:hidden) ---- */}
       <section className="px-4 pt-4 md:hidden">

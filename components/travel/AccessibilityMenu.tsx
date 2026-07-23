@@ -130,7 +130,7 @@ export default function AccessibilityMenu() {
         aria-expanded={open}
         aria-controls={open ? 'a11y-panel' : undefined}
         aria-label="תפריט נגישות"
-        className="fixed bottom-20 start-4 z-[70] grid h-[52px] w-[52px] place-items-center rounded-full bg-cta-fill text-navy-deep shadow-xl shadow-navy/25 ring-2 ring-white/60 transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-deep lg:bottom-24 lg:start-5"
+        className="fixed bottom-20 left-4 z-[70] grid h-[52px] w-[52px] place-items-center rounded-full bg-cta-fill text-navy-deep shadow-xl shadow-navy/25 ring-2 ring-white/60 transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-deep lg:bottom-24 lg:left-auto lg:start-5"
       >
         <Accessibility className="h-6 w-6" aria-hidden />
       </button>
@@ -149,7 +149,7 @@ export default function AccessibilityMenu() {
             tabIndex={-1}
             role="region"
             aria-label="הגדרות נגישות"
-            className="glass-elevated fixed bottom-20 start-4 z-[71] max-h-[70vh] w-[min(20rem,calc(100vw-2rem))] overflow-y-auto p-4 outline-none lg:bottom-24 lg:start-5"
+            className="glass-elevated fixed bottom-20 left-4 z-[71] max-h-[70vh] w-[min(20rem,calc(100vw-2rem))] overflow-y-auto p-4 outline-none lg:bottom-24 lg:left-auto lg:start-5"
             dir="rtl"
           >
             <div className="mb-3 flex items-center justify-between">

@@ -3,8 +3,36 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
-import { Menu, X, ChevronDown, Phone, MessageCircle, LogIn } from 'lucide-react';
+import {
+  Menu,
+  X,
+  ChevronDown,
+  Phone,
+  MessageCircle,
+  LogIn,
+  Home,
+  Plane,
+  Mountain,
+  PiggyBank,
+  HeartPulse,
+  HeartHandshake,
+  Building2,
+  Briefcase,
+  type LucideIcon,
+} from 'lucide-react';
 import { NAV_MENU } from '@/lib/nav';
+
+/** Elegant per-category icons for the mobile drawer. */
+const NAV_ICON: Record<string, LucideIcon> = {
+  '/': Home,
+  '/travel-insurance': Plane,
+  '/har-habituach': Mountain,
+  '/finance': PiggyBank,
+  '/health': HeartPulse,
+  '/life': HeartHandshake,
+  '/mortgage': Building2,
+  '/business-insurance': Briefcase,
+};
 import { SITE, whatsappHref } from '@/lib/content';
 import { useBodyScrollLock } from '@/lib/use-body-scroll-lock';
 
@@ -56,10 +84,12 @@ export default function MobileNav() {
             type="button"
             aria-label="סגירת התפריט"
             onClick={close}
-            className="fixed inset-0 bg-navy-deep/60 backdrop-blur-sm"
+            className="fixed inset-0 animate-fade-in bg-navy-deep/60 backdrop-blur-md"
           />
-          <div className="absolute inset-y-0 right-0 flex w-[86%] max-w-sm animate-slide-in flex-col overflow-y-auto bg-gradient-to-b from-navy to-navy-deep shadow-2xl">
-            <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+          <div className="absolute inset-y-0 right-0 flex w-[87%] max-w-sm animate-drawer-in flex-col overflow-y-auto border-l border-white/10 bg-navy-deep/85 shadow-2xl backdrop-blur-2xl">
+            {/* subtle gold glow for depth */}
+            <div aria-hidden className="pointer-events-none absolute -top-16 end-[-4rem] h-48 w-48 rounded-full bg-glow-gold opacity-30 blur-3xl" />
+            <div className="relative flex items-center justify-between border-b border-white/10 px-5 py-4">
               <span className="text-[17px] font-extrabold tracking-tight text-white">
                 Future <span className="text-gold">Insurance</span>
               </span>
@@ -67,36 +97,40 @@ export default function MobileNav() {
                 type="button"
                 onClick={close}
                 aria-label="סגירה"
-                className="grid h-9 w-9 place-items-center rounded-lg bg-white/10 text-white transition-colors hover:bg-white/20"
+                className="grid h-9 w-9 place-items-center rounded-xl bg-white/10 text-white ring-1 ring-white/10 transition-colors hover:bg-white/20"
               >
                 <X className="h-5 w-5" aria-hidden />
               </button>
             </div>
 
-            <nav className="flex-1 px-3 py-3" aria-label="ניווט ראשי">
-              {NAV_MENU.map((item) =>
-                item.children ? (
-                  <div key={item.href} className="border-b border-white/5">
+            <nav className="relative flex-1 space-y-1 px-3 py-4" aria-label="ניווט ראשי">
+              {NAV_MENU.map((item) => {
+                const Icon = NAV_ICON[item.href] ?? Home;
+                return item.children ? (
+                  <div key={item.href}>
                     <button
                       type="button"
                       onClick={() => setExpanded(expanded === item.href ? null : item.href)}
                       aria-expanded={expanded === item.href}
-                      className="flex w-full items-center justify-between rounded-lg px-3 py-3 text-[16px] font-bold text-white transition-colors hover:bg-white/10"
+                      className="flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-[16px] font-bold text-white transition-colors hover:bg-white/10"
                     >
-                      {item.label}
+                      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-white/10 text-gold-bright ring-1 ring-white/10">
+                        <Icon className="h-[18px] w-[18px]" aria-hidden />
+                      </span>
+                      <span className="flex-1 text-start">{item.label}</span>
                       <ChevronDown
-                        className={`h-5 w-5 shrink-0 transition-transform ${expanded === item.href ? 'rotate-180' : ''}`}
+                        className={`h-5 w-5 shrink-0 text-white/60 transition-transform ${expanded === item.href ? 'rotate-180' : ''}`}
                         aria-hidden
                       />
                     </button>
                     {expanded === item.href && (
-                      <div className="pb-2">
+                      <div className="mt-0.5 space-y-0.5 ps-12">
                         {item.children.map((c) => (
                           <Link
                             key={c.href}
                             href={c.href}
                             onClick={close}
-                            className="block rounded-lg px-6 py-2.5 text-[14.5px] font-semibold text-white/75 transition-colors hover:bg-white/10 hover:text-white"
+                            className="block rounded-xl px-3 py-2.5 text-[14.5px] font-semibold text-white/70 transition-colors hover:bg-white/10 hover:text-white"
                           >
                             {c.label}
                           </Link>
@@ -109,12 +143,15 @@ export default function MobileNav() {
                     key={item.href}
                     href={item.href}
                     onClick={close}
-                    className="block border-b border-white/5 rounded-lg px-3 py-3 text-[16px] font-bold text-white transition-colors hover:bg-white/10"
+                    className="flex items-center gap-3 rounded-2xl px-3 py-3 text-[16px] font-bold text-white transition-colors hover:bg-white/10"
                   >
-                    {item.label}
+                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-white/10 text-gold-bright ring-1 ring-white/10">
+                      <Icon className="h-[18px] w-[18px]" aria-hidden />
+                    </span>
+                    <span className="flex-1 text-start">{item.label}</span>
                   </Link>
-                ),
-              )}
+                );
+              })}
             </nav>
 
             <div className="grid grid-cols-2 gap-2.5 border-t border-white/10 p-4">
