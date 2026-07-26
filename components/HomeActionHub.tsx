@@ -73,17 +73,17 @@ const ACTIONS: Action[] = [
 
 // Light + airy on mobile, deep-navy on desktop (desktop must stay unchanged).
 const CARD =
-  'group flex flex-col items-center rounded-2xl border border-slate-200 bg-white p-3 text-center transition-all duration-200 hover:-translate-y-1 hover:ring-1 hover:ring-gold/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-bright md:border-white/10 md:bg-white/5 md:p-5 md:hover:bg-white/10 md:items-start md:text-start';
+  'group flex flex-col items-center rounded-2xl border border-slate-200 bg-white p-3.5 text-center transition-all duration-200 hover:-translate-y-1 hover:ring-1 hover:ring-gold/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-bright md:border-white/[0.07] md:bg-white/[0.04] md:p-6 md:hover:bg-white/[0.08] md:items-start md:text-start';
 
 export default function HomeActionHub() {
   const [form, setForm] = useState<FormCfg | null>(null);
 
   return (
     <section className="mx-auto w-full max-w-container px-4 pt-5 md:px-10 md:pt-10">
-      <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white/85 p-4 shadow-lg backdrop-blur-sm md:border-white/10 md:bg-gradient-to-br md:from-navy md:to-navy-deep md:p-8 md:shadow-xl">
-        {/* decorative floating orbs — desktop only (keeps mobile clean & light) */}
-        <div aria-hidden className="pointer-events-none absolute -top-10 end-[-3rem] hidden h-40 w-40 rounded-full bg-glow-gold opacity-40 blur-3xl md:block" />
-        <div aria-hidden className="pointer-events-none absolute bottom-[-4rem] start-[-3rem] hidden h-48 w-48 rounded-full bg-glow-navy opacity-40 blur-3xl md:block" />
+      <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white/85 p-4 shadow-lg backdrop-blur-sm md:border-white/[0.07] md:bg-gradient-to-br md:from-slate-800 md:via-slate-900 md:to-indigo-950 md:p-9 md:shadow-lg">
+        {/* soft decorative glows — desktop only (keeps mobile clean & light) */}
+        <div aria-hidden className="pointer-events-none absolute -top-10 end-[-3rem] hidden h-44 w-44 rounded-full bg-glow-gold opacity-25 blur-3xl md:block" />
+        <div aria-hidden className="pointer-events-none absolute bottom-[-4rem] start-[-3rem] hidden h-52 w-52 rounded-full bg-glow-navy opacity-25 blur-3xl md:block" />
 
         <div className="relative">
           <div className="text-center md:text-start">
@@ -98,13 +98,13 @@ export default function HomeActionHub() {
             </p>
           </div>
 
-          <div className="mt-4 grid grid-cols-2 gap-2.5 md:mt-6 md:gap-3 lg:grid-cols-4">
+          <div className="mt-4 grid grid-cols-2 gap-2.5 md:mt-7 md:gap-4 lg:grid-cols-4">
             {ACTIONS.map((a, i) => {
               const inner = (
                 <>
                   <span
                     className="grid h-12 w-12 shrink-0 animate-float place-items-center rounded-2xl text-white ring-1 ring-white/20 md:h-14 md:w-14"
-                    style={{ backgroundColor: a.accent, animationDelay: `${i * 0.45}s`, boxShadow: `0 10px 24px -8px ${a.accent}` }}
+                    style={{ backgroundColor: a.accent, animationDelay: `${i * 0.45}s`, boxShadow: `0 8px 20px -10px ${a.accent}` }}
                   >
                     <a.Icon className="h-6 w-6 md:h-7 md:w-7" aria-hidden />
                   </span>
