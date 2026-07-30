@@ -1,41 +1,60 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
 /**
- * Edge middleware. Two unrelated jobs, dispatched by path:
+ * Edge middleware. Two unrelated jobs, dispatched by hostname then path:
  *
- * 1. Host-scoped landing page — a request for "/" on the fly host is rewritten
- *    to /fly, so fly.amirs.co.il shows the travel-insurance landing page while
- *    futureins.co.il keeps serving the main site's homepage untouched.
+ * 1. Host-scoped landing page — fly.amirs.co.il serves the standalone agent
+ *    landing page (/fly) and nothing else, while futureins.co.il keeps serving
+ *    the main site untouched.
  * 2. HTTP Basic-Auth gate for the internal admin tools (/admin/*). Credentials
  *    come from env vars — set ADMIN_USER + ADMIN_PASSWORD in Vercel (and
  *    .env.local for local dev). If they are NOT configured the section is
  *    locked (fail-closed), never left open.
  *
+ * NOTE — this file deliberately exports no route-matcher config object.
+ * An earlier revision declared one holding a negative-lookahead pattern, so the
+ * middleware would run on every path except the framework internals. It
+ * compiled locally but failed the Vercel build with
+ * `Error: Unhandled type: "ColonToken"` while that pattern was being parsed.
+ * With no matcher declared the middleware runs on every request instead, and the
+ * same filtering happens below in plain JavaScript — startsWith and includes,
+ * with no regular expressions and no path tokens left to mis-parse. isInternal()
+ * is checked first, so an asset request costs only a few string comparisons.
+ *
  * Runs on the Edge runtime, so it uses the Web `atob` (Buffer isn't available).
  */
-export const config = {
-  /**
-   * Everything except Next internals and files with an extension. The broad
-   * matcher is required so the fly host can be confined to its landing page
-   * (see below); on the main host any path that is not /admin/* returns
-   * NextResponse.next() before reaching the auth gate, so the public site can
-   * never be locked by this middleware.
-   */
-  matcher: ['/((?!_next/static|_next/image|_next/data|favicon\\.ico|.*\\.[\\w]+$).*)'],
-};
 
 /** Hostname that serves the /fly landing page at its root. Env-overridable. */
-const FLY_HOST = (process.env.FLY_HOST ?? 'fly.amirs.co.il').toLowerCase();
+const FLY_HOST = (process.env.FLY_HOST || 'fly.amirs.co.il').toLowerCase();
+
+/** First entry of a possibly comma-joined proxy header, trimmed. */
+function headerValue(req: NextRequest, name: string): string {
+  const raw = req.headers.get(name);
+  if (!raw) return '';
+  return raw.split(',')[0].trim();
+}
 
 /**
  * Public hostname of the request. x-forwarded-host is preferred because behind
- * Vercel's proxy `host` can be the internal deployment hostname, which would
- * never match the custom domain. Port and casing are stripped so a value like
+ * Vercel's proxy `host` is the internal deployment hostname, which would never
+ * match the custom domain. Port and casing are stripped so a value like
  * "FLY.amirs.co.il:443" still matches.
  */
 function requestHost(req: NextRequest): string {
-  const raw = req.headers.get('x-forwarded-host') ?? req.headers.get('host') ?? '';
-  return raw.split(',')[0].split(':')[0].trim().toLowerCase();
+  const host = headerValue(req, 'x-forwarded-host') || headerValue(req, 'host');
+  return host.split(':')[0].toLowerCase();
+}
+
+/**
+ * Requests this middleware must never touch: framework internals and any file
+ * with an extension (robots.txt, sitemap.xml, images, fonts...). Replaces the
+ * negative-lookahead matcher that broke the Vercel build.
+ */
+function isInternal(pathname: string): boolean {
+  if (pathname.startsWith('/_next/')) return true;
+  if (pathname.startsWith('/_vercel/')) return true;
+  const lastSegment = pathname.slice(pathname.lastIndexOf('/') + 1);
+  return lastSegment.includes('.');
 }
 
 function unauthorized(): NextResponse {
@@ -49,7 +68,10 @@ function unauthorized(): NextResponse {
 }
 
 export function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
+  const pathname = req.nextUrl.pathname;
+
+  /* Framework internals and static files pass through untouched. */
+  if (isInternal(pathname)) return NextResponse.next();
 
   /* ---- 1. The fly host serves the landing page and nothing else ---- */
   if (requestHost(req) === FLY_HOST) {
@@ -65,20 +87,19 @@ export function middleware(req: NextRequest) {
     if (pathname.startsWith('/api/')) return NextResponse.next();
 
     // Anything else on this host — /health, /admin, a stray /fly typed by hand —
-    // goes back to the single canonical landing URL. Redirecting /fly itself is
-    // safe and cannot loop: the redirect lands on "/", which is then rewritten
-    // internally (the browser never requests /fly again).
+    // goes back to the single canonical landing URL. Redirecting /fly cannot
+    // loop: it lands on "/", which is then rewritten internally, so the browser
+    // never requests /fly again.
+    //
     // Built as a plain string rather than by mutating a cloned NextURL, whose
     // host/port setters keep the original port and emitted a Location like
-    // https://fly.amirs.co.il:3000/ when running behind a proxy.
-    // x-forwarded-* keeps the visitor on the public host and scheme; without
-    // them (local dev) the request's own host — including its port — is reused.
-    const first = (v: string | null) => v?.split(',')[0].trim() || '';
-    const host = first(req.headers.get('x-forwarded-host')) || req.nextUrl.host;
-    const proto =
-      first(req.headers.get('x-forwarded-proto')) ||
-      req.nextUrl.protocol.replace(':', '');
-    return NextResponse.redirect(`${proto}://${host}/`, 308);
+    // https://fly.amirs.co.il:3000/ from behind a proxy. x-forwarded-* keeps the
+    // visitor on the public host and scheme; without them (local dev) the
+    // request's own host, including its port, is reused.
+    const host = headerValue(req, 'x-forwarded-host') || req.nextUrl.host;
+    const forwardedProto = headerValue(req, 'x-forwarded-proto');
+    const proto = forwardedProto || req.nextUrl.protocol.replace(':', '');
+    return NextResponse.redirect(proto + '://' + host + '/', 308);
   }
 
   /* Public routes pass straight through; only /admin/* reaches the auth gate. */
@@ -91,8 +112,10 @@ export function middleware(req: NextRequest) {
   // Fail-closed: with no credentials configured, admin stays locked for everyone.
   if (!user || !pass) return unauthorized();
 
-  const header = req.headers.get('authorization') ?? '';
-  const [scheme, encoded] = header.split(' ');
+  const header = req.headers.get('authorization') || '';
+  const parts = header.split(' ');
+  const scheme = parts[0];
+  const encoded = parts[1];
   if (scheme === 'Basic' && encoded) {
     try {
       const decoded = atob(encoded);
