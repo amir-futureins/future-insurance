@@ -19,21 +19,21 @@ import HarDisclaimer from '@/components/HarDisclaimer';
 
 /**
  * SiteChrome — wraps page content with the public marketing chrome (navbar,
- * ticker, footer) and all floating widgets.
+ * ticker, footer) and all floating widgets. Internal tools under /admin get a
+ * bare canvas: no public nav/ticker/footer and none of the conversion floats,
+ * which would otherwise overlap the dashboard.
  *
- * Two route groups get a bare canvas instead:
- *   /admin/* — internal tools; the conversion floats would overlap the dashboard.
- *   /fly     — the standalone agent landing page served at the root of
- *              fly.amirs.co.il. It is a self-contained funnel with its own
- *              header, footer and widgets, so the Future Insurance chrome must
- *              not appear on that host — and inheriting it would also stack two
- *              WhatsApp buttons, two accessibility menus and two sticky bars.
+ * Routes that must not inherit the chrome at all (currently /fly) are placed
+ * OUTSIDE the app/(site) route group instead of being special-cased here. A
+ * pathname comparison cannot work for them: middleware rewrites "/" on the fly
+ * host to /fly, so the client-visible pathname stays "/" and any check here
+ * would silently fail, rendering the chrome on top of that page.
  */
 export default function SiteChrome({ children }: { children: ReactNode }) {
   const pathname = usePathname() ?? '/';
-  const isBare = pathname.startsWith('/admin') || pathname === '/fly';
+  const isAdmin = pathname.startsWith('/admin');
 
-  if (isBare) {
+  if (isAdmin) {
     return <div id="a11y-content">{children}</div>;
   }
 

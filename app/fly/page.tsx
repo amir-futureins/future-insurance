@@ -544,9 +544,13 @@ gtag('config','AW-18295158593');`}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Opaque background so the layout's ambient gold/navy glows (fixed,
-          -z-10) do not tint this standalone page. */}
-      <div className="relative z-0 min-h-screen bg-white">
+      {/* id="a11y-content" is the element the shared AccessibilityMenu applies
+          its contrast/grayscale/invert filters and link-emphasis classes to.
+          SiteChrome normally provides it, but /fly sits outside the (site) route
+          group, so without this the toolbar would silently do nothing here.
+          The widgets below are deliberately OUTSIDE it, so the toolbar never
+          inverts or greys out its own controls. */}
+      <div id="a11y-content" className="relative z-0 min-h-screen bg-white">
         <TopBar />
         <AgentIdentity />
         <main>

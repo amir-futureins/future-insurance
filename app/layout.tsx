@@ -2,8 +2,6 @@ import type { Metadata, Viewport } from 'next';
 import { Assistant } from 'next/font/google';
 import Script from 'next/script';
 import { GTM_ID } from '@/lib/gtm';
-import { LeadModalProvider } from '@/components/travel/LeadModal';
-import SiteChrome from '@/components/SiteChrome';
 import './globals.css';
 
 const assistant = Assistant({
@@ -86,20 +84,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </>
         ) : null}
 
-        {/* ambient aurora glows (decorative, behind everything) */}
-        {/* Static blurred blobs — kept still so they don't force the sticky
-            navbar / glass surfaces to re-composite their backdrop every frame. */}
-        <div
-          aria-hidden
-          className="no-print pointer-events-none fixed inset-0 -z-10 overflow-hidden"
-        >
-          <div className="absolute -top-32 end-[-8rem] h-[520px] w-[520px] rounded-full bg-glow-gold opacity-50 blur-3xl" />
-          <div className="absolute bottom-[-10rem] start-[-8rem] h-[560px] w-[560px] rounded-full bg-glow-navy opacity-40 blur-3xl" />
-        </div>
-
-        <LeadModalProvider>
-          <SiteChrome>{children}</SiteChrome>
-        </LeadModalProvider>
+        {/* No chrome here on purpose. The marketing navbar / ticker / footer,
+            the floating widgets and the aurora glows live in
+            app/(site)/layout.tsx, so routes outside that route group — /fly,
+            the standalone landing page for fly.amirs.co.il — render on a bare
+            canvas without needing to detect their own pathname or hostname. */}
+        {children}
       </body>
     </html>
   );

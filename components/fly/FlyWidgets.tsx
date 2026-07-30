@@ -6,12 +6,23 @@ import { trackEvent } from '@/lib/gtm';
 /**
  * Floating conversion widgets for the /fly landing page.
  *
- * /fly gets a bare canvas from SiteChrome (no TrustBar / SiteFooter / site
- * floats), so this supplies the two it needs: a WhatsApp button and a persistent
- * purchase bar. The accessibility toolbar is NOT re-implemented here — the page
+ * /fly renders outside the app/(site) route group, so it gets none of the site's
+ * floats. This supplies the two it needs: a WhatsApp button and a persistent
+ * purchase bar. The accessibility toolbar is NOT re-implemented — the page
  * renders the shared components/travel/AccessibilityMenu, which already meets
- * IS 5568 and is pinned bottom-20 left-4, so WhatsApp sits on the opposite side
- * to avoid overlapping it.
+ * IS 5568.
+ *
+ * Collision map (the shared a11y button SWITCHES SIDES between breakpoints:
+ * `bottom-20 left-4` on mobile, `lg:bottom-24 lg:left-auto lg:start-5` — and in
+ * this RTL document `start` resolves to the RIGHT edge). So WhatsApp has to
+ * mirror it in the opposite direction at each breakpoint:
+ *
+ *            mobile (<lg)            desktop (lg+)
+ *   a11y     bottom 80px, LEFT       bottom 96px, RIGHT
+ *   whatsapp bottom 80px, RIGHT      bottom 96px, LEFT
+ *   buy bar  bottom 12px, full width; ~56px tall, so its top edge (~68px)
+ *            clears both widgets, and on desktop it is centred at max-w-540px
+ *            which leaves both gutters free.
  */
 
 const WA_PHONE = '972528422884';
@@ -54,7 +65,7 @@ export default function FlyWidgets({ buyHref }: { buyHref: string }) {
         rel="noopener noreferrer"
         onClick={() => trackEvent('click_whatsapp', { context: 'fly_landing' })}
         aria-label={`שיחת וואטסאפ: ${WA_TEXT}`}
-        className={`no-print fixed bottom-20 right-4 z-[60] grid h-[54px] w-[54px] place-items-center rounded-full bg-[#25D366] text-white shadow-[0_10px_24px_rgba(37,211,102,0.40)] ring-[6px] ring-white/85 transition-all duration-300 hover:scale-105 ${
+        className={`no-print fixed bottom-20 right-4 z-[60] grid h-[54px] w-[54px] place-items-center rounded-full bg-[#25D366] text-white shadow-[0_10px_24px_rgba(37,211,102,0.40)] ring-[6px] ring-white/85 transition-all duration-300 hover:scale-105 lg:bottom-24 lg:right-auto lg:left-5 ${
           pastHero
             ? 'pointer-events-auto translate-y-0 scale-100 opacity-100'
             : 'pointer-events-none translate-y-3 scale-90 opacity-0'
