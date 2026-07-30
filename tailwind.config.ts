@@ -180,6 +180,28 @@ const config: Config = {
           from: { opacity: '0' },
           to: { opacity: '1' },
         },
+        // Expanding red aura for the persistent purchase bar on /fly. The gold
+        // `pulse-glow` above is the house accent and reads wrong on a red CTA.
+        'red-pulse': {
+          '0%, 100%': {
+            boxShadow: '0 8px 22px rgba(227,6,19,0.30), 0 0 0 0 rgba(227,6,19,0.55)',
+          },
+          '70%': {
+            boxShadow: '0 12px 28px rgba(227,6,19,0.34), 0 0 0 16px rgba(227,6,19,0)',
+          },
+        },
+        // White halo pulse for the CTA embedded in the red charged card on /fly.
+        // The gold `pulse-glow` above is invisible against a red surface.
+        'pill-pulse': {
+          '0%, 100%': {
+            transform: 'scale(1)',
+            boxShadow: '0 6px 16px rgba(0,0,0,0.18), 0 0 0 0 rgba(255,255,255,0.65)',
+          },
+          '55%': {
+            transform: 'scale(1.035)',
+            boxShadow: '0 8px 20px rgba(0,0,0,0.22), 0 0 0 12px rgba(255,255,255,0)',
+          },
+        },
       },
       animation: {
         breathe: 'breathe 2.4s ease-in-out infinite',
@@ -206,6 +228,8 @@ const config: Config = {
         'nudge-x': 'nudge-x 2.6s ease-in-out infinite',
         'drawer-in': 'drawer-in 0.32s cubic-bezier(0.16,1,0.3,1) both',
         'fade-in': 'fade-in 0.25s ease-out both',
+        'pill-pulse': 'pill-pulse 1.9s ease-in-out infinite',
+        'red-pulse': 'red-pulse 2.2s ease-out infinite',
       },
     },
   },

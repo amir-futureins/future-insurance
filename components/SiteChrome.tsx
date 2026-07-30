@@ -19,15 +19,21 @@ import HarDisclaimer from '@/components/HarDisclaimer';
 
 /**
  * SiteChrome — wraps page content with the public marketing chrome (navbar,
- * ticker, footer) and all floating widgets. Internal tools under /admin get a
- * bare canvas: no public nav/ticker/footer and none of the conversion floats,
- * which would otherwise overlap the dashboard.
+ * ticker, footer) and all floating widgets.
+ *
+ * Two route groups get a bare canvas instead:
+ *   /admin/* — internal tools; the conversion floats would overlap the dashboard.
+ *   /fly     — the standalone agent landing page served at the root of
+ *              fly.amirs.co.il. It is a self-contained funnel with its own
+ *              header, footer and widgets, so the Future Insurance chrome must
+ *              not appear on that host — and inheriting it would also stack two
+ *              WhatsApp buttons, two accessibility menus and two sticky bars.
  */
 export default function SiteChrome({ children }: { children: ReactNode }) {
   const pathname = usePathname() ?? '/';
-  const isAdmin = pathname.startsWith('/admin');
+  const isBare = pathname.startsWith('/admin') || pathname === '/fly';
 
-  if (isAdmin) {
+  if (isBare) {
     return <div id="a11y-content">{children}</div>;
   }
 
