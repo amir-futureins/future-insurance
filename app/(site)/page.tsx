@@ -58,6 +58,27 @@ const jsonLd = {
   ],
 };
 
+/**
+ * Carriers in the mobile quick-purchase brand bar. Each href is
+ * /api/go/[provider] — the native affiliate redirect, i.e. the shortest path to
+ * the carrier's own buy flow with no interstitial landing page. Clicks are
+ * instrumented site-wide by AffiliateClickTracker, which pushes a
+ * `purchase_click` GTM event for every `a[href^="/api/go/"]`, so these buttons
+ * need no per-link handler (and the section stays a server component).
+ *
+ * `accent` fills the CTA button; `strip` is the hairline along the card top and
+ * carries each carrier's second brand colour (Harel gold, Clal cyan, Migdal
+ * emerald). Both are darkened where needed so white button text clears AA
+ * (≥4.5:1). Colours only — the mark inside stays BrandEmblem's nominative
+ * wordmark, never a reproduction of a carrier's trademarked logo.
+ */
+const DIRECT_BUY = [
+  { slug: 'passportcard', name: 'PassportCard', accent: '#E11933', strip: '#E11933' },
+  { slug: 'harel', name: 'הראל', accent: '#0057B8', strip: '#D4A24A' },
+  { slug: 'clal', name: 'כלל', accent: '#002D62', strip: '#00A0DF' },
+  { slug: 'migdal', name: 'מגדל', accent: '#0F766E', strip: '#10B981' },
+];
+
 export default function HomePage() {
   return (
     <main>
@@ -81,22 +102,38 @@ export default function HomePage() {
           <p className="mt-1 text-[12.5px] leading-snug text-muted">
             פוליסה דיגיטלית מיידית · השוואת מחירים · ליווי סוכן מורשה
           </p>
+          {/* 2x2 brand grid — every card is a direct deep-link into that
+              carrier's own online buy flow. Grid rows stretch by default and
+              all four cards share one content structure, so the CTA buttons
+              line up without any height juggling. */}
           <div className="mt-3.5 grid grid-cols-2 gap-2.5">
-            {[
-              ['passportcard', 'PassportCard'],
-              ['harel', 'הראל'],
-              ['clal', 'כלל'],
-              ['migdal', 'מגדל'],
-            ].map(([slug, label]) => (
-              <Link
-                key={slug}
-                href={`/travel-insurance/${slug}`}
-                className="flex items-center gap-2.5 rounded-2xl border border-slate-200 bg-slate-50 p-2.5 transition-colors active:bg-slate-100"
+            {DIRECT_BUY.map((p) => (
+              <a
+                key={p.slug}
+                href={`/api/go/${p.slug}`}
+                target="_blank"
+                rel="noopener noreferrer sponsored"
+                aria-label={`לרכישת ביטוח נסיעות אונליין ב${p.name} — נפתח באתר החברה`}
+                className="block overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-transform active:scale-[0.98]"
               >
-                <BrandEmblem slug={slug} variant="sm" />
-                <span className="flex-1 text-start text-[14px] font-bold text-ink">{label}</span>
-                <ArrowLeft className="h-4 w-4 shrink-0 text-faint" aria-hidden />
-              </Link>
+                <span
+                  aria-hidden
+                  className="block h-1.5 w-full"
+                  style={{ backgroundColor: p.strip }}
+                />
+                <span className="flex flex-col items-center gap-2 p-3 text-center">
+                  <BrandEmblem slug={p.slug} variant="sm" />
+                  <span className="text-[13.5px] font-extrabold leading-tight text-ink">
+                    {p.name}
+                  </span>
+                  <span
+                    className="w-full rounded-xl py-2 text-[12px] font-extrabold text-white"
+                    style={{ backgroundColor: p.accent }}
+                  >
+                    לרכישה אונליין
+                  </span>
+                </span>
+              </a>
             ))}
           </div>
           <Link
