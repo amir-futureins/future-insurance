@@ -55,7 +55,12 @@ export default function SocialProof() {
   const color = PROVIDER_COLOR[item.provider] ?? '#A97C34';
 
   return (
-    <div className="no-print pointer-events-none fixed bottom-[calc(env(safe-area-inset-bottom)_+_17.5rem)] end-4 z-40 w-[min(20rem,calc(100vw-2rem))] lg:bottom-6">
+    // Below lg the toast docks to the INLINE-START edge (right, in RTL) just
+    // above the sticky bar: the opposite side from the accessibility/AI launcher
+    // rail, and narrow enough to clear it, so it can never sit on a CTA. z-30
+    // keeps it under the z-50 sticky bar. Every lg: value restores the original
+    // desktop placement exactly.
+    <div className="no-print pointer-events-none fixed bottom-[calc(env(safe-area-inset-bottom)_+_5rem)] start-4 z-30 w-[min(20rem,calc(100vw-6rem))] lg:bottom-6 lg:start-auto lg:end-4 lg:z-40">
       <div className="glass pointer-events-auto flex animate-toast-in items-center gap-3 p-3 pe-9">
         <span
           className="grid h-10 w-10 shrink-0 place-items-center rounded-full"

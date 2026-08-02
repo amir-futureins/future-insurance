@@ -61,18 +61,52 @@ const jsonLd = {
 };
 
 /**
- * Carriers offered for DIRECT online purchase in the mobile quick-buy block.
+ * Carriers offered for DIRECT online purchase in the mobile brand bar.
  * Each href goes to /api/go/[provider], the native affiliate redirect — the
  * shortest possible path to the carrier's own buy flow, with no interstitial
  * landing page. Clicks are picked up site-wide by AffiliateClickTracker, which
  * pushes a `purchase_click` GTM event for every `a[href^="/api/go/"]`.
  * Order is the requested merchandising order, not the lib/providers.ts order.
+ *
+ * `from`/`to` are the requested house accents per carrier, darkened where
+ * needed so white 11px label text clears AA (≥4.5:1) on the gradient's light
+ * end. `accent` is the hairline strip along the card top. These are accent
+ * colours only — the mark inside stays the nominative wordmark from
+ * BrandEmblem, never a reproduction of a carrier's trademarked logo.
  */
 const DIRECT_BUY = [
-  { slug: 'passportcard', name: 'PassportCard', tagline: 'ללא הוצאות מהכיס' },
-  { slug: 'harel', name: 'הראל', tagline: 'פופולרי למשפחות' },
-  { slug: 'clal', name: 'כלל', tagline: 'מחיר משתלם' },
-  { slug: 'migdal', name: 'מגדל', tagline: 'כיסוי מקיף' },
+  {
+    slug: 'passportcard',
+    name: 'PassportCard',
+    tagline: 'ללא הוצאות מהכיס',
+    from: '#E11933',
+    to: '#A5101F',
+    accent: '#FFFFFF',
+  },
+  {
+    slug: 'harel',
+    name: 'הראל',
+    tagline: 'פופולרי למשפחות',
+    from: '#0057B8',
+    to: '#003B7E',
+    accent: '#FFC20E',
+  },
+  {
+    slug: 'clal',
+    name: 'כלל',
+    tagline: 'מחיר משתלם',
+    from: '#0086BC',
+    to: '#002D62',
+    accent: '#7FD4F2',
+  },
+  {
+    slug: 'migdal',
+    name: 'מגדל',
+    tagline: 'כיסוי מקיף',
+    from: '#047857',
+    to: '#0F766E',
+    accent: '#5EEAD4',
+  },
 ];
 
 export default function HomePage() {
@@ -86,27 +120,26 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* ---- "מה תרצה לעשות היום?" quick-action hub (mobile + desktop) ---- */}
-      <HomeActionHub />
+      {/* ---- MOBILE-ONLY quick-purchase BRAND BAR (md:hidden) ----
+           Deliberately the FIRST block in <main> so it lands above the fold on a
+           phone, ahead of the action hub. On md+ it is hidden entirely and the
+           desktop order (action hub → hero) is untouched.
 
-      {/* ---- MOBILE-ONLY travel direct-purchase block (md:hidden) ----
-           Two deliberately separated paths, so "buy now" is never confused with
+           Two visually separated paths, so "buy now" is never confused with
            "compare first":
-             1. A 2x2 grid of carriers, each card a DIRECT deep-link into that
-                company's own online buy flow (gold = primary action).
-             2. Below an "או" divider, the dynamic comparison tool as a visually
+             1. A 2x2 grid of carrier buttons in each insurer's own accent
+                colours — every card is a DIRECT deep-link into that company's
+                online buy flow via /api/go/[slug].
+             2. Below an "או" divider, the dynamic comparison tool as a plainly
                 secondary, outlined CTA. */}
       <section className="px-4 pt-3.5 md:hidden">
         <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white/85 p-4 shadow-lg backdrop-blur-sm">
           <div className="flex items-center gap-1.5 text-[12px] font-bold text-gold-deep">
-            <span aria-hidden>✈️</span> ביטוח נסיעות לחו״ל
+            <span aria-hidden>✈️</span> פוליסה דיגיטלית מיידית · ליווי סוכן מורשה
           </div>
-          <h2 className="mt-1 text-[19px] font-extrabold leading-tight text-ink">
-            רכישה מהירה אונליין — בחרו חברה
+          <h2 className="mt-1 text-[18px] font-extrabold leading-tight text-ink">
+            רכישת ביטוח נסיעות לחו״ל — בחרו חברה לרכישה מיידית:
           </h2>
-          <p className="mt-1 text-[12.5px] leading-snug text-muted">
-            מעבר ישיר לרכישה באתר החברה · פוליסה דיגיטלית מיידית
-          </p>
 
           <ul className="mt-3.5 grid grid-cols-2 gap-2.5">
             {DIRECT_BUY.map((p) => (
@@ -116,19 +149,25 @@ export default function HomePage() {
                   target="_blank"
                   rel="noopener noreferrer sponsored"
                   aria-label={`לרכישת ביטוח נסיעות אונליין ב${p.name} — נפתח באתר החברה`}
-                  className="flex w-full min-w-0 flex-col items-center rounded-2xl border border-slate-200 bg-white p-3 text-center shadow-sm transition-transform active:scale-[0.98]"
+                  className="relative flex w-full min-w-0 flex-col items-center overflow-hidden rounded-2xl p-3 text-center shadow-lg ring-1 ring-black/10 transition-transform active:scale-[0.97]"
+                  style={{ backgroundImage: `linear-gradient(140deg, ${p.from} 0%, ${p.to} 100%)` }}
                 >
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 top-0 h-[3px]"
+                    style={{ backgroundColor: p.accent }}
+                  />
                   <BrandEmblem slug={p.slug} variant="sm" />
-                  <span className="mt-2 block w-full truncate text-[13.5px] font-extrabold leading-tight text-ink">
+                  <span className="mt-2 block w-full truncate text-[13.5px] font-extrabold leading-tight text-white">
                     {p.name}
                   </span>
                   {/* flex-1 absorbs the height difference between one- and
                       two-line taglines, so all four buy buttons stay aligned. */}
-                  <span className="mt-0.5 block flex-1 text-[11px] leading-snug text-muted">
+                  <span className="mt-0.5 block flex-1 text-[11px] leading-snug text-white/90">
                     {p.tagline}
                   </span>
-                  <span className="mt-2.5 flex w-full items-center justify-center gap-1 rounded-xl bg-cta-fill px-2 py-2 text-[12.5px] font-extrabold text-navy-deep shadow-sm">
-                    לרכישה אונליין
+                  <span className="mt-2.5 flex w-full items-center justify-center gap-1 rounded-xl bg-white/20 px-2 py-2 text-[12.5px] font-extrabold text-white ring-1 ring-inset ring-white/35">
+                    לרכישה מיידית
                     <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden />
                   </span>
                 </a>
@@ -156,6 +195,9 @@ export default function HomePage() {
           </p>
         </div>
       </section>
+
+      {/* ---- "מה תרצה לעשות היום?" quick-action hub (mobile + desktop) ---- */}
+      <HomeActionHub />
 
       {/* ---- HERO ---- */}
       <HomeHero />
