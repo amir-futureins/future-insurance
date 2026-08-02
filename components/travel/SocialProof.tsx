@@ -55,7 +55,7 @@ export default function SocialProof() {
   const color = PROVIDER_COLOR[item.provider] ?? '#A97C34';
 
   return (
-    <div className="no-print pointer-events-none fixed bottom-24 end-4 z-40 w-[min(20rem,calc(100vw-2rem))] lg:bottom-6">
+    <div className="no-print pointer-events-none fixed bottom-[calc(env(safe-area-inset-bottom)_+_17.5rem)] end-4 z-40 w-[min(20rem,calc(100vw-2rem))] lg:bottom-6">
       <div className="glass pointer-events-auto flex animate-toast-in items-center gap-3 p-3 pe-9">
         <span
           className="grid h-10 w-10 shrink-0 place-items-center rounded-full"

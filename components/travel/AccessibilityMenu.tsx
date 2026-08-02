@@ -61,7 +61,20 @@ function apply(s: Settings) {
   content.classList.toggle('a11y-bigcursor', s.bigCursor);
 }
 
-export default function AccessibilityMenu() {
+/**
+ * Where the toggle + panel sit. This is the historical position and stays the
+ * DEFAULT so callers that render <AccessibilityMenu /> with no props — notably
+ * the standalone /fly landing page, whose own widgets are laid out around these
+ * exact offsets — are completely unaffected. The main site opts into a raised
+ * offset (see components/SiteChrome.tsx) to clear its mobile sticky bar.
+ */
+const DEFAULT_OFFSET = 'bottom-20 left-4 lg:bottom-24 lg:left-auto lg:start-5';
+
+export default function AccessibilityMenu({
+  offsetClass = DEFAULT_OFFSET,
+}: {
+  offsetClass?: string;
+} = {}) {
   const [open, setOpen] = useState(false);
   const [s, setS] = useState<Settings>(DEFAULTS);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -130,7 +143,7 @@ export default function AccessibilityMenu() {
         aria-expanded={open}
         aria-controls={open ? 'a11y-panel' : undefined}
         aria-label="תפריט נגישות"
-        className="fixed bottom-20 left-4 z-[70] grid h-[52px] w-[52px] place-items-center rounded-full bg-cta-fill text-navy-deep shadow-xl shadow-navy/25 ring-2 ring-white/60 transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-deep lg:bottom-24 lg:left-auto lg:start-5"
+        className={`fixed ${offsetClass} z-[70] grid h-[52px] w-[52px] place-items-center rounded-full bg-cta-fill text-navy-deep shadow-xl shadow-navy/25 ring-2 ring-white/60 transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-deep`}
       >
         <Accessibility className="h-6 w-6" aria-hidden />
       </button>
@@ -149,7 +162,7 @@ export default function AccessibilityMenu() {
             tabIndex={-1}
             role="region"
             aria-label="הגדרות נגישות"
-            className="glass-elevated fixed bottom-20 left-4 z-[71] max-h-[70vh] w-[min(20rem,calc(100vw-2rem))] overflow-y-auto p-4 outline-none lg:bottom-24 lg:left-auto lg:start-5"
+            className={`glass-elevated fixed ${offsetClass} z-[71] max-h-[70vh] w-[min(20rem,calc(100vw-2rem))] overflow-y-auto p-4 outline-none`}
             dir="rtl"
           >
             <div className="mb-3 flex items-center justify-between">

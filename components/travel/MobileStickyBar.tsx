@@ -24,7 +24,10 @@ export default function MobileStickyBar() {
   const ctaLabel = isTravel ? 'להשוואה ורכישה מהירה 🚀' : 'ייעוץ חינם בוואטסאפ 🚀';
 
   return (
-    <div className="no-print fixed inset-x-0 bottom-0 z-40 border-t border-navy/10 bg-base/90 shadow-[0_-8px_24px_-16px_rgba(15,33,65,0.35)] backdrop-blur-xl lg:hidden">
+    // z-50 (was z-40) so the z-40 nudges/toasts can never paint over the primary
+    // mobile CTA. pb-[env(safe-area-inset-bottom)] keeps the buttons clear of the
+    // iOS home indicator instead of sitting underneath it.
+    <div className="no-print fixed inset-x-0 bottom-0 z-50 border-t border-navy/10 bg-base/90 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_24px_-16px_rgba(15,33,65,0.35)] backdrop-blur-xl lg:hidden">
       <div className="mx-auto flex max-w-container items-stretch gap-2 px-3 py-2.5">
         <a
           href={whatsappHref()}
