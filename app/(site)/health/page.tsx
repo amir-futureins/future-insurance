@@ -23,11 +23,12 @@ const HEALTH_BENEFITS = [
 import ArticleGrid from '@/components/ArticleGrid';
 import ExpertTips from '@/components/ExpertTips';
 import SuccessCarousel from '@/components/SuccessCarousel';
+import SeoSchema from '@/components/SeoSchema';
 
 export const metadata: Metadata = {
-  title: 'ביטוח בריאות פרטי — ניתוחים, השתלות ותרופות מחוץ לסל',
+  title: 'ביטוח בריאות פרטי — ניתוחים והשתלות',
   description:
-    'ביטוח בריאות פרטי חכם: כיסוי לניתוחים פרטיים, השתלות, תרופות מחוץ לסל ומחלות קשות. בדיקת כפילות ביטוחים חינם וליווי סוכן מורשה. בונים כיסוי מדויק בלי לשלם על מיותר.',
+    'ביטוח בריאות פרטי: ניתוחים, השתלות, תרופות מחוץ לסל ומחלות קשות. בדיקת כפילויות חינם וליווי סוכן מורשה — כיסוי מדויק בלי לשלם על מיותר.',
   keywords: ['ביטוח בריאות פרטי', 'כפילות ביטוחים', 'ביטוח ניתוחים', 'תרופות מחוץ לסל', 'ביטוח מחלות קשות'],
   alternates: { canonical: '/health' },
 };
@@ -51,6 +52,10 @@ const GUIDE_POINTS = [
 export default function HealthPage() {
   return (
     <main>
+      <SeoSchema
+        crumbs={[{ name: 'ביטוח בריאות', path: '/health' }]}
+        service={{ name: 'ביטוח בריאות פרטי', description: 'ביטוח בריאות פרטי — ניתוחים, השתלות ותרופות מחוץ לסל, בליווי סוכן מורשה.', path: '/health', serviceType: 'ביטוח בריאות' }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

@@ -1,14 +1,21 @@
 import type { Metadata, Viewport } from 'next';
-import { Assistant } from 'next/font/google';
+import { Heebo } from 'next/font/google';
 import Script from 'next/script';
 import { GTM_ID } from '@/lib/gtm';
 import './globals.css';
 
-const assistant = Assistant({
+/**
+ * Heebo — a Hebrew/Latin superfamily with a taller x-height and tighter, more
+ * even spacing than Assistant, which reads as more deliberate at body sizes.
+ * display:'swap' renders fallback text immediately, and next/font self-hosts the
+ * file and emits a matched size-adjust fallback, so the swap costs no layout
+ * shift (no CLS) and there is no render-blocking request to Google.
+ */
+const heebo = Heebo({
   subsets: ['hebrew', 'latin'],
-  weight: ['400', '600', '700', '800'],
+  weight: ['400', '500', '700', '800'],
   display: 'swap',
-  variable: '--font-assistant',
+  variable: '--font-heebo',
 });
 
 const SITE_URL = 'https://futureins.co.il';
@@ -56,7 +63,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="he" dir="rtl" className={assistant.variable}>
+    <html lang="he" dir="rtl" className={heebo.variable}>
       <head>
         <noscript>
           <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>

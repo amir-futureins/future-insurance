@@ -11,6 +11,7 @@ import BrandEmblem from '@/components/travel/BrandEmblem';
 import BrandCalculator from '@/components/travel/BrandCalculator';
 import FloatingPurchaseCTA from '@/components/FloatingPurchaseCTA';
 import FaqSection from '@/components/FaqSection';
+import SeoSchema from '@/components/SeoSchema';
 
 /** Branded travel-carrier landing pages: /travel-insurance/{passportcard,harel,clal,migdal}. */
 export function generateStaticParams() {
@@ -21,7 +22,10 @@ export function generateMetadata({ params }: { params: { provider: string } }): 
   const b = getBrand(params.provider);
   if (!b) return {};
   return {
-    title: `ביטוח נסיעות ${b.name} — מחשבון מחיר, השוואה ורכישה דיגיטלית 2026`,
+    // Kept short enough that the "| Future Insurance" title template still
+    // leaves the whole thing under the ~60 chars Google renders before it
+    // truncates. The high-intent head term stays first.
+    title: `ביטוח נסיעות ${b.name} — השוואה ורכישה`,
     description: `ביטוח נסיעות ${b.name}: מחשבון עלות יומית, השוואה מול החברות המובילות, ביקורות ומדריכים — ורכישה דיגיטלית מיידית בליווי סוכן מורשה.`,
     keywords: [`ביטוח נסיעות ${b.name}`, `${b.name} ביטוח נסיעות`, `ביטוח נסיעות ${b.name} מחיר`, 'ביטוח נסיעות לחו״ל', 'השוואת ביטוח נסיעות'],
     alternates: { canonical: `/travel-insurance/${params.provider}` },
@@ -114,6 +118,18 @@ export default function BrandPage({ params }: { params: { provider: string } }) 
 
   return (
     <main>
+      <SeoSchema
+        crumbs={[
+          { name: 'ביטוח נסיעות לחו״ל', path: '/travel-insurance' },
+          { name: brand.name, path: `/travel-insurance/${params.provider}` },
+        ]}
+        service={{
+          name: `ביטוח נסיעות ${brand.name}`,
+          description: `ביטוח נסיעות לחו״ל של ${brand.name} — מחשבון מחיר, השוואה ורכישה אונליין.`,
+          path: `/travel-insurance/${params.provider}`,
+          serviceType: 'ביטוח נסיעות לחו״ל',
+        }}
+      />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* ============ MOBILE-ONLY converting above-the-fold (md:hidden) ============ */}

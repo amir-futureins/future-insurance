@@ -5,9 +5,10 @@ import PageHero from '@/components/PageHero';
 import { HeroMortgageCard } from '@/components/verticals/HeroCards';
 import VideoBlock from '@/components/VideoBlock';
 import FaqSection from '@/components/FaqSection';
+import SeoSchema from '@/components/SeoSchema';
 
 export const metadata: Metadata = {
-  title: 'ביטוח מבנה ודירה למשכנתא — כיסוי מלא בזול מהבנק',
+  title: 'ביטוח מבנה למשכנתא — זול מהבנק',
   description:
     'ביטוח מבנה (נזקי טבע, אש, צנרת, רעידת אדמה) הנדרש למשכנתא — עצמאי וזול בעשרות אחוזים ממחיר הבנק, על אותו כיסוי בדיוק. מחשבון וליווי מלא במעבר.',
   keywords: ['ביטוח מבנה', 'ביטוח דירה למשכנתא', 'ביטוח מבנה למשכנתא', 'ביטוח נזקי טבע', 'ביטוח רעידת אדמה'],
@@ -38,6 +39,9 @@ const jsonLd = {
 export default function StructurePage() {
   return (
     <main>
+      <SeoSchema
+        crumbs={[{ name: 'ביטוח משכנתא', path: '/mortgage' }, { name: 'ביטוח מבנה', path: '/mortgage/structure' }]}
+      />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <PageHero

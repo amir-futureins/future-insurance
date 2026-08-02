@@ -6,9 +6,10 @@ import { HeroHarCard } from '@/components/verticals/HeroCards';
 import PolicyChecker from '@/components/verticals/PolicyChecker';
 import VideoBlock from '@/components/VideoBlock';
 import FaqSection from '@/components/FaqSection';
+import SeoSchema from '@/components/SeoSchema';
 
 export const metadata: Metadata = {
-  title: 'בדיקת כפל ביטוח והוזלה — סורק פוליסות חינם',
+  title: 'בדיקת כפל ביטוח — סורק פוליסות חינם',
   description:
     'משלמים על כיסוי כפול בלי לדעת? סורקים את הר הביטוח, מזהים כפל ביטוחים ומאחדים לתיק אחד חכם — לרוב בחיסכון של מאות שקלים בחודש. בדיקה חינם וללא התחייבות.',
   keywords: ['כפל ביטוח', 'בדיקת כפל ביטוחים', 'הוזלת ביטוח', 'איחוד פוליסות', 'סריקת פוליסות חינם'],
@@ -32,6 +33,9 @@ const jsonLd = {
 export default function DuplicateCheckPage() {
   return (
     <main>
+      <SeoSchema
+        crumbs={[{ name: 'הר הביטוח', path: '/har-habituach' }, { name: 'בדיקת כפל ביטוח', path: '/har-habituach/duplicate-check' }]}
+      />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <PageHero

@@ -6,9 +6,10 @@ import { HeroCarHistoryCard } from '@/components/verticals/HeroCards';
 import GovDataCta from '@/components/GovDataCta';
 import VideoBlock from '@/components/VideoBlock';
 import FaqSection from '@/components/FaqSection';
+import SeoSchema from '@/components/SeoSchema';
 
 export const metadata: Metadata = {
-  title: 'הוצאת אישור עבר ביטוחי לרכב ב-3 דקות — מדריך',
+  title: 'אישור עבר ביטוחי לרכב — מדריך מהיר',
   description:
     'איך מוציאים אישור עבר ביטוחי (היסטוריית תביעות) לרכב מהר הביטוח ב-3 צעדים פשוטים, ואיך עבר נקי מזכה בהנחה משמעותית בביטוח הרכב. בדיקה וליווי חינם.',
   keywords: ['עבר ביטוחי לרכב', 'אישור היסטוריית תביעות', 'הר הביטוח רכב', 'הנחה בביטוח רכב', 'ותק ביטוחי'],
@@ -38,6 +39,9 @@ const jsonLd = {
 export default function CarClaimsPage() {
   return (
     <main>
+      <SeoSchema
+        crumbs={[{ name: 'הר הביטוח', path: '/har-habituach' }, { name: 'עבר ביטוחי לרכב', path: '/har-habituach/car-claims' }]}
+      />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <PageHero

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Clock, ArrowRight, Calculator } from 'lucide-react';
 import { GUIDES, getGuide, SITE } from '@/lib/content';
 import { IMG, unsplash } from '@/lib/images';
+import SeoSchema from '@/components/SeoSchema';
 
 export function generateStaticParams() {
   return GUIDES.map((g) => ({ slug: g.slug }));
@@ -18,7 +19,10 @@ export function generateMetadata({
   const guide = getGuide(params.slug);
   if (!guide) return { title: 'מדריך לא נמצא' };
   return {
-    title: guide.title,
+    // absolute: guide titles are already descriptive and several would exceed
+    // the ~60 chars Google renders once the "| Future Insurance" template is
+    // appended. Dropping the suffix here keeps every guide title fully visible.
+    title: { absolute: guide.title },
     description: guide.excerpt,
     alternates: { canonical: `/guides/${guide.slug}` },
     openGraph: {
@@ -46,6 +50,12 @@ export default function GuidePage({ params }: { params: { slug: string } }) {
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-12 md:px-10 md:py-16">
+      <SeoSchema
+        crumbs={[
+          { name: 'ביטוח נסיעות לחו״ל', path: '/travel-insurance' },
+          { name: guide.title, path: `/guides/${guide.slug}` },
+        ]}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { SITE } from '@/lib/content';
+import SeoSchema from '@/components/SeoSchema';
 
 export const metadata: Metadata = {
   title: 'הצהרת נגישות',
@@ -11,6 +12,9 @@ export const metadata: Metadata = {
 export default function AccessibilityStatement() {
   return (
     <main className="mx-auto max-w-3xl px-6 py-16 md:px-10 md:py-24">
+      <SeoSchema
+        crumbs={[{ name: 'הצהרת נגישות', path: '/accessibility' }]}
+      />
       <span className="eyebrow text-[13px]">נגישות</span>
       <h1 className="mt-2 text-[clamp(28px,6vw,40px)] font-extrabold leading-tight text-ink">
         הצהרת נגישות

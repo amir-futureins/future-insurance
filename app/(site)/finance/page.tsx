@@ -10,9 +10,10 @@ import VideoBlock from '@/components/VideoBlock';
 import FaqSection from '@/components/FaqSection';
 import ArticleGrid from '@/components/ArticleGrid';
 import PromoBanner from '@/components/PromoBanner';
+import SeoSchema from '@/components/SeoSchema';
 
 export const metadata: Metadata = {
-  title: 'פנסיה, קרן השתלמות וקופת גמל — סימולטור צמיחת הון',
+  title: 'פנסיה וקרן השתלמות — סימולטור חיסכון',
   description:
     'מרכז פיננסי לפנסיה, קרן השתלמות וקופת גמל. סימולטור ריבית דריבית עם גרף צמיחה חי, בדיקת דמי ניהול והתאמת מסלול השקעה — לחיסכון מקסימלי לפרישה.',
   keywords: [
@@ -59,6 +60,10 @@ const PRODUCTS = [
 export default function FinancePage() {
   return (
     <main>
+      <SeoSchema
+        crumbs={[{ name: 'פנסיה ופיננסים', path: '/finance' }]}
+        service={{ name: 'פנסיה, גמל והשתלמות', description: 'סימולטור צמיחת הון, השוואת דמי ניהול וליווי בבחירת מסלול.', path: '/finance', serviceType: 'תכנון פנסיוני' }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

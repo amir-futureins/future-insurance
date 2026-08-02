@@ -8,11 +8,12 @@ import FeatureBadges from '@/components/travel/FeatureBadges';
 import Testimonials from '@/components/travel/Testimonials';
 import AmbientDecor from '@/components/travel/AmbientDecor';
 import { FAQ_ITEMS, SITE } from '@/lib/content';
+import SeoSchema from '@/components/SeoSchema';
 
 export const metadata: Metadata = {
-  title: 'ביטוח נסיעות לחו״ל — השוואה, מחשבון והמלצה חכמה',
+  title: 'ביטוח נסיעות לחו״ל — השוואה ורכישה',
   description:
-    'מחשבון ביטוח נסיעות חכם שממליץ על החברה המשתלמת עבורכם — PassportCard, הראל, מגדל וכלל. ללא השתתפות עצמית, רופא אונליין ופוליסה מיידית. השוו וקבלו הצעה עוד היום.',
+    'השוואת ביטוח נסיעות לחו״ל בין PassportCard, הראל, מגדל וכלל — מחשבון חכם, פוליסה מיידית ורכישה אונליין בליווי סוכן מורשה.',
   keywords: [
     'ביטוח נסיעות',
     'ביטוח נסיעות לחול',
@@ -65,6 +66,10 @@ const jsonLd = {
 export default function TravelInsurancePage() {
   return (
     <>
+      <SeoSchema
+        crumbs={[{ name: 'ביטוח נסיעות לחו״ל', path: '/travel-insurance' }]}
+        service={{ name: 'ביטוח נסיעות לחו״ל', description: 'השוואת ביטוח נסיעות לחו״ל בין PassportCard, הראל, כלל ומגדל — ורכישה אונליין.', path: '/travel-insurance', serviceType: 'ביטוח נסיעות לחו״ל' }}
+      />
       <script
         type="application/ld+json"
         // JSON-LD is trusted, server-generated content.

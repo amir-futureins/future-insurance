@@ -21,9 +21,10 @@ import { HeroHarCard } from '@/components/verticals/HeroCards';
 import VideoBlock from '@/components/VideoBlock';
 import FaqSection from '@/components/FaqSection';
 import ArticleGrid from '@/components/ArticleGrid';
+import SeoSchema from '@/components/SeoSchema';
 
 export const metadata: Metadata = {
-  title: 'הר הביטוח ועבר ביטוחי לרכב — סורק כפל פוליסות ואיחוד תיק',
+  title: 'הר הביטוח — סורק כפל פוליסות חינם',
   description:
     'בודקים את הר הביטוח, מזהים כפל פוליסות ומאחדים את תיק הביטוח לחיסכון של מאות שקלים בחודש. בדיקת עבר ביטוחי לרכב להשגת המחיר הטוב ביותר — בדיקה חינם.',
   keywords: ['הר הביטוח', 'עבר ביטוחי לרכב', 'כפל ביטוחים', 'איחוד תיק ביטוח', 'סריקת פוליסות'],
@@ -49,6 +50,10 @@ const HERO_STEPS = [
 export default function HarHabituachPage() {
   return (
     <main>
+      <SeoSchema
+        crumbs={[{ name: 'הר הביטוח', path: '/har-habituach' }]}
+        service={{ name: 'סריקת הר הביטוח', description: 'סריקת הר הביטוח לזיהוי כפל פוליסות ואיחוד תיק הביטוח.', path: '/har-habituach', serviceType: 'בדיקת תיק ביטוח' }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

@@ -50,7 +50,8 @@ const config: Config = {
       },
       fontFamily: {
         sans: [
-          'var(--font-assistant)',
+          'var(--font-heebo)',
+          'Heebo',
           'Assistant',
           "'Helvetica Neue'",
           'Arial',

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, ShieldCheck, AlertTriangle } from 'lucide-react';
 import { SITE } from '@/lib/content';
+import SeoSchema from '@/components/SeoSchema';
 
 export const metadata: Metadata = {
   title: 'תקנון ותנאי שימוש ומדיניות פרטיות',
@@ -16,6 +17,9 @@ const UPDATED = '22 ביולי 2026';
 function Section({ n, title, children }: { n: string; title: string; children: React.ReactNode }) {
   return (
     <section className="mt-8">
+      <SeoSchema
+        crumbs={[{ name: 'תנאי שימוש', path: '/terms' }]}
+      />
       <h2 className="flex items-baseline gap-2 text-[19px] font-extrabold text-ink">
         <span className="num text-gold-deep">{n}.</span>
         {title}

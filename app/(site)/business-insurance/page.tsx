@@ -4,9 +4,10 @@ import { whatsappHref, SITE } from '@/lib/content';
 import PageHero from '@/components/PageHero';
 import VideoBlock from '@/components/VideoBlock';
 import FaqSection from '@/components/FaqSection';
+import SeoSchema from '@/components/SeoSchema';
 
 export const metadata: Metadata = {
-  title: 'ביטוח לעסק — אחריות, תכולה ומבנה עסקי | הגנה מלאה 360°',
+  title: 'ביטוח לעסק — אחריות, תכולה ומבנה',
   description:
     'ביטוח עסק מקיף: אחריות מקצועית וצד ג׳, ביטוח תכולה ומלאי, ביטוח מבנה עסקי ואובדן הכנסה. התאמת כיסוי לפי סוג העסק, השוואת חברות וליווי סוכן מורשה.',
   keywords: ['ביטוח עסק', 'ביטוח אחריות מקצועית', 'ביטוח צד שלישי לעסק', 'ביטוח תכולת עסק', 'ביטוח מבנה עסקי'],
@@ -46,6 +47,10 @@ const jsonLd = {
 function ShieldCard() {
   return (
     <div className="glass-elevated relative mx-auto w-full max-w-md overflow-hidden">
+      <SeoSchema
+        crumbs={[{ name: 'ביטוח עסקי', path: '/business-insurance' }]}
+        service={{ name: 'ביטוח לעסק', description: 'ביטוח עסקי — אחריות מקצועית, צד ג׳, תכולה ומבנה עסקי.', path: '/business-insurance', serviceType: 'ביטוח עסקי' }}
+      />
       <div className="flex items-center justify-between bg-gradient-to-l from-navy-deep to-[#22366A] px-5 py-3 text-white">
         <span className="flex items-center gap-2 text-[14px] font-extrabold">
           <ShieldCheck className="h-4 w-4 text-gold-bright" aria-hidden />

@@ -18,9 +18,10 @@ import PromoBanner from '@/components/PromoBanner';
 import ComparisonTable from '@/components/ComparisonTable';
 import ExpertTips from '@/components/ExpertTips';
 import SuccessCarousel from '@/components/SuccessCarousel';
+import SeoSchema from '@/components/SeoSchema';
 
 export const metadata: Metadata = {
-  title: 'ביטוח משכנתא — חיים + מבנה, חיסכון מול הבנק',
+  title: 'ביטוח משכנתא — חיסכון מול הבנק',
   description:
     'ביטוח משכנתא (חיים + מבנה) עצמאי, זול בעשרות אחוזים ממחיר הבנק. מחשבון שמראה בדיוק כמה תחסכו, וליווי מלא במעבר — כולל ההודעה לבנק.',
   keywords: ['ביטוח משכנתא', 'ביטוח חיים למשכנתא', 'ביטוח מבנה', 'חיסכון בביטוח משכנתא', 'ביטוח משכנתא מול הבנק'],
@@ -40,6 +41,10 @@ const jsonLd = {
 export default function MortgagePage() {
   return (
     <main>
+      <SeoSchema
+        crumbs={[{ name: 'ביטוח משכנתא', path: '/mortgage' }]}
+        service={{ name: 'ביטוח משכנתא', description: 'ביטוח משכנתא — חיים ומבנה, בעשרות אחוזים פחות ממחיר הבנק על אותו כיסוי.', path: '/mortgage', serviceType: 'ביטוח משכנתא' }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

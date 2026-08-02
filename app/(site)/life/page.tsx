@@ -10,9 +10,10 @@ import FaqSection from '@/components/FaqSection';
 import ArticleGrid from '@/components/ArticleGrid';
 import ExpertTips from '@/components/ExpertTips';
 import SuccessCarousel from '@/components/SuccessCarousel';
+import SeoSchema from '@/components/SeoSchema';
 
 export const metadata: Metadata = {
-  title: 'ביטוח חיים והגנה משפחתית — חישוב כיסוי מותאם',
+  title: 'ביטוח חיים — חישוב כיסוי למשפחה',
   description:
     'ביטוח חיים (ריסק) שמגן על המשפחה כלכלית. מחשבון הגנה משפחתית שמתרגם הכנסה חודשית רצויה לכיסוי מומלץ, עם אומדן פרמיה מיידי וליווי סוכן מורשה.',
   keywords: ['ביטוח חיים', 'ביטוח ריסק', 'הגנה משפחתית', 'מחשבון ביטוח חיים'],
@@ -32,6 +33,10 @@ const jsonLd = {
 export default function LifePage() {
   return (
     <main>
+      <SeoSchema
+        crumbs={[{ name: 'ביטוח חיים', path: '/life' }]}
+        service={{ name: 'ביטוח חיים והגנה משפחתית', description: 'ביטוח חיים בהתאמה אישית — חישוב סכום כיסוי ואומדן פרמיה מיידי.', path: '/life', serviceType: 'ביטוח חיים' }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
