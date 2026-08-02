@@ -50,16 +50,7 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
 
       {/* floating widgets stay outside #a11y-content so the toolbar itself
           is never inverted/grayscaled */}
-      {/* Mobile float ladder (<lg), measured from the safe-area-adjusted bottom
-          so nothing collides and nothing hides under the iOS home indicator:
-            MobileStickyBar   0      → ~3.9rem
-            AccessibilityMenu 5.5rem → ~8.75rem
-            AiAssistantWidget 9.5rem → ~12.9rem
-            StickyLeftGovCTA  13.5rem (md+)
-            SocialProofToast  17.5rem (md+)
-          Each offset is written as a literal here / in the component so Tailwind
-          can generate it. Desktop (lg+) positions are unchanged. */}
-      <AccessibilityMenu offsetClass="bottom-[calc(env(safe-area-inset-bottom)_+_5.5rem)] left-4 lg:bottom-24 lg:left-auto lg:start-5" />
+      <AccessibilityMenu />
       <SocialProof />
       <WhatsAppFloat />
       <SideActionDock />

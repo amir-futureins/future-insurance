@@ -49,7 +49,7 @@ export default function StickyLeftGovCTA() {
 
   return (
     <>
-      <div className="no-print fixed bottom-[calc(env(safe-area-inset-bottom)_+_14rem)] left-0 z-40 hidden animate-nudge-x md:block lg:bottom-28">
+      <div className="no-print fixed bottom-28 left-0 z-40 hidden animate-nudge-x md:block">
         <button
           type="button"
           onClick={() => setOpen(true)}

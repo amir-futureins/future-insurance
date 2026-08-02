@@ -7,8 +7,6 @@ import {
   Phone,
   BadgeCheck,
   Check,
-  ExternalLink,
-  Scale,
 } from 'lucide-react';
 import { SITE, whatsappHref } from '@/lib/content';
 import { VERTICALS, AGENT, AGENCY_REVIEWS, AGENCY_ARTICLES } from '@/lib/agency';
@@ -60,144 +58,56 @@ const jsonLd = {
   ],
 };
 
-/**
- * Carriers offered for DIRECT online purchase in the mobile brand bar.
- * Each href goes to /api/go/[provider], the native affiliate redirect — the
- * shortest possible path to the carrier's own buy flow, with no interstitial
- * landing page. Clicks are picked up site-wide by AffiliateClickTracker, which
- * pushes a `purchase_click` GTM event for every `a[href^="/api/go/"]`.
- * Order is the requested merchandising order, not the lib/providers.ts order.
- *
- * `from`/`to` are the requested house accents per carrier, darkened where
- * needed so white 11px label text clears AA (≥4.5:1) on the gradient's light
- * end. `accent` is the hairline strip along the card top. These are accent
- * colours only — the mark inside stays the nominative wordmark from
- * BrandEmblem, never a reproduction of a carrier's trademarked logo.
- */
-const DIRECT_BUY = [
-  {
-    slug: 'passportcard',
-    name: 'PassportCard',
-    tagline: 'ללא הוצאות מהכיס',
-    from: '#E11933',
-    to: '#A5101F',
-    accent: '#FFFFFF',
-  },
-  {
-    slug: 'harel',
-    name: 'הראל',
-    tagline: 'פופולרי למשפחות',
-    from: '#0057B8',
-    to: '#003B7E',
-    accent: '#FFC20E',
-  },
-  {
-    slug: 'clal',
-    name: 'כלל',
-    tagline: 'מחיר משתלם',
-    from: '#0086BC',
-    to: '#002D62',
-    accent: '#7FD4F2',
-  },
-  {
-    slug: 'migdal',
-    name: 'מגדל',
-    tagline: 'כיסוי מקיף',
-    from: '#047857',
-    to: '#0F766E',
-    accent: '#5EEAD4',
-  },
-];
-
 export default function HomePage() {
   return (
-    // overflow-x-clip (not -hidden) is the sticky-safe guard used across this
-    // codebase: `hidden` would force overflow-y to `auto`, turning <main> into a
-    // scroll container and breaking in-page anchors + any sticky descendant.
-    <main className="overflow-x-clip">
+    <main>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* ---- MOBILE-ONLY quick-purchase BRAND BAR (md:hidden) ----
-           Deliberately the FIRST block in <main> so it lands above the fold on a
-           phone, ahead of the action hub. On md+ it is hidden entirely and the
-           desktop order (action hub → hero) is untouched.
+      {/* ---- "מה תרצה לעשות היום?" quick-action hub (mobile + desktop) ---- */}
+      <HomeActionHub />
 
-           Two visually separated paths, so "buy now" is never confused with
-           "compare first":
-             1. A 2x2 grid of carrier buttons in each insurer's own accent
-                colours — every card is a DIRECT deep-link into that company's
-                online buy flow via /api/go/[slug].
-             2. Below an "או" divider, the dynamic comparison tool as a plainly
-                secondary, outlined CTA. */}
+      {/* ---- MOBILE-ONLY travel quick-buy banner (md:hidden) ---- */}
       <section className="px-4 pt-3.5 md:hidden">
         <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white/85 p-4 shadow-lg backdrop-blur-sm">
           <div className="flex items-center gap-1.5 text-[12px] font-bold text-gold-deep">
-            <span aria-hidden>✈️</span> פוליסה דיגיטלית מיידית · ליווי סוכן מורשה
+            <span aria-hidden>✈️</span> ביטוח נסיעות לחו״ל
           </div>
-          <h2 className="mt-1 text-[18px] font-extrabold leading-tight text-ink">
-            רכישת ביטוח נסיעות לחו״ל — בחרו חברה לרכישה מיידית:
+          <h2 className="mt-1 text-[19px] font-extrabold leading-tight text-ink">
+            רכישה מהירה אונליין — בחרו חברה
           </h2>
-
-          <ul className="mt-3.5 grid grid-cols-2 gap-2.5">
-            {DIRECT_BUY.map((p) => (
-              <li key={p.slug} className="flex">
-                <a
-                  href={`/api/go/${p.slug}`}
-                  target="_blank"
-                  rel="noopener noreferrer sponsored"
-                  aria-label={`לרכישת ביטוח נסיעות אונליין ב${p.name} — נפתח באתר החברה`}
-                  className="relative flex w-full min-w-0 flex-col items-center overflow-hidden rounded-2xl p-3 text-center shadow-lg ring-1 ring-black/10 transition-transform active:scale-[0.97]"
-                  style={{ backgroundImage: `linear-gradient(140deg, ${p.from} 0%, ${p.to} 100%)` }}
-                >
-                  <span
-                    aria-hidden
-                    className="absolute inset-x-0 top-0 h-[3px]"
-                    style={{ backgroundColor: p.accent }}
-                  />
-                  <BrandEmblem slug={p.slug} variant="sm" />
-                  <span className="mt-2 block w-full truncate text-[13.5px] font-extrabold leading-tight text-white">
-                    {p.name}
-                  </span>
-                  {/* flex-1 absorbs the height difference between one- and
-                      two-line taglines, so all four buy buttons stay aligned. */}
-                  <span className="mt-0.5 block flex-1 text-[11px] leading-snug text-white/90">
-                    {p.tagline}
-                  </span>
-                  <span className="mt-2.5 flex w-full items-center justify-center gap-1 rounded-xl bg-white/20 px-2 py-2 text-[12.5px] font-extrabold text-white ring-1 ring-inset ring-white/35">
-                    לרכישה מיידית
-                    <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden />
-                  </span>
-                </a>
-              </li>
+          <p className="mt-1 text-[12.5px] leading-snug text-muted">
+            פוליסה דיגיטלית מיידית · השוואת מחירים · ליווי סוכן מורשה
+          </p>
+          <div className="mt-3.5 grid grid-cols-2 gap-2.5">
+            {[
+              ['passportcard', 'PassportCard'],
+              ['harel', 'הראל'],
+              ['clal', 'כלל'],
+              ['migdal', 'מגדל'],
+            ].map(([slug, label]) => (
+              <Link
+                key={slug}
+                href={`/travel-insurance/${slug}`}
+                className="flex items-center gap-2.5 rounded-2xl border border-slate-200 bg-slate-50 p-2.5 transition-colors active:bg-slate-100"
+              >
+                <BrandEmblem slug={slug} variant="sm" />
+                <span className="flex-1 text-start text-[14px] font-bold text-ink">{label}</span>
+                <ArrowLeft className="h-4 w-4 shrink-0 text-faint" aria-hidden />
+              </Link>
             ))}
-          </ul>
-
-          <div className="mt-4 flex items-center gap-2.5">
-            <span className="h-px flex-1 bg-slate-200" aria-hidden />
-            <span className="text-[11.5px] font-bold text-faint">או</span>
-            <span className="h-px flex-1 bg-slate-200" aria-hidden />
           </div>
-
           <Link
             href="/travel-insurance"
-            className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl border border-navy/15 bg-white px-4 py-3 text-[14px] font-bold text-ink shadow-sm transition-transform active:scale-[0.98]"
+            className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 px-4 py-3.5 text-[15px] font-extrabold text-navy-deep shadow-lg transition-transform active:scale-[0.98]"
           >
-            <Scale className="h-4 w-4 shrink-0 text-gold-deep" aria-hidden />
-            השוואת מחירים בין כל החברות
-            <ArrowLeft className="h-4 w-4 shrink-0 text-faint" aria-hidden />
+            השוואת כל חברות החו״ל
+            <ArrowLeft className="h-4 w-4" aria-hidden />
           </Link>
-
-          <p className="mt-2 text-center text-[11px] leading-snug text-faint">
-            הרכישה מתבצעת באתר חברת הביטוח · השירות ללא עלות ללקוח
-          </p>
         </div>
       </section>
-
-      {/* ---- "מה תרצה לעשות היום?" quick-action hub (mobile + desktop) ---- */}
-      <HomeActionHub />
 
       {/* ---- HERO ---- */}
       <HomeHero />
@@ -205,7 +115,7 @@ export default function HomePage() {
       {/* ---- 4 VERTICAL CARDS ---- */}
       <section
         id="verticals"
-        className="mx-auto w-full max-w-container scroll-mt-24 px-4 py-14 sm:px-6 md:px-10 md:py-16"
+        className="mx-auto w-full max-w-container scroll-mt-24 px-6 py-14 md:px-10 md:py-16"
       >
         <div className="mx-auto max-w-2xl text-center">
           <span className="eyebrow text-[13px]">תחומי הביטוח שלנו</span>
@@ -281,8 +191,8 @@ export default function HomePage() {
       />
 
       {/* ---- AGENT BIO / LICENSE ---- */}
-      <section className="mx-auto w-full max-w-container px-4 py-14 sm:px-6 md:px-10 md:py-16">
-        <div className="glass-elevated relative overflow-hidden p-5 sm:p-9">
+      <section className="mx-auto w-full max-w-container px-6 py-14 md:px-10 md:py-16">
+        <div className="glass-elevated relative overflow-hidden p-7 sm:p-9">
           <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-recommend-highlight" />
           <div className="relative flex flex-col items-center gap-6 text-center sm:flex-row sm:items-center sm:text-start">
             <span
@@ -332,7 +242,7 @@ export default function HomePage() {
       </section>
 
       {/* ---- REVIEWS ---- */}
-      <section className="mx-auto w-full max-w-container px-4 py-14 sm:px-6 md:px-10 md:py-16">
+      <section className="mx-auto w-full max-w-container px-6 py-14 md:px-10 md:py-16">
         <div className="mx-auto max-w-2xl text-center">
           <span className="eyebrow inline-flex items-center gap-1.5 text-[13px]">
             <Star className="h-4 w-4" aria-hidden />

@@ -76,10 +76,7 @@ export default function SocialProofToast() {
   const item = STORIES[index];
 
   return (
-    // See components/travel/SocialProof.tsx — same docking rule, so the two
-    // toasts (which never render on the same route) behave identically. Every
-    // lg: value restores the original desktop placement exactly.
-    <div className="no-print pointer-events-none fixed bottom-[calc(env(safe-area-inset-bottom)_+_5rem)] start-4 z-30 hidden w-[min(20rem,calc(100vw-6rem))] md:block lg:bottom-44 lg:start-auto lg:end-4 lg:z-40">
+    <div className="no-print pointer-events-none fixed bottom-44 end-4 z-40 hidden w-[min(20rem,calc(100vw-6rem))] md:block">
       <div className="glass pointer-events-auto flex animate-toast-in items-center gap-3 p-3 pe-9">
         <span
           className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-[18px]"
