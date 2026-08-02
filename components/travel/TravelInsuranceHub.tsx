@@ -16,6 +16,7 @@ import TravelCalculator from './TravelCalculator';
 import ProviderGrid from './ProviderGrid';
 import DestinationCarousel from './DestinationCarousel';
 import HeroRatesStrip from './HeroRatesStrip';
+import BrandBuyCarousel from '@/components/BrandBuyCarousel';
 
 const DURATION_MIN = 1;
 const DURATION_MAX = 90;
@@ -107,6 +108,11 @@ export default function TravelInsuranceHub() {
               עונים על כמה שאלות והמחשבון החכם ממליץ על חברת הביטוח שמתאימה בדיוק לפרופיל
               שלכם — PassportCard, הראל, מגדל או כלל. השוואה שקופה, פוליסה מיידית.
             </p>
+
+            {/* mobile-only direct-purchase rail, straight under the heading —
+                buying is one tap from the top of the page on a phone. Hidden at
+                md+, where the boarding pass and provider grid already serve it. */}
+            <BrandBuyCarousel className="mt-6" />
 
             {/* live destination rates marquee */}
             <HeroRatesStrip />
