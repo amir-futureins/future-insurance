@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { trackEvent } from '@/lib/gtm';
 
 /**
@@ -23,6 +22,13 @@ import { trackEvent } from '@/lib/gtm';
  *   buy bar  bottom 12px, full width; ~56px tall, so its top edge (~68px)
  *            clears both widgets, and on desktop it is centred at max-w-540px
  *            which leaves both gutters free.
+ *   cookie   bottom 144px (lg: 176px) — clears the whole stack above; see
+ *            components/fly/CookieConsent.tsx.
+ *
+ * Both floats are rendered unconditionally. The WhatsApp button used to fade in
+ * only after an IntersectionObserver saw the hero scroll past, which left the
+ * page's only support channel invisible on load; it is now permanently on
+ * screen, so neither this file nor the page needs the #fly-hero-end sentinel.
  */
 
 const WA_PHONE = '972528422884';
@@ -38,25 +44,6 @@ function WhatsAppGlyph() {
 }
 
 export default function FlyWidgets({ buyHref }: { buyHref: string }) {
-  /* The WhatsApp button fades in once the hero has scrolled past, so it never
-     competes with the card CTA above the fold. The purchase bar is permanent. */
-  const [pastHero, setPastHero] = useState(false);
-
-  useEffect(() => {
-    const sentinel = document.getElementById('fly-hero-end');
-    if (!sentinel || !('IntersectionObserver' in window)) {
-      setPastHero(true); // no sentinel/IO: reveal rather than strand the button
-      return;
-    }
-    const io = new IntersectionObserver(
-      ([entry]) =>
-        setPastHero(!entry.isIntersecting && entry.boundingClientRect.top < 0),
-      { threshold: 0 },
-    );
-    io.observe(sentinel);
-    return () => io.disconnect();
-  }, []);
-
   return (
     <>
       <a
@@ -65,11 +52,7 @@ export default function FlyWidgets({ buyHref }: { buyHref: string }) {
         rel="noopener noreferrer"
         onClick={() => trackEvent('click_whatsapp', { context: 'fly_landing' })}
         aria-label={`שיחת וואטסאפ: ${WA_TEXT}`}
-        className={`no-print fixed bottom-20 right-4 z-[60] grid h-[54px] w-[54px] place-items-center rounded-full bg-[#25D366] text-white shadow-[0_10px_24px_rgba(37,211,102,0.40)] ring-[6px] ring-white/85 transition-all duration-300 hover:scale-105 lg:bottom-24 lg:right-auto lg:left-5 ${
-          pastHero
-            ? 'pointer-events-auto translate-y-0 scale-100 opacity-100'
-            : 'pointer-events-none translate-y-3 scale-90 opacity-0'
-        }`}
+        className="no-print fixed bottom-20 right-4 z-[60] grid h-[54px] w-[54px] place-items-center rounded-full bg-[#25D366] text-white shadow-[0_10px_24px_rgba(37,211,102,0.40)] ring-[6px] ring-white/85 transition-transform duration-300 hover:scale-105 lg:bottom-24 lg:right-auto lg:left-5"
       >
         <WhatsAppGlyph />
       </a>
