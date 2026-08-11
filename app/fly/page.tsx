@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Script from 'next/script';
 import { AGENT } from '@/lib/agency';
 import AccessibilityMenu from '@/components/travel/AccessibilityMenu';
+import CookieConsent from '@/components/fly/CookieConsent';
 import FlyWidgets from '@/components/fly/FlyWidgets';
 
 /**
@@ -31,13 +32,47 @@ const FLY_URL = 'https://fly.amirs.co.il';
  * touched, but it should be corrected separately.
  */
 const LICENSE = '208678854';
+const AGENCY_NAME = 'שושני אמיר — סוכנות לביטוח';
 const DISCLOSURE = `משווק מורשה של פספורטכארד | מס׳ רישיון: ${LICENSE}`;
+
+/**
+ * Mandatory independent-agent notice. Rendered TWICE — once directly under the
+ * top bar (above the fold on mobile) and once in the footer — because the
+ * PassportCard partner policy requires the "not the official site" statement to
+ * be visible without scrolling as well as on the page's legal block.
+ *
+ * The straight double quote of the source copy is written as the Hebrew
+ * gershayim (״), matching every other Hebrew abbreviation on this page
+ * (לחו״ל, מס׳, ע״י); the wording is otherwise verbatim.
+ */
+const COMPLIANCE_NOTICE =
+  'שושני אמיר — סוכנות לביטוח (סוכן ביטוח מורשה). אתר זה מופעל ע״י סוכן עצמאי ואינו האתר הרשמי של חברת PassportCard.';
+
+/**
+ * Regulatory identity block for the footer.
+ *
+ * Every value here must be a real, verified detail — a fabricated licence or
+ * company number is a regulatory offence, so nothing in this list is guessed.
+ * TODO(before launch): add the agency's company number (ח.פ./ע.מ.) and the
+ * licensed branches (ענפי רישיון); they are deliberately omitted, not invented.
+ */
+const AGENCY_DETAILS = [
+  { k: 'שם הסוכנות', v: AGENCY_NAME, ltr: false },
+  { k: 'סוכן ביטוח מורשה', v: AGENT.name, ltr: false },
+  { k: 'מס׳ רישיון סוכן', v: LICENSE, ltr: true },
+  { k: 'גורם מפקח', v: 'רשות שוק ההון, ביטוח וחיסכון', ltr: false },
+  { k: 'המוצר המשווק', v: 'ביטוח נסיעות לחו״ל של PassportCard', ltr: false },
+  { k: 'זיקה למבטח', v: 'הסוכן מקבל עמלה מהמבטח בגין שיווק המוצר', ltr: false },
+  { k: 'טלפון', v: '052-842-2884', ltr: true },
+] as const;
 
 /* Compliance 5.2.1 — the agent name must render at a font size greater than or
    equal to the H1. Both are clamps whose min, slope AND max satisfy that, so the
-   relationship holds at every viewport width, not only at tested breakpoints. */
-const FS_AGENT = 'text-[clamp(1.5rem,4.9vw,2.55rem)]';
-const FS_H1 = 'text-[clamp(1.45rem,4.6vw,2.4rem)]';
+   relationship holds at every viewport width, not only at tested breakpoints.
+   Both were stepped down from their previous values so that the notice, the H1,
+   the sub-headline and the primary CTA all clear a 375x560 mobile fold. */
+const FS_AGENT = 'text-[clamp(1.3rem,4.2vw,2.2rem)]';
+const FS_H1 = 'text-[clamp(1.25rem,4vw,2.1rem)]';
 
 const H2 = 'text-[clamp(1.2rem,3.6vw,1.75rem)] font-extrabold tracking-tight text-ink';
 const RAIL =
@@ -45,7 +80,12 @@ const RAIL =
 const RAIL_ITEM = 'min-w-[260px] shrink-0 snap-center md:min-w-0 md:shrink';
 
 /* Compliance 5.2.3 — the brand keyword ("פספורטכארד" / "PassportCard") must not
-   appear in the <title>, the meta description, or the <h1>. */
+   appear in the <title>, the meta description, or the <h1>.
+   NOTE: the <h1> now carries "PassportCard" by explicit instruction of the
+   agency owner, so this route currently satisfies 5.2.3 for the title and the
+   description ONLY. The independent-agent notice rendered above the fold
+   (COMPLIANCE_NOTICE) is the stated mitigation. Revisit if the partner
+   confirms the H1 restriction still binds. */
 export const metadata: Metadata = {
   // `absolute` bypasses the root layout's "%s | Future Insurance" template —
   // this host is the agent's landing page, not an Future Insurance sub-page, and
@@ -116,19 +156,12 @@ const STEPS = [
   { n: '3', t: 'רוכשים אונליין', d: 'השלמת הרכישה באתר המאובטח של המבטח וקבלת הפוליסה לדוא״ל.' },
 ] as const;
 
-/* TODO(before launch): replace with real, consented customer reviews.
-   Publishing fabricated testimonials breaches Israeli consumer-protection law. */
-const REVIEWS = [
-  {
-    q: 'הנפקה קלה תוך 2 דקות. כשהזדקקתי לרופא בתאילנד, הכרטיס שילם הכל במקום ואמיר עזר לי בווטסאפ!',
-    n: 'דניאל כ.',
-  },
-  {
-    q: 'טסים רגועים רק עם פספורטכארד ועם הליווי של אמיר. שירות מקצועי, מהיר וללא פשרות.',
-    n: 'משפחת לוי',
-  },
-  { q: 'הצירוף הכי מהיר שהיה לי בחיים. חסך לי המון זמן לפני הטיסה.', n: 'עומר ש.' },
-] as const;
+/* The "לקוחות ממליצים" section was REMOVED, not commented out: its three quotes
+   were illustrative placeholders, and publishing invented testimonials breaches
+   Israeli consumer-protection law. To bring it back, add real reviews that the
+   named customers have consented to publish — and keep the "אין באמור התחייבות
+   לתוצאה" qualifier that sat under the rail, since a testimonial must not read
+   as a promise of cover or of payout. */
 
 const LEGAL = [
   'האמור באתר זה הינו מידע שיווקי כללי בלבד, אינו מהווה ייעוץ ביטוחי, רפואי או משפטי ואינו תחליף לעיון בתנאי הפוליסה המלאים.',
@@ -196,46 +229,100 @@ function TopBar() {
   );
 }
 
+/**
+ * Mandated independent-agent notice.
+ *
+ * `variant="top"` is the above-the-fold band; `variant="footer"` repeats it in
+ * the legal block. Amber rather than the page's red/navy so it reads as a legal
+ * notice and not as another marketing strip, and role="note" keeps that
+ * distinction for screen readers too.
+ */
+function ComplianceNotice({ variant }: { variant: 'top' | 'footer' }) {
+  const top = variant === 'top';
+  return (
+    <div
+      role="note"
+      className={
+        top
+          ? 'border-b border-amber-300/70 bg-amber-50'
+          : 'rounded-2xl border border-amber-300/70 bg-amber-50 px-3.5 py-2.5'
+      }
+    >
+      <p
+        className={`${
+          top ? 'mx-auto max-w-container px-4 py-2 sm:px-6' : ''
+        } flex items-start gap-2 text-[11.5px] font-semibold leading-snug text-[#78350F]`}
+      >
+        <span aria-hidden className="shrink-0 leading-none">
+          ⚠️
+        </span>
+        <span>{COMPLIANCE_NOTICE}</span>
+      </p>
+    </div>
+  );
+}
+
 /** Agent identity + mandatory disclosure badge (compliance 5.2.1 / 5.2.3). */
 function AgentIdentity() {
   return (
     <header className="border-b border-navy/10 bg-white">
-      <div className="mx-auto max-w-container px-4 py-4 sm:px-6">
-        <div className="flex items-center gap-3">
-          <span
-            aria-hidden
-            className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-navy-deep text-lg font-black text-white"
-          >
-            {AGENT.initials}
-          </span>
-          <div className="min-w-0">
-            <p className={`${FS_AGENT} font-black leading-[1.08] tracking-tight text-ink`}>
-              {AGENT.name}
-            </p>
-            <p className="text-[15px] font-bold leading-tight text-muted">{AGENT.title}</p>
-          </div>
+      {/* One compact row: the identity block has to leave the fold's remaining
+          height to the H1, the sub-headline and the primary CTA. */}
+      <div className="mx-auto flex max-w-container items-center gap-2.5 px-4 py-2.5 sm:px-6">
+        <span
+          aria-hidden
+          className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-navy-deep text-[15px] font-black text-white"
+        >
+          {AGENT.initials}
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className={`${FS_AGENT} font-black leading-[1.1] tracking-tight text-ink`}>
+            {AGENT.name}
+          </p>
+          <p className="text-[12.5px] font-bold leading-tight text-muted">
+            {AGENT.title} · מס׳ רישיון <span dir="ltr">{LICENSE}</span>
+          </p>
         </div>
-
-        <p className="mt-3 inline-flex items-center gap-2 rounded-full border border-navy/10 bg-base px-3.5 py-1.5 text-[11px] font-bold leading-tight text-muted">
-          <span aria-hidden className="h-1.5 w-1.5 shrink-0 rounded-full bg-pc" />
-          {DISCLOSURE}
-        </p>
       </div>
     </header>
   );
 }
 
-/** Hero — the red charged card carries the primary action. */
+/**
+ * Hero — ordered for the mobile fold.
+ *
+ * The primary CTA sits directly under the sub-headline, ABOVE the charged-card
+ * graphic, so that the headline, the legal notice and the purchase button are
+ * all reachable without scrolling; the 206px card would otherwise push the
+ * button off a 375x560 screen. The card keeps its own pill CTA for visitors who
+ * scroll back to it.
+ */
 function Hero() {
   return (
-    <section className="mx-auto max-w-container px-4 pb-8 pt-6 sm:px-6 md:pb-12 md:pt-10">
+    <section className="mx-auto max-w-container px-4 pb-8 pt-4 sm:px-6 md:pb-12 md:pt-10">
       <div className="mx-auto max-w-2xl text-center">
-        <h1 className={`${FS_H1} font-extrabold leading-[1.28] tracking-tight text-ink`}>
-          ביטוח נסיעות לחו״ל ברכישה דיגיטלית מהירה ובליווי אישי
+        <h1 className={`${FS_H1} font-extrabold leading-[1.25] tracking-tight text-ink`}>
+          ביטוח נסיעות לחו״ל עם PassportCard — הרכישה הדיגיטלית המהירה בישראל ✈️
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-[17px] leading-relaxed text-muted">
-          כיסוי שמותאם ליעד, לגיל ולמצב רפואי קיים — ואחריו צירוף דיגיטלי מאובטח באתר
-          המבטח, עם סוכן שאפשר לדבר איתו.
+        <p className="mx-auto mt-2.5 max-w-xl text-[14.5px] leading-relaxed text-muted md:text-[17px]">
+          כרטיס אדום שמשלם על הטיפול הרפואי במקום, מענה 24/7 ב-WhatsApp והנפקה אונליין
+          ב-3 דקות.
+        </p>
+
+        {/* Primary purchase CTA — glowing red, above the fold. */}
+        <a
+          href={BUY}
+          target="_blank"
+          rel="noopener nofollow sponsored"
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-pc px-5 py-4 text-[clamp(0.95rem,3.9vw,1.15rem)] font-black leading-tight text-white shadow-lg shadow-red-500/50 transition-all duration-200 hover:bg-[#C10510] hover:shadow-red-500/80 md:mx-auto md:max-w-md"
+        >
+          ⚡ לרכישת הפוליסה אונליין 👈
+        </a>
+
+        {/* Marketing disclosure, kept adjacent to the purchase action. */}
+        <p className="mt-2.5 inline-flex items-center gap-2 rounded-full border border-navy/10 bg-base px-3 py-1.5 text-[11px] font-bold leading-tight text-muted">
+          <span aria-hidden className="h-1.5 w-1.5 shrink-0 rounded-full bg-pc" />
+          {DISCLOSURE}
         </p>
 
         <figure className="mt-6">
@@ -403,82 +490,43 @@ function Steps() {
   );
 }
 
-function Reviews() {
-  return (
-    <section
-      aria-labelledby="reviews-title"
-      className="border-y border-navy/10 bg-base py-10 md:py-14"
-    >
-      <div className="mx-auto max-w-container px-4 sm:px-6">
-        <div className="mb-4 flex items-baseline justify-between gap-3">
-          <h2 id="reviews-title" className={H2}>
-            לקוחות ממליצים
-          </h2>
-          <span className="whitespace-nowrap text-[12px] font-bold text-faint md:hidden">
-            החליקו ←
-          </span>
-        </div>
-
-        <ul className={RAIL} style={{ overscrollBehaviorX: 'contain' }}>
-          {REVIEWS.map((r) => (
-            <li key={r.n} className={RAIL_ITEM}>
-              <figure className="flex h-full flex-col gap-2.5 rounded-2xl border border-navy/10 bg-white p-4 shadow-sm">
-                <span
-                  className="text-[13px] tracking-[2px] text-pc"
-                  role="img"
-                  aria-label="דירוג 5 מתוך 5"
-                >
-                  ★★★★★
-                </span>
-                <blockquote className="text-[14px] font-medium leading-relaxed text-ink">
-                  ״{r.q}״
-                </blockquote>
-                <figcaption className="mt-auto text-[12.5px] font-extrabold text-muted">
-                  {r.n}
-                </figcaption>
-              </figure>
-            </li>
-          ))}
-        </ul>
-
-        <p className="mt-4 text-[11.5px] leading-relaxed text-faint">
-          חוויות אישיות של לקוחות. אין באמור התחייבות לתוצאה, לכיסוי או לתשלום תגמולי ביטוח
-          במקרה מסוים.
-        </p>
-      </div>
-    </section>
-  );
-}
-
-/** Native details/summary — the accordion still works with JavaScript off. */
+/**
+ * Native details/summary — the accordion still works with JavaScript off.
+ *
+ * Carries the tinted full-bleed band that the removed testimonials section used
+ * to provide, so the page keeps alternating base/white and Steps does not run
+ * straight into the FAQ on one flat surface.
+ */
 function Faq() {
   return (
     <section
       aria-labelledby="faq-title"
-      className="mx-auto max-w-container px-4 py-10 sm:px-6 md:py-14"
+      className="border-y border-navy/10 bg-base py-10 md:py-14"
     >
-      <h2 id="faq-title" className={`mb-4 ${H2}`}>
-        שאלות ותשובות
-      </h2>
-      <div className="mx-auto max-w-3xl">
-        {FAQS.map((f) => (
-          <details
-            key={f.q}
-            className="group mb-2.5 overflow-hidden rounded-2xl border border-navy/10 bg-white shadow-sm"
-          >
-            <summary className="flex cursor-pointer list-none items-center gap-2.5 p-4 text-[15px] font-extrabold leading-snug text-ink [&::-webkit-details-marker]:hidden">
-              <span className="flex-1">{f.q}</span>
-              <span
-                aria-hidden
-                className="grid h-6 w-6 shrink-0 place-items-center rounded-lg border border-navy/10 bg-base text-[13px] font-black text-pc"
-              >
-                <span className="group-open:hidden">+</span>
-                <span className="hidden group-open:inline">−</span>
-              </span>
-            </summary>
-            <p className="px-4 pb-4 text-[13.5px] leading-relaxed text-muted">{f.a}</p>
-          </details>
-        ))}
+      <div className="mx-auto max-w-container px-4 sm:px-6">
+        <h2 id="faq-title" className={`mb-4 ${H2}`}>
+          שאלות ותשובות
+        </h2>
+        <div className="mx-auto max-w-3xl">
+          {FAQS.map((f) => (
+            <details
+              key={f.q}
+              className="group mb-2.5 overflow-hidden rounded-2xl border border-navy/10 bg-white shadow-sm"
+            >
+              <summary className="flex cursor-pointer list-none items-center gap-2.5 p-4 text-[15px] font-extrabold leading-snug text-ink [&::-webkit-details-marker]:hidden">
+                <span className="flex-1">{f.q}</span>
+                <span
+                  aria-hidden
+                  className="grid h-6 w-6 shrink-0 place-items-center rounded-lg border border-navy/10 bg-base text-[13px] font-black text-pc"
+                >
+                  <span className="group-open:hidden">+</span>
+                  <span className="hidden group-open:inline">−</span>
+                </span>
+              </summary>
+              <p className="px-4 pb-4 text-[13.5px] leading-relaxed text-muted">{f.a}</p>
+            </details>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -503,6 +551,24 @@ function FlyFooter() {
         <p className="mt-3 inline-flex rounded-full border border-pc/25 bg-pc/[0.06] px-3.5 py-1.5 text-[11.5px] font-bold text-[#C10510]">
           {DISCLOSURE}
         </p>
+
+        {/* Second, mandated placement of the independent-agent notice. */}
+        <div className="mt-3">
+          <ComplianceNotice variant="footer" />
+        </div>
+
+        {/* Regulatory identity block. <dl> so each label stays associated with
+            its value for assistive technology. */}
+        <dl className="mt-4 grid gap-x-4 gap-y-1.5 border-t border-navy/10 pt-3 text-[12px] leading-relaxed sm:grid-cols-2">
+          {AGENCY_DETAILS.map((d) => (
+            <div key={d.k} className="flex flex-wrap gap-x-1.5">
+              <dt className="font-bold text-ink">{d.k}:</dt>
+              <dd dir={d.ltr ? 'ltr' : undefined} className="text-muted">
+                {d.v}
+              </dd>
+            </div>
+          ))}
+        </dl>
 
         <p className="mt-4 border-t border-navy/10 pt-3 text-[12px] font-bold leading-relaxed text-muted">
           השירות והתיווך מבוצעים על ידי {AGENT.name}, {AGENT.title} (מס׳ רישיון {LICENSE}).
@@ -552,21 +618,20 @@ gtag('config','AW-18295158593');`}
           inverts or greys out its own controls. */}
       <div id="a11y-content" className="relative z-0 min-h-screen bg-white">
         <TopBar />
+        <ComplianceNotice variant="top" />
         <AgentIdentity />
         <main>
           <Hero />
-          {/* sentinel: FlyWidgets reveals the WhatsApp button past this point */}
-          <div id="fly-hero-end" aria-hidden className="h-px" />
           <Metrics />
           <WhatToCheck />
           <Steps />
-          <Reviews />
           <Faq />
         </main>
         <FlyFooter />
       </div>
 
       <FlyWidgets buyHref={BUY} />
+      <CookieConsent />
       <AccessibilityMenu />
     </>
   );
