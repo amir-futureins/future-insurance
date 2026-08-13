@@ -1,8 +1,16 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
 import { AGENT } from '@/lib/agency';
+import {
+  AGENCY_BRANCHES,
+  AGENCY_LICENSE,
+  AGENCY_NAME,
+  AGENCY_TAX_ID,
+  insuranceAgencySchema,
+} from '@/lib/schema';
 import AccessibilityMenu from '@/components/travel/AccessibilityMenu';
 import CookieConsent from '@/components/fly/CookieConsent';
+import FlyAffiliateTracker from '@/components/fly/FlyAffiliateTracker';
 import FlyWidgets from '@/components/fly/FlyWidgets';
 
 /**
@@ -26,14 +34,33 @@ const BUY = '/api/go/passportcard';
 const FLY_URL = 'https://fly.amirs.co.il';
 
 /**
- * Real Capital Market Authority licence number, kept local to this route.
+ * Regulatory identifiers now live in lib/schema.ts so the footer, the meta
+ * description and the JSON-LD graph read the same values. They are TWO
+ * DIFFERENT numbers and must never be conflated: 208678854 is the company
+ * number, and an earlier revision published it under the label "מס׳ רישיון" in
+ * four places — a wrong regulatory identifier on a licensed-agent page.
+ *
  * lib/agency.ts still carries a placeholder in AGENT.license which is rendered
  * across the main site — deliberately left alone here so futureins.co.il is not
  * touched, but it should be corrected separately.
  */
-const LICENSE = '208678854';
-const AGENCY_NAME = 'שושני אמיר — סוכנות לביטוח';
+const LICENSE = AGENCY_LICENSE;
+const COMPANY_ID = AGENCY_TAX_ID;
 const DISCLOSURE = `משווק מורשה של פספורטכארד | מס׳ רישיון: ${LICENSE}`;
+
+/**
+ * Issuance-speed claim, stated ONCE and reused everywhere it appears.
+ *
+ * Three different figures used to run on this page at the same time — "2 דקות"
+ * in the top bar, "3 דקות" in the sub-headline and "2 דקות" in the metrics tile
+ * — for a process the FAQ itself says underwriting can extend. A single hedged
+ * phrase plus a footnote replaces all three.
+ */
+const ISSUANCE_CLAIM = 'הנפקה דיגיטלית תוך דקות ספורות';
+const ISSUANCE_FOOTNOTE = '*בכפוף לתהליך החיתום הרפואי';
+
+/** Qualifier for the "0 ₪" figure, rendered adjacent to it rather than elsewhere. */
+const ZERO_COST_FOOTNOTE = '*בטיפול רפואי בחו״ל בכפוף לתנאי הפוליסה';
 
 /**
  * Mandatory independent-agent notice. Rendered TWICE — once directly under the
@@ -41,25 +68,57 @@ const DISCLOSURE = `משווק מורשה של פספורטכארד | מס׳ ר�
  * PassportCard partner policy requires the "not the official site" statement to
  * be visible without scrolling as well as on the page's legal block.
  *
- * The straight double quote of the source copy is written as the Hebrew
- * gershayim (״), matching every other Hebrew abbreviation on this page
- * (לחו״ל, מס׳, ע״י); the wording is otherwise verbatim.
+ * Carries AGENCY_NAME rather than a second hard-coded name: the notice and the
+ * footer identity block previously named two different entities, which defeats
+ * the point of a disclosure meant to prevent confusion about who runs the site.
  */
 const COMPLIANCE_NOTICE =
-  'שושני אמיר — סוכנות לביטוח (סוכן ביטוח מורשה). אתר זה מופעל ע״י סוכן עצמאי ואינו האתר הרשמי של חברת PassportCard.';
+  `${AGENCY_NAME} (בהנהלת ${AGENT.name} — סוכן ביטוח מורשה). אתר זה מופעל ע״י סוכן עצמאי ואינו האתר הרשמי של חברת PassportCard.`;
+
+/**
+ * Formal footer identity line and agency statement.
+ *
+ * Competitor insurers (כלל, הראל, הפניקס, מגדל) were REMOVED: this is a
+ * PassportCard affiliate landing page whose every CTA sells one product, so
+ * naming rival carriers here both risks the partner agreement and misdescribes
+ * what the page actually markets.
+ */
+const FOOTER_IDENTITY =
+  `${AGENCY_NAME} (בהנהלת ${AGENT.name} — ${AGENT.title}, מס׳ רישיון ${AGENCY_LICENSE}, ח.פ ${AGENCY_TAX_ID}, ענפים: ${AGENCY_BRANCHES}).`;
+
+const AGENCY_STATEMENT =
+  'הסוכנות הינה סוכנות ביטוח מורשת המשווקת את ביטוח הנסיעות לחו״ל של פספורטכארד. הרכישה והנפקת הפוליסה מבוצעות ישירות בשרתי חברת הביטוח ובכפוף לתנאי החיתום והפוליסה.';
+
+/**
+ * Statutory footer links.
+ *
+ * ABSOLUTE on purpose. middleware.ts redirects every non-root path on
+ * fly.amirs.co.il back to "/", so a relative "/terms" would bounce the visitor
+ * to this landing page instead of the document.
+ *
+ * /privacy has no page of its own — next.config.mjs redirects it to /terms,
+ * whose title is "תקנון ותנאי שימוש ומדיניות פרטיות" and whose section 5 is the
+ * privacy policy. Without that redirect this link would 404.
+ */
+const SITE_URL = 'https://futureins.co.il';
+const LEGAL_LINKS = [
+  { label: 'תקנון ותנאי שימוש', href: `${SITE_URL}/terms` },
+  { label: 'מדיניות פרטיות', href: `${SITE_URL}/privacy` },
+  { label: 'הצהרת נגישות', href: `${SITE_URL}/accessibility` },
+] as const;
 
 /**
  * Regulatory identity block for the footer.
  *
  * Every value here must be a real, verified detail — a fabricated licence or
  * company number is a regulatory offence, so nothing in this list is guessed.
- * TODO(before launch): add the agency's company number (ח.פ./ע.מ.) and the
- * licensed branches (ענפי רישיון); they are deliberately omitted, not invented.
  */
 const AGENCY_DETAILS = [
   { k: 'שם הסוכנות', v: AGENCY_NAME, ltr: false },
   { k: 'סוכן ביטוח מורשה', v: AGENT.name, ltr: false },
   { k: 'מס׳ רישיון סוכן', v: LICENSE, ltr: true },
+  { k: 'ח.פ', v: COMPANY_ID, ltr: true },
+  { k: 'ענפי רישיון', v: AGENCY_BRANCHES, ltr: false },
   { k: 'גורם מפקח', v: 'רשות שוק ההון, ביטוח וחיסכון', ltr: false },
   { k: 'המוצר המשווק', v: 'ביטוח נסיעות לחו״ל של PassportCard', ltr: false },
   { k: 'זיקה למבטח', v: 'הסוכן מקבל עמלה מהמבטח בגין שיווק המוצר', ltr: false },
@@ -95,7 +154,7 @@ export const metadata: Metadata = {
       'ביטוח נסיעות לחו״ל ברכישה דיגיטלית מהירה | אמיר שושני, סוכן ביטוח מורשה',
   },
   description:
-    'ביטוח נסיעות לחו״ל מותאם ליעד, לגיל ולמצב רפואי קיים: צירוף דיגיטלי מאובטח, תשלום ישיר על הוצאות רפואיות בחו״ל וליווי אישי 24/7 של אמיר שושני, סוכן ביטוח מורשה. מס׳ רישיון 208678854.',
+    `ביטוח נסיעות לחו״ל מותאם ליעד, לגיל ולמצב רפואי קיים: צירוף דיגיטלי מאובטח, תשלום ישיר על הוצאות רפואיות בחו״ל וליווי אישי 24/7 של ${AGENT.name}, סוכן ביטוח מורשה. מס׳ רישיון ${LICENSE}.`,
   // Canonical points at the fly host, so the copy reachable at
   // futureins.co.il/fly does not compete with it as duplicate content.
   alternates: { canonical: `${FLY_URL}/` },
@@ -164,6 +223,7 @@ const STEPS = [
    as a promise of cover or of payout. */
 
 const LEGAL = [
+  `${ISSUANCE_FOOTNOTE}. ${ZERO_COST_FOOTNOTE.replace('*', '')}.`,
   'האמור באתר זה הינו מידע שיווקי כללי בלבד, אינו מהווה ייעוץ ביטוחי, רפואי או משפטי ואינו תחליף לעיון בתנאי הפוליסה המלאים.',
   'לסוכן זיקה למבטח בשל קבלת עמלה ממנו בגין שיווק המוצר.',
   'הכיסוי, גבולות האחריות, ההחרגות וההשתתפות העצמית הם כמפורט בפוליסה ובדף פרטי הביטוח בלבד. בכל מקרה של סתירה — יגברו תנאי הפוליסה.',
@@ -174,26 +234,7 @@ const LEGAL = [
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
-    {
-      '@type': 'InsuranceAgency',
-      '@id': `${FLY_URL}/#agent`,
-      name: `${AGENT.name} - ${AGENT.title}`,
-      description:
-        'סוכן ביטוח מורשה המתמחה בביטוח נסיעות לחו״ל מותאם אישית וברכישה דיגיטלית.',
-      url: `${FLY_URL}/`,
-      telephone: '+972-52-842-2884',
-      priceRange: '₪₪',
-      areaServed: { '@type': 'Country', name: 'Israel' },
-      address: { '@type': 'PostalAddress', addressCountry: 'IL' },
-      inLanguage: 'he-IL',
-      identifier: LICENSE,
-      founder: {
-        '@type': 'Person',
-        name: AGENT.name,
-        jobTitle: AGENT.title,
-        identifier: LICENSE,
-      },
-    },
+    insuranceAgencySchema(FLY_URL),
     {
       '@type': 'FAQPage',
       '@id': `${FLY_URL}/#faq`,
@@ -214,7 +255,7 @@ function TopBar() {
     <div className="sticky top-0 z-50 bg-pc shadow-[0_1px_6px_rgba(15,23,42,0.14)]">
       <div className="mx-auto flex max-w-container items-center gap-2.5 px-4 py-2 sm:px-6">
         <span className="min-w-0 flex-1 text-[12px] font-bold leading-tight text-white md:text-[14px]">
-          ✈️ טסים לחו״ל? ביטוח אונליין תוך 2 דקות
+          ✈️ טסים לחו״ל? {ISSUANCE_CLAIM}*
         </span>
         <a
           href={BUY}
@@ -302,11 +343,13 @@ function Hero() {
     <section className="mx-auto max-w-container px-4 pb-8 pt-4 sm:px-6 md:pb-12 md:pt-10">
       <div className="mx-auto max-w-2xl text-center">
         <h1 className={`${FS_H1} font-extrabold leading-[1.25] tracking-tight text-ink`}>
-          ביטוח נסיעות לחו״ל עם PassportCard — הרכישה הדיגיטלית המהירה בישראל ✈️
+          ביטוח נסיעות לחו״ל ברכישה דיגיטלית מהירה
         </h1>
         <p className="mx-auto mt-2.5 max-w-xl text-[14.5px] leading-relaxed text-muted md:text-[17px]">
-          כרטיס אדום שמשלם על הטיפול הרפואי במקום, מענה 24/7 ב-WhatsApp והנפקה אונליין
-          ב-3 דקות.
+          כרטיס אדום שמשלם על הטיפול הרפואי במקום, מענה 24/7 ב-WhatsApp ו{ISSUANCE_CLAIM}*.
+        </p>
+        <p className="mx-auto mt-1.5 text-[11px] leading-relaxed text-faint">
+          {ISSUANCE_FOOTNOTE}
         </p>
 
         {/* Primary purchase CTA — glowing red, above the fold. */}
@@ -387,10 +430,13 @@ function Hero() {
 }
 
 function Metrics() {
+  /* Each headline figure carries its own qualifier IN THE TILE. The "0 ₪" and
+     the issuance time are absolute claims, and a caveat parked elsewhere on the
+     page does not travel with the number a visitor actually reads. */
   const items = [
-    { k: '0 ₪', v: 'הוצאות מהכיס במקרה רפואי', ltr: true },
-    { k: '2 דקות', v: 'זמן צירוף דיגיטלי', ltr: false },
-    { k: '24/7', v: 'ליווי אישי של אמיר', ltr: true },
+    { k: '0 ₪', v: 'הוצאות מהכיס במקרה רפואי*', note: ZERO_COST_FOOTNOTE, ltr: true },
+    { k: 'דקות ספורות', v: 'הנפקה דיגיטלית*', note: ISSUANCE_FOOTNOTE, ltr: false },
+    { k: '24/7', v: 'ליווי אישי של אמיר', note: null, ltr: true },
   ];
   return (
     <section className="mx-auto max-w-container px-4 pb-8 sm:px-6">
@@ -404,13 +450,18 @@ function Metrics() {
                 side of the digits inside an RTL document. */}
             <span
               dir={m.ltr ? 'ltr' : undefined}
-              className="whitespace-nowrap text-[clamp(1.1rem,4.4vw,1.6rem)] font-black leading-tight tracking-tight text-pc"
+              className="text-[clamp(0.95rem,4vw,1.6rem)] font-black leading-tight tracking-tight text-pc"
             >
               {m.k}
             </span>
             <span className="text-[clamp(0.68rem,2.1vw,0.82rem)] font-bold leading-snug text-ink">
               {m.v}
             </span>
+            {m.note && (
+              <span className="mt-auto pt-1 text-[9.5px] leading-snug text-faint">
+                {m.note}
+              </span>
+            )}
           </div>
         ))}
       </div>
@@ -538,15 +589,17 @@ function FlyFooter() {
     <footer className="border-t border-navy/10 bg-base">
       {/* pb clears the persistent purchase bar + the floating widgets above it */}
       <div className="mx-auto max-w-container px-4 pb-40 pt-8 sm:px-6">
-        <p className="text-[1.1rem] font-black tracking-tight text-ink">
-          {AGENT.name} · {AGENT.title}
+        <p className="text-[1.1rem] font-black tracking-tight text-ink">{AGENCY_NAME}</p>
+        <p className="mt-1.5 text-[13px] font-bold leading-relaxed text-muted">
+          {FOOTER_IDENTITY}
         </p>
-        <p className="mt-2 text-[14px] leading-relaxed text-muted">
-          מס׳ רישיון {LICENSE} ·{' '}
+        <p className="mt-1 text-[14px] leading-relaxed text-muted">
           <a dir="ltr" href="tel:+972528422884" className="font-bold text-pc hover:underline">
             052-842-2884
           </a>
         </p>
+
+        <p className="mt-3 text-[12.5px] leading-relaxed text-muted">{AGENCY_STATEMENT}</p>
 
         <p className="mt-3 inline-flex rounded-full border border-pc/25 bg-pc/[0.06] px-3.5 py-1.5 text-[11.5px] font-bold text-[#C10510]">
           {DISCLOSURE}
@@ -569,6 +622,30 @@ function FlyFooter() {
             </div>
           ))}
         </dl>
+
+        {/* Statutory documents. Absolute URLs — see LEGAL_LINKS. */}
+        <nav
+          aria-label="מסמכים משפטיים"
+          className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1.5 border-t border-navy/10 pt-3 text-[12.5px]"
+        >
+          {LEGAL_LINKS.map((l, i) => (
+            <span key={l.label} className="flex items-center gap-x-2">
+              {i > 0 && (
+                <span aria-hidden className="text-navy/25">
+                  |
+                </span>
+              )}
+              <a
+                href={l.href}
+                target="_blank"
+                rel="noopener"
+                className="font-bold text-pc underline underline-offset-2 hover:text-[#C10510]"
+              >
+                {l.label}
+              </a>
+            </span>
+          ))}
+        </nav>
 
         <p className="mt-4 border-t border-navy/10 pt-3 text-[12px] font-bold leading-relaxed text-muted">
           השירות והתיווך מבוצעים על ידי {AGENT.name}, {AGENT.title} (מס׳ רישיון {LICENSE}).
@@ -631,6 +708,8 @@ gtag('config','AW-18295158593');`}
       </div>
 
       <FlyWidgets buyHref={BUY} />
+      {/* Delegated dataLayer tracking for every /api/go/passportcard CTA. */}
+      <FlyAffiliateTracker />
       <CookieConsent />
       <AccessibilityMenu />
     </>
