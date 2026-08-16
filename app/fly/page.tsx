@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
+import { ShieldCheck } from 'lucide-react';
 import { AGENT } from '@/lib/agency';
 import {
   AGENCY_BRANCHES,
@@ -368,41 +369,49 @@ function Hero() {
           {DISCLOSURE}
         </p>
 
+        {/* Benefit panel — deliberately NOT a look-alike payment card.
+            The previous version rendered PassportCard's brand red (#E11933) as a
+            gradient, a gold EMV chip and masked "•••• ••••" digits: the three
+            signatures that made an agent page read as the insurer's own asset.
+            All three are gone. What remains is the agency's navy/gold palette, a
+            shield mark instead of a chip, and the agency's own name on the panel
+            so the graphic identifies its actual publisher. */}
         <figure className="mt-6">
-          <div className="relative mx-auto flex min-h-[206px] max-w-[380px] flex-col justify-between gap-3.5 overflow-hidden rounded-[18px] bg-gradient-to-br from-[#FF2A38] via-pc to-[#A5030D] p-[18px] text-start shadow-[0_14px_30px_rgba(227,6,19,0.30)]">
+          <div className="relative mx-auto flex min-h-[206px] max-w-[380px] flex-col justify-between gap-3.5 overflow-hidden rounded-[18px] bg-gradient-to-br from-navy-light via-navy to-navy-deep p-[18px] text-start shadow-[0_14px_30px_rgba(20,43,85,0.32)]">
             <span
               aria-hidden
-              className="pointer-events-none absolute -top-[60px] -right-10 h-[190px] w-[190px] rounded-full bg-white/10"
+              className="pointer-events-none absolute -top-[60px] -right-10 h-[190px] w-[190px] rounded-full bg-gold/10"
             />
             <span
               aria-hidden
-              className="pointer-events-none absolute -bottom-[90px] -right-[70px] h-[200px] w-[200px] rounded-full bg-white/[0.07]"
+              className="pointer-events-none absolute -bottom-[90px] -right-[70px] h-[200px] w-[200px] rounded-full bg-gold/[0.07]"
             />
 
             <div className="relative flex items-start justify-between gap-3">
               <span className="flex min-w-0 flex-1 flex-col gap-1.5">
                 <span className="text-[17px] font-black leading-tight tracking-tight text-white">
-                  🔥 הכרטיס הנטען שלכם לחו״ל
+                  תשלום ישיר לספק הרפואי בחו״ל
                 </span>
-                <span className="text-[13px] font-bold text-white/90">תשלום ישיר בחו״ל</span>
+                <span className="text-[13px] font-bold text-white/85">
+                  בלי מקדמה מהכיס, בלי מסלול החזרים
+                </span>
               </span>
               <span
                 aria-hidden
-                className="grid h-8 w-[42px] shrink-0 grid-cols-2 gap-[3px] rounded-[7px] bg-gradient-to-br from-[#FFE9A8] to-[#E0B457] p-[5px]"
+                className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-gold/40 bg-gold/15 text-gold-bright"
               >
-                <i className="rounded-[2px] bg-[#A06E14]/45" />
-                <i className="rounded-[2px] bg-[#A06E14]/45" />
-                <i className="rounded-[2px] bg-[#A06E14]/45" />
-                <i className="rounded-[2px] bg-[#A06E14]/45" />
+                <ShieldCheck className="h-5 w-5" />
               </span>
             </div>
 
-            <div className="relative flex items-center justify-between gap-2.5">
-              <span className="inline-flex items-center rounded-full border border-white/40 bg-white/[0.18] px-3 py-1.5 text-[12px] font-extrabold text-white">
+            <div className="relative flex flex-wrap items-center justify-between gap-2.5">
+              <span className="inline-flex items-center rounded-full border border-gold/45 bg-gold/15 px-3 py-1.5 text-[12px] font-extrabold text-gold-bright">
                 ללא מקדמות
               </span>
-              <span aria-hidden className="text-[12px] font-bold tracking-[2px] text-white/70">
-                •••• ••••
+              {/* Replaces the masked card digits: the panel now names the agency
+                  that publishes it rather than mimicking a card face. */}
+              <span className="text-[11px] font-bold tracking-tight text-white/60">
+                {AGENCY_NAME}
               </span>
             </div>
 
@@ -410,13 +419,13 @@ function Hero() {
               href={BUY}
               target="_blank"
               rel="noopener nofollow sponsored"
-              className="relative z-[1] flex animate-pill-pulse items-center justify-center rounded-xl bg-white px-3.5 py-3.5 text-[15px] font-black leading-tight text-[#C10510] motion-reduce:animate-none"
+              className="relative z-[1] flex animate-pulse-glow items-center justify-center rounded-xl bg-cta-fill px-3.5 py-3.5 text-[15px] font-black leading-tight text-navy-deep motion-reduce:animate-none"
             >
               ⚡ לחצו לרכישה מהירה אונליין 👈
             </a>
           </div>
-          <figcaption className="mt-2 text-center text-[11px] font-semibold text-faint">
-            * הדמיה גרפית להמחשה בלבד
+          <figcaption className="mt-2 text-center text-[12px] font-semibold text-muted">
+            * הדמיה גרפית להמחשה בלבד. אינה כרטיס תשלום ואינה מונפקת על ידי הסוכנות.
           </figcaption>
         </figure>
 
