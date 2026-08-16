@@ -347,7 +347,7 @@ function Hero() {
           ביטוח נסיעות לחו״ל ברכישה דיגיטלית מהירה
         </h1>
         <p className="mx-auto mt-2.5 max-w-xl text-[14.5px] leading-relaxed text-muted md:text-[17px]">
-          כרטיס אדום שמשלם על הטיפול הרפואי במקום, מענה 24/7 ב-WhatsApp ו{ISSUANCE_CLAIM}*.
+          תשלום ישיר לספק הרפואי בחו״ל, מענה 24/7 ב-WhatsApp ו{ISSUANCE_CLAIM}.*
         </p>
         <p className="mx-auto mt-1.5 text-[11px] leading-relaxed text-faint">
           {ISSUANCE_FOOTNOTE}
@@ -389,8 +389,10 @@ function Hero() {
 
             <div className="relative flex items-start justify-between gap-3">
               <span className="flex min-w-0 flex-1 flex-col gap-1.5">
+                {/* Deliberately NOT the sub-headline's wording — that line now
+                    opens with "תשלום ישיר לספק הרפואי בחו״ל" a few rows above. */}
                 <span className="text-[17px] font-black leading-tight tracking-tight text-white">
-                  תשלום ישיר לספק הרפואי בחו״ל
+                  ההוצאה הרפואית משולמת במקום
                 </span>
                 <span className="text-[13px] font-bold text-white/85">
                   בלי מקדמה מהכיס, בלי מסלול החזרים
