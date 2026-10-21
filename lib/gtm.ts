@@ -34,8 +34,7 @@ export function pushToDataLayer(payload: Record<string, unknown>): void {
 }
 
 /**
- * Track a named conversion event. Used for the provider CTAs
- * (e.g. 'click_passportcard', 'click_harel').
+ * Track a named conversion event (e.g. 'generate_lead', 'click_call').
  */
 export function trackEvent(
   event: string,

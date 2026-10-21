@@ -8,8 +8,7 @@ export const contentType = 'image/png';
 
 /**
  * Sitewide default OpenGraph/Twitter share image (WhatsApp/social link previews).
- * Any route that ships its own opengraph-image (e.g. /travel-insurance) overrides
- * this one; every other route falls back here.
+ * Any route that ships its own opengraph-image overrides this one.
  */
 const PILLARS = [
   { label: 'ביטוח נסיעות', color: '#5AA0F5' },

@@ -25,7 +25,7 @@ export default function ContactButton() {
         open={open}
         onClose={() => setOpen(false)}
         vertical="contact_navbar"
-        title="צור קשר — ונחזור אליכם תוך דקות"
+        title="צור קשר — ונחזור אליכם בשעות הפעילות"
         subtitle="השאירו שם וטלפון ונציג מומחה יחזור אליכם עם המענה המהיר ביותר, ללא עלות."
       />
     </>

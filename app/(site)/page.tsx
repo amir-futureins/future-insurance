@@ -1,19 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import {
-  ArrowLeft,
-  ShieldCheck,
-  Star,
-  Phone,
-  BadgeCheck,
-  Check,
-} from 'lucide-react';
-import { SITE, whatsappHref } from '@/lib/content';
-import { VERTICALS, AGENT, AGENCY_REVIEWS, AGENCY_ARTICLES } from '@/lib/agency';
+import { ArrowLeft, ShieldCheck, Phone, BadgeCheck, Check } from 'lucide-react';
+import { SITE, TRAVEL_URL, whatsappHref } from '@/lib/content';
+import { VERTICALS, AGENT, AGENCY_ARTICLES, HOW_IT_WORKS } from '@/lib/agency';
 import { Reveal } from '@/components/travel/ui';
 import HomeHero from '@/components/HomeHero';
 import HomeActionHub from '@/components/HomeActionHub';
-import BrandEmblem from '@/components/travel/BrandEmblem';
 import VideoBlock from '@/components/VideoBlock';
 import ArticleGrid from '@/components/ArticleGrid';
 import PromoBanner from '@/components/PromoBanner';
@@ -44,9 +36,11 @@ const jsonLd = {
   logo: `${SITE.url}/new-logo.png`,
   image: `${SITE.url}/opengraph-image`,
   telephone: '+972-52-842-2884',
+  email: SITE.email,
   priceRange: '₪₪',
   areaServed: { '@type': 'Country', name: 'Israel' },
-  address: { '@type': 'PostalAddress', addressCountry: 'IL' },
+  address: { '@type': 'PostalAddress', addressLocality: 'אור יהודה', addressCountry: 'IL' },
+  openingHours: ['Su-Th 09:00-20:00', 'Fr 09:00-14:00'],
   inLanguage: 'he-IL',
   knowsAbout: [
     'ביטוח נסיעות לחו״ל',
@@ -69,44 +63,19 @@ export default function HomePage() {
       {/* ---- "מה תרצה לעשות היום?" quick-action hub (mobile + desktop) ---- */}
       <HomeActionHub />
 
-      {/* ---- MOBILE-ONLY travel quick-buy banner (md:hidden) ---- */}
+      {/* ---- MOBILE-ONLY travel banner (md:hidden) → il-ins.co.il ---- */}
       <section className="px-4 pt-3.5 md:hidden">
-        <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white/85 p-4 shadow-lg backdrop-blur-sm">
-          <div className="flex items-center gap-1.5 text-[12px] font-bold text-gold-deep">
-            <span aria-hidden>✈️</span> ביטוח נסיעות לחו״ל
-          </div>
-          <h2 className="mt-1 text-[19px] font-extrabold leading-tight text-ink">
-            רכישה מהירה אונליין — בחרו חברה
-          </h2>
-          <p className="mt-1 text-[12.5px] leading-snug text-muted">
-            פוליסה דיגיטלית מיידית · השוואת מחירים · ליווי סוכן מורשה
-          </p>
-          <div className="mt-3.5 grid grid-cols-2 gap-2.5">
-            {[
-              ['passportcard', 'PassportCard'],
-              ['harel', 'הראל'],
-              ['clal', 'כלל'],
-              ['migdal', 'מגדל'],
-            ].map(([slug, label]) => (
-              <Link
-                key={slug}
-                href={`/travel-insurance/${slug}`}
-                className="flex items-center gap-2.5 rounded-2xl border border-slate-200 bg-slate-50 p-2.5 transition-colors active:bg-slate-100"
-              >
-                <BrandEmblem slug={slug} variant="sm" />
-                <span className="flex-1 text-start text-[14px] font-bold text-ink">{label}</span>
-                <ArrowLeft className="h-4 w-4 shrink-0 text-faint" aria-hidden />
-              </Link>
-            ))}
-          </div>
-          <Link
-            href="/travel-insurance"
-            className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 px-4 py-3.5 text-[15px] font-extrabold text-navy-deep shadow-lg transition-transform active:scale-[0.98]"
-          >
-            השוואת כל חברות החו״ל
-            <ArrowLeft className="h-4 w-4" aria-hidden />
-          </Link>
-        </div>
+        <a
+          href={TRAVEL_URL}
+          className="flex items-center gap-3 rounded-3xl border border-slate-200 bg-white/85 p-4 shadow-lg backdrop-blur-sm"
+        >
+          <span className="text-[28px] leading-none" aria-hidden>✈️</span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-[16px] font-extrabold text-ink">ביטוח נסיעות לחו״ל</span>
+            <span className="block text-[12.5px] text-muted">רכישה ומידע באתר הנסיעות שלנו</span>
+          </span>
+          <ArrowLeft className="h-5 w-5 shrink-0 text-gold-deep" aria-hidden />
+        </a>
       </section>
 
       {/* ---- HERO ---- */}
@@ -177,8 +146,8 @@ export default function HomePage() {
       <PromoBanner
         eyebrow="בדיקה חינם"
         title="משלמים על כיסוי כפול בלי לדעת?"
-        text="סורקים את הר הביטוח, מזהים כפילויות ומאחדים את התיק — לרוב בחיסכון של מאות שקלים בחודש."
-        ctaLabel="לסריקת כפילויות"
+        text="עוברים יחד על דוח הר הביטוח שלכם, מזהים כפילויות ומסדרים את התיק — ללא עלות."
+        ctaLabel="לבדיקת כפילויות"
         ctaHref="/har-habituach"
       />
 
@@ -186,7 +155,7 @@ export default function HomePage() {
       <VideoBlock
         title="נסביר בקצרה איך חוסכים בכל תחומי הביטוח"
         subtitle="סוכן מורשה מסביר איך המערכת עובדת, איך משווים חברות בשקיפות, ואיך מזהים כפילויות וחיסכון בתיק הביטוח והפנסיה שלכם."
-        points={['השוואה שקופה בין החברות המובילות', 'זיהוי כפילויות וחיסכון מיידי', 'ליווי אישי של סוכן מורשה']}
+        points={['השוואה בין חברות הביטוח', 'זיהוי כפילויות בתיק', 'ליווי אישי של סוכן מורשה']}
         href={whatsappHref()}
       />
 
@@ -216,7 +185,7 @@ export default function HomePage() {
                   <ShieldCheck className="h-3.5 w-3.5 text-gold-deep" aria-hidden />
                   {AGENT.license}
                 </span>
-                <span>· {AGENT.years} שנות ניסיון</span>
+                <span>· {SITE.address}</span>
               </div>
             </div>
             <div className="flex shrink-0 flex-col gap-2">
@@ -241,50 +210,25 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ---- REVIEWS ---- */}
+      {/* ---- HOW IT WORKS ---- */}
       <section className="mx-auto w-full max-w-container px-6 py-14 md:px-10 md:py-16">
         <div className="mx-auto max-w-2xl text-center">
-          <span className="eyebrow inline-flex items-center gap-1.5 text-[13px]">
-            <Star className="h-4 w-4" aria-hidden />
-            לקוחות ממליצים
-          </span>
+          <span className="eyebrow text-[13px]">איך זה עובד</span>
           <h2 className="mt-2 text-[clamp(24px,5vw,30px)] font-bold leading-tight text-ink">
-            אלפי לקוחות בחרו נכון
+            שלושה שלבים פשוטים
           </h2>
         </div>
-        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {AGENCY_REVIEWS.slice(0, 3).map((r, i) => (
-            <Reveal key={r.name} delay={(i % 3) * 80} className="glass flex h-full flex-col p-6">
-              <div className="flex items-center gap-3">
-                <span
-                  className="grid h-11 w-11 place-items-center rounded-full text-[15px] font-extrabold text-white shadow"
-                  style={{ background: `linear-gradient(135deg, ${r.from}, ${r.to})` }}
-                  aria-hidden
-                >
-                  {r.initials}
-                </span>
-                <div className="min-w-0">
-                  <div className="text-[15px] font-extrabold text-ink">{r.name}</div>
-                  <div className="flex items-center gap-1 text-[12px] text-muted">
-                    {r.city}
-                    <span className="mx-1 text-faint">·</span>
-                    <span className="inline-flex" aria-label={`דירוג ${r.rating} מתוך 5`}>
-                      {Array.from({ length: r.rating }).map((_, s) => (
-                        <Star key={s} className="h-3.5 w-3.5 fill-gold text-gold" aria-hidden />
-                      ))}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <span className="mt-3 inline-flex w-fit items-center rounded-full bg-gold-tint px-2.5 py-0.5 text-[11px] font-semibold text-gold-deep">
-                {r.vertical}
+        <ol className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+          {HOW_IT_WORKS.map((step, i) => (
+            <Reveal key={step.title} delay={i * 80} className="glass flex h-full flex-col p-6">
+              <span className="grid h-11 w-11 place-items-center rounded-full bg-navy text-[18px] font-extrabold text-gold-bright shadow">
+                {i + 1}
               </span>
-              <blockquote className="mt-3 flex-1 text-[14px] leading-relaxed text-ink/90">
-                ״{r.quote}״
-              </blockquote>
+              <h3 className="mt-4 text-[18px] font-extrabold text-ink">{step.title}</h3>
+              <p className="mt-2 text-[14.5px] leading-relaxed text-muted">{step.text}</p>
             </Reveal>
           ))}
-        </div>
+        </ol>
       </section>
 
       {/* ---- ARTICLES ---- */}

@@ -15,13 +15,10 @@ function WhatsAppGlyph({ className }: { className?: string }) {
 
 /**
  * Bottom sticky action bar for mobile — compact WhatsApp + click-to-call icons
- * and a prominent primary CTA that smooth-scrolls to the provider comparison.
+ * and a prominent WhatsApp consultation CTA.
  */
 export default function MobileStickyBar() {
   const pathname = usePathname();
-  const isTravel = pathname === '/travel-insurance';
-  const ctaHref = isTravel ? `${SITE.travelPath}#providers` : whatsappHref();
-  const ctaLabel = isTravel ? 'להשוואה ורכישה מהירה 🚀' : 'ייעוץ חינם בוואטסאפ 🚀';
 
   return (
     <div className="no-print fixed inset-x-0 bottom-0 z-40 border-t border-navy/10 bg-base/90 shadow-[0_-8px_24px_-16px_rgba(15,33,65,0.35)] backdrop-blur-xl lg:hidden">
@@ -45,12 +42,13 @@ export default function MobileStickyBar() {
           <Phone className="h-5 w-5 text-gold-deep" aria-hidden />
         </a>
         <a
-          href={ctaHref}
-          {...(isTravel ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
+          href={whatsappHref()}
+          target="_blank"
+          rel="noopener noreferrer"
           onClick={() => trackEvent('click_mobilebar_cta', { context: pathname })}
           className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-cta-fill py-2.5 text-[14px] font-extrabold text-navy-deep shadow-md"
         >
-          {ctaLabel}
+          ייעוץ ללא עלות בוואטסאפ
         </a>
       </div>
     </div>

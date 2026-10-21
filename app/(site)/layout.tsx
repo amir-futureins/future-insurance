@@ -1,4 +1,3 @@
-import { LeadModalProvider } from '@/components/travel/LeadModal';
 import SiteChrome from '@/components/SiteChrome';
 
 /**
@@ -19,7 +18,7 @@ import SiteChrome from '@/components/SiteChrome';
  */
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (
-    <LeadModalProvider>
+    <>
       {/* ambient aurora glows (decorative, behind everything) */}
       {/* Static blurred blobs — kept still so they don't force the sticky
           navbar / glass surfaces to re-composite their backdrop every frame. */}
@@ -32,6 +31,6 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       </div>
 
       <SiteChrome>{children}</SiteChrome>
-    </LeadModalProvider>
+    </>
   );
 }

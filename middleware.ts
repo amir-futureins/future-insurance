@@ -102,8 +102,20 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(proto + '://' + host + '/', 308);
   }
 
-  /* Public routes pass straight through; only /admin/* reaches the auth gate. */
-  if (!pathname.startsWith('/admin')) return NextResponse.next();
+  /* ---- futureins.co.il: travel is handled on il-ins.co.il ----
+     /fly and the /api/go affiliate redirects exist only for the fly host
+     above. On the main site they 301 to the travel site instead, so no
+     carrier-branded page or purchase redirect is reachable from here. */
+  if (pathname === '/fly' || pathname.startsWith('/fly/') || pathname.startsWith('/api/go')) {
+    return NextResponse.redirect('https://il-ins.co.il/', 301);
+  }
+
+  /* Leads API: the GET (list) handler is admin-only, same gate as /admin/*.
+     POST stays public — the site's own lead forms submit to it. */
+  const isLeadsRead = pathname.startsWith('/api/leads') && req.method !== 'POST';
+
+  /* Public routes pass straight through; only admin reads reach the auth gate. */
+  if (!pathname.startsWith('/admin') && !isLeadsRead) return NextResponse.next();
 
   /* ---- 2. Basic-Auth gate for /admin/* ---- */
   const user = process.env.ADMIN_USER;

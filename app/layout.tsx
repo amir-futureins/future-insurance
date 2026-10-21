@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Assistant } from 'next/font/google';
-import Script from 'next/script';
-import { GTM_ID } from '@/lib/gtm';
+import { CONSENT_BOOTSTRAP } from '@/lib/consent';
 import './globals.css';
 
 const assistant = Assistant({
@@ -58,31 +57,14 @@ export default function RootLayout({
   return (
     <html lang="he" dir="rtl" className={assistant.variable}>
       <head>
+        {/* Consent Mode v2 defaults (all denied) + opt-in GTM loader. Must run
+            before anything else, so it is a plain inline script in <head>. */}
+        <script dangerouslySetInnerHTML={{ __html: CONSENT_BOOTSTRAP }} />
         <noscript>
           <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
         </noscript>
       </head>
       <body className="font-sans antialiased">
-        {GTM_ID ? (
-          <>
-            <Script id="gtm-init" strategy="afterInteractive">
-              {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','${GTM_ID}');`}
-            </Script>
-            <noscript>
-              <iframe
-                src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
-                height="0"
-                width="0"
-                style={{ display: 'none', visibility: 'hidden' }}
-                title="gtm"
-              />
-            </noscript>
-          </>
-        ) : null}
 
         {/* No chrome here on purpose. The marketing navbar / ticker / footer,
             the floating widgets and the aurora glows live in

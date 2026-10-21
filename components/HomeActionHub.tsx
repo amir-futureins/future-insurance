@@ -4,13 +4,14 @@ import { useState } from 'react';
 import { Plane, Car, TrendingDown, Layers, ArrowLeft } from 'lucide-react';
 import LeadForm from '@/components/LeadForm';
 import { trackEvent } from '@/lib/gtm';
+import { TRAVEL_URL } from '@/lib/content';
 
 /**
  * HomeActionHub — "מה תרצה לעשות היום?" interactive quick-action launcher at the
  * top of the home hero (mobile + desktop). Deep-navy + gold, floating icon
  * circles with a gentle micro-animation. Every action fires a GTM/dataLayer
- * event. Travel → the PassportCard affiliate link (/api/go → AFFILIATE_*); the
- * other three open a quick lead-capture form.
+ * event. Travel → il-ins.co.il (our travel-insurance site); the other three
+ * open a quick lead-capture form.
  */
 type FormCfg = { vertical: string; title: string; subtitle: string; idField?: boolean };
 
@@ -27,11 +28,11 @@ interface Action {
 const ACTIONS: Action[] = [
   {
     key: 'travel',
-    label: 'רכישת ביטוח חו״ל',
-    sub: 'PassportCard — רכישה מיידית',
+    label: 'ביטוח נסיעות לחו״ל',
+    sub: 'באתר הנסיעות שלנו',
     Icon: Plane,
     accent: '#0057B8',
-    href: '/api/go/passportcard',
+    href: TRAVEL_URL,
   },
   {
     key: 'car',
@@ -54,7 +55,7 @@ const ACTIONS: Action[] = [
     form: {
       vertical: 'price_reduction_home',
       title: 'הוזלת הביטוחים שלכם',
-      subtitle: 'השאירו פרטים ונשווה את הפוליסות הקיימות — לרוב חוסכים מאות שקלים בחודש.',
+      subtitle: 'השאירו פרטים ונבדוק את הפוליסות הקיימות שלכם מול החלופות בשוק.',
     },
   },
   {
@@ -94,7 +95,7 @@ export default function HomeActionHub() {
               מה תרצה לעשות היום?
             </h2>
             <p className="mt-1 text-[13.5px] leading-snug text-muted md:mt-1.5 md:text-[14px] md:text-white/65">
-              בחרו פעולה — ונטפל בזה עבורכם תוך דקות.
+              בחרו פעולה ונחזור אליכם בשעות הפעילות.
             </p>
           </div>
 
@@ -115,7 +116,7 @@ export default function HomeActionHub() {
                     {a.sub}
                   </span>
                   <span className="mt-1.5 inline-flex items-center gap-1 text-[12px] font-bold text-gold-deep md:mt-2 md:text-[12.5px] md:text-gold-bright">
-                    {a.href ? 'לרכישה מיידית' : 'להשארת פרטים'}
+                    {a.href ? 'למעבר לאתר' : 'להשארת פרטים'}
                     <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" aria-hidden />
                   </span>
                 </>
@@ -125,10 +126,8 @@ export default function HomeActionHub() {
                   key={a.key}
                   href={a.href}
                   target="_blank"
-                  rel="noopener noreferrer sponsored"
-                  onClick={() =>
-                    trackEvent('purchase_click', { provider: 'passportcard', location: 'home_action_hub' })
-                  }
+                  rel="noopener noreferrer"
+                  onClick={() => trackEvent('action_hub_click', { action: a.key })}
                   className={CARD}
                 >
                   {inner}

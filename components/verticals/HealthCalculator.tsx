@@ -44,7 +44,7 @@ export default function HealthCalculator() {
           אילו כיסויים חשובים לכם?
         </h2>
         <p className="mx-auto mt-2 max-w-xl text-[15px] leading-relaxed text-muted">
-          בוחרים מה שמתאים — והעלות המשוערת מתעדכנת בזמן אמת. בלי כפילויות, בלי מיותר.
+          בוחרים מה שמתאים — והעלות המשוערת מתעדכנת מיד. בלי כפילויות, בלי מיותר.
         </p>
       </header>
 
@@ -104,7 +104,7 @@ export default function HealthCalculator() {
               <span className="pb-1.5 text-[14px] font-semibold text-muted">/ לחודש</span>
             </div>
             <p className="mt-2 text-[13px] leading-snug text-muted">
-              {selected.length} כיסויים נבחרו · הערכה להמחשה, המחיר הסופי לפי גיל ומצב בריאות.
+              {selected.length} כיסויים נבחרו · הערכה בלבד, המחיר הסופי לפי גיל ומצב בריאות.
             </p>
 
             <div className="mt-4 flex items-start gap-2 rounded-xl bg-navy/[0.04] p-3 text-[12.5px] leading-snug text-ink/80">
@@ -132,7 +132,7 @@ export default function HealthCalculator() {
           vertical="health"
           title="קבלת הצעה לביטוח בריאות"
           subtitle="נבנה עבורכם כיסוי חכם ונבדוק כפילויות מול הביטוחים הקיימים."
-          summary={`${selected.length} כיסויים · הערכה ~₪${total} לחודש`}
+          summary={`${selected.length} כיסויים · הערכה בלבד: ~₪${total} לחודש`}
           extraField={{
             label: 'חברת הביטוח הנוכחית',
             name: 'currentInsurer',

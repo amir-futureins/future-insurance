@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { saveConsent } from '@/lib/consent';
 
 /**
  * Cookie-consent notice for the /fly landing page.
@@ -52,6 +53,8 @@ export default function CookieConsent() {
     } catch {
       /* nothing to persist to — dismiss for this page view only */
     }
+    // Grants Consent Mode and loads GTM (the root layout keeps both off until now).
+    saveConsent('all');
     setVisible(false);
   }
 

@@ -55,7 +55,7 @@ export default function FinanceCalculator() {
           כמה יצמח החיסכון שלכם?
         </h2>
         <p className="mx-auto mt-2 max-w-xl text-[15px] leading-relaxed text-muted">
-          משחקים עם ההפקדה, משך החיסכון והתשואה — והגרף מתעדכן בזמן אמת. זהו כוחה של ריבית דריבית.
+          משחקים עם ההפקדה, משך החיסכון והתשואה — והגרף מתעדכן מיד. זהו כוחה של ריבית דריבית.
         </p>
       </header>
 
@@ -184,7 +184,7 @@ export default function FinanceCalculator() {
             </div>
 
             <p className="mt-3 text-[12px] leading-snug text-muted">
-              הדמיה להמחשה בלבד. התשואה בפועל משתנה; דמי ניהול נמוכים ומסלול מתאים משפיעים מאוד.
+              הערכה בלבד. התשואה בפועל משתנה; דמי ניהול נמוכים ומסלול מתאים משפיעים מאוד.
             </p>
 
             <button
@@ -206,7 +206,7 @@ export default function FinanceCalculator() {
           vertical="finance"
           title="בדיקת פנסיה, גמל והשתלמות"
           subtitle="נבדוק דמי ניהול, מסלולים וכפילויות — ונמקסם לכם את החיסכון."
-          summary={`הפקדה ₪${fmt(monthly)}/חודש · ${years} שנים · צפי ~₪${fmt(finalValue)}`}
+          summary={`הפקדה ₪${fmt(monthly)}/חודש · ${years} שנים · הערכה בלבד: ~₪${fmt(finalValue)}`}
         />
       )}
     </section>
