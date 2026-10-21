@@ -13,7 +13,6 @@ import LeadForm from '@/components/LeadForm';
 const INSURERS = [
   'אין ביטוח בריאות',
   'הראל',
-  'מגדל',
   'כלל',
   'מנורה מבטחים',
   'הפניקס',

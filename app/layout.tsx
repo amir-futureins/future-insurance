@@ -44,7 +44,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  // Navy to blend the mobile status bar with the sticky "Future Fly" navbar.
+  // Navy to blend the mobile status bar with the sticky navbar.
   themeColor: '#142B55',
   colorScheme: 'light',
 };
@@ -66,11 +66,8 @@ export default function RootLayout({
       </head>
       <body className="font-sans antialiased">
 
-        {/* No chrome here on purpose. The marketing navbar / ticker / footer,
-            the floating widgets and the aurora glows live in
-            app/(site)/layout.tsx, so routes outside that route group — /fly,
-            the standalone landing page for fly.amirs.co.il — render on a bare
-            canvas without needing to detect their own pathname or hostname. */}
+        {/* No chrome here on purpose: the marketing navbar / footer, the
+            floating widgets and the aurora glows live in app/(site)/layout.tsx. */}
         {children}
       </body>
     </html>
