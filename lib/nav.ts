@@ -4,6 +4,8 @@
  * the same categories AND sub-categories.
  */
 
+import { TRAVEL_URL } from './content';
+
 export interface NavChild {
   href: string;
   label: string;
@@ -17,22 +19,12 @@ export interface NavItem {
 
 export const NAV_MENU: NavItem[] = [
   { href: '/', label: 'בית' },
-  {
-    href: '/travel-insurance',
-    label: 'חו״ל',
-    children: [
-      { href: '/travel-insurance', label: 'השוואת חברות ומחשבון' },
-      { href: '/travel-insurance/passportcard', label: 'PassportCard' },
-      { href: '/travel-insurance/harel', label: 'הראל' },
-      { href: '/travel-insurance/clal', label: 'כלל' },
-      { href: '/travel-insurance/migdal', label: 'מגדל' },
-    ],
-  },
+  { href: TRAVEL_URL, label: 'ביטוח נסיעות' },
   {
     href: '/har-habituach',
     label: 'הר הביטוח',
     children: [
-      { href: '/har-habituach', label: 'סריקת תיק הביטוח' },
+      { href: '/har-habituach', label: 'בדיקת תיק הביטוח' },
       { href: '/har-habituach/duplicate-check', label: 'בדיקת כפל ביטוח והוזלה' },
       { href: '/har-habituach/car-claims', label: 'עבר ביטוחי לרכב' },
     ],

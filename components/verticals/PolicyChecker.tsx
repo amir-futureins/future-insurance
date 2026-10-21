@@ -40,7 +40,6 @@ export default function PolicyChecker() {
   if (has('life') && has('mortgage')) overlaps.push('ביטוח חיים חופף (פרטי + משכנתא)');
   if (has('health')) overlaps.push('בריאות — כפילות אפשרית מול שב״ן הקופה');
   if (has('car') && has('home')) overlaps.push('כיסויי צד ג׳ חופפים');
-  const potential = Math.min(600, selected.length * 45 + overlaps.length * 45);
 
   return (
     <section
@@ -50,13 +49,13 @@ export default function PolicyChecker() {
       <header className="mb-8 text-center">
         <span className="eyebrow inline-flex items-center gap-1.5 text-[13px]">
           <Search className="h-4 w-4" aria-hidden />
-          סורק כפל פוליסות
+          בדיקת כפל פוליסות
         </span>
         <h2 className="mt-2 text-[clamp(24px,5vw,30px)] font-bold leading-tight text-ink">
           אילו ביטוחים פעילים יש לכם?
         </h2>
         <p className="mx-auto mt-2 max-w-xl text-[15px] leading-relaxed text-muted">
-          מסמנים מה שיש לכם — וקבלו בדיקה ראשונית לחפיפות. נאמת מולכם ומול הר הביטוח.
+          מסמנים מה שיש לכם — וקבלו בדיקה ראשונית לחפיפות. את הבדיקה המלאה עושים יחד, על דוח הר הביטוח שלכם.
         </p>
       </header>
 
@@ -131,12 +130,9 @@ export default function PolicyChecker() {
                 ))}
               </ul>
               <div className="mt-5 flex flex-col items-center gap-4 border-t border-gold/30 pt-5 sm:flex-row sm:justify-between">
-                <div className="text-center sm:text-start">
-                  <div className="text-[13px] font-semibold text-muted">חיסכון פוטנציאלי</div>
-                  <div className="currency text-[26px] font-extrabold leading-none text-gold-deep">
-                    עד ₪{potential} <span className="text-[14px] font-bold text-muted">/ חודש</span>
-                  </div>
-                </div>
+                <p className="text-center text-[13px] text-muted sm:text-start">
+                  בדיקה ראשונית לפי הבחירה שלכם בלבד. התמונה המלאה מתקבלת רק ממעבר על הפוליסות.
+                </p>
                 <button
                   type="button"
                   onClick={() => setOpen(true)}
@@ -150,8 +146,7 @@ export default function PolicyChecker() {
           ) : (
             <div className="rounded-2xl border border-navy/10 bg-white p-6 text-center">
               <p className="text-[15px] text-ink/90">
-                לא זוהו חפיפות ברורות מהבחירה — אך בדיקה מעמיקה מול הר הביטוח לרוב חושפת פרטים
-                נוספים.
+                לא זוהו חפיפות ברורות מהבחירה. אפשר לעבור יחד על דוח הר הביטוח לבדיקה מלאה.
               </p>
               <button
                 type="button"
@@ -173,7 +168,7 @@ export default function PolicyChecker() {
           vertical="har"
           idField
           title="איחוד תיק הביטוח — בדיקה חינם"
-          subtitle="נסקור את כל הפוליסות שלכם מול הר הביטוח, נזהה כפילויות ונאחד לתיק אחד חכם."
+          subtitle="נעבור יחד על דוח הר הביטוח שלכם, נזהה כפילויות ונאחד לתיק אחד מסודר."
           summary={`${selected.length} סוגי ביטוח נבחרו${overlaps.length ? ` · ${overlaps.length} נקודות לבדיקה` : ''}`}
           extraField={{
             label: 'בכמה חברות ביטוח אתם מבוטחים היום?',

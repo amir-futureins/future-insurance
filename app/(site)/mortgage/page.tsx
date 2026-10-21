@@ -5,7 +5,6 @@ import {
   MORTGAGE_FAQ,
   relatedArticles,
   EXPERT_TIPS,
-  AGENCY_REVIEWS,
   MORTGAGE_COMPARE,
 } from '@/lib/agency';
 import MortgageCalculator from '@/components/verticals/MortgageCalculator';
@@ -17,12 +16,11 @@ import ArticleGrid from '@/components/ArticleGrid';
 import PromoBanner from '@/components/PromoBanner';
 import ComparisonTable from '@/components/ComparisonTable';
 import ExpertTips from '@/components/ExpertTips';
-import SuccessCarousel from '@/components/SuccessCarousel';
 
 export const metadata: Metadata = {
   title: 'ביטוח משכנתא — חיים + מבנה, חיסכון מול הבנק',
   description:
-    'ביטוח משכנתא (חיים + מבנה) עצמאי, זול בעשרות אחוזים ממחיר הבנק. מחשבון שמראה בדיוק כמה תחסכו, וליווי מלא במעבר — כולל ההודעה לבנק.',
+    'ביטוח משכנתא (חיים + מבנה) — השוואה מול הצעת הבנק, מחשבון להערכה ראשונית וליווי מלא במעבר, כולל ההודעה לבנק.',
   keywords: ['ביטוח משכנתא', 'ביטוח חיים למשכנתא', 'ביטוח מבנה', 'חיסכון בביטוח משכנתא', 'ביטוח משכנתא מול הבנק'],
   alternates: { canonical: '/mortgage' },
 };
@@ -50,11 +48,11 @@ export default function MortgagePage() {
         eyebrow="ביטוח משכנתא"
         title={
           <>
-            אותו כיסוי בדיוק — <span className="text-gold-deep">בחצי מהמחיר</span> של הבנק
+            משווים את <span className="text-gold-deep">ביטוח המשכנתא</span> מול הבנק
           </>
         }
-        subtitle="הבנק מחייב ביטוח חיים ומבנה — אבל לא חייבים לקנות דרכו. פוליסה עצמאית חוסכת אלפי שקלים לאורך המשכנתא, על אותו כיסוי בדיוק."
-        badges={['🏠 חיים + מבנה', '💰 חיסכון של אלפי ₪', '🤝 ליווי מלא במעבר', '🏦 זול ממחיר הבנק']}
+        subtitle="הבנק מחייב ביטוח חיים ומבנה — אבל לא חייבים לקנות דרכו. כדאי להשוות את ההצעה של הבנק מול הצעות של חברות הביטוח."
+        badges={['🏠 חיים + מבנה', '🤝 ליווי מלא במעבר', '🏦 השוואה מול הבנק']}
         primary={{ href: '#calculator', label: 'לחישוב החיסכון' }}
         secondary={{ href: whatsappHref(), label: 'כמה אחסוך?', external: true, icon: TrendingDown }}
         visual={<HeroMortgageCard />}
@@ -71,7 +69,7 @@ export default function MortgagePage() {
       />
 
       <VideoBlock
-        title="איך חוסכים אלפי שקלים בביטוח המשכנתא?"
+        title="איך משווים ביטוח משכנתא מול הבנק?"
         subtitle="מומחה מסביר בקצרה למה ביטוח הבנק יקר, מה חשוב לבדוק בפוליסה עצמאית, ואיך עוברים בלי להישאר לרגע בלי כיסוי."
         points={['למה הבנק גובה יותר על אותו כיסוי', 'ההבדל בין ביטוח חיים למבנה', 'מעבר מסודר — כולל ההודעה לבנק']}
         href={whatsappHref()}
@@ -79,12 +77,10 @@ export default function MortgagePage() {
 
       <ExpertTips title="טיפים לחיסכון בביטוח משכנתא" tips={EXPERT_TIPS.mortgage} />
 
-      <SuccessCarousel title="לקוחות שחסכו אלפי שקלים" reviews={AGENCY_REVIEWS} />
-
       <PromoBanner
         eyebrow="אל תשלמו לבנק יותר מדי"
         title="לוקחים משכנתא? אל תחתמו על ביטוח הבנק לפני שתשוו"
-        text="פוליסה עצמאית חוסכת אלפי שקלים לאורך המשכנתא — על אותו כיסוי בדיוק. נלווה אתכם גם בהודעה לבנק."
+        text="משווים את ההצעה של הבנק מול חברות הביטוח, ואם מחליטים לעבור — נלווה אתכם גם בהודעה לבנק."
         ctaLabel="דברו איתנו"
         ctaHref={whatsappHref()}
         external

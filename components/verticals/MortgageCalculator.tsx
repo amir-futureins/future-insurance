@@ -166,7 +166,7 @@ export default function MortgageCalculator() {
                     <div className="text-[13px] font-bold text-ink">
                       חיסכון של כ-{savingPct}% — ₪<CountUp value={yearlySaving} /> בשנה
                     </div>
-                    <div className="text-[11.5px] text-muted">על אותו כיסוי בדיוק, לאורך המשכנתא.</div>
+                    <div className="text-[11.5px] text-muted">הערכה בלבד, לפי הנתונים שהזנתם. המחיר הסופי נקבע מול חברת הביטוח.</div>
                   </div>
                 </div>
               </>
@@ -192,7 +192,7 @@ export default function MortgageCalculator() {
           vertical="mortgage"
           title="קבלת הצעה לביטוח משכנתא"
           subtitle="נשווה מול מחיר הבנק ונלווה אתכם גם במעבר — כולל ההודעה לבנק."
-          summary={`${shekelShort(loan)} · ${years} שנים · ~₪${monthlyPremium}/חודש (חיסכון ~${savingPct}%)`}
+          summary={`${shekelShort(loan)} · ${years} שנים · הערכה בלבד: ~₪${monthlyPremium}/חודש`}
         />
       )}
     </section>

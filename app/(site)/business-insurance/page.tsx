@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Briefcase, ShieldCheck, ArrowLeft, Phone } from 'lucide-react';
+import { Briefcase, ShieldCheck, Phone } from 'lucide-react';
 import { whatsappHref, SITE } from '@/lib/content';
 import PageHero from '@/components/PageHero';
 import VideoBlock from '@/components/VideoBlock';

@@ -36,7 +36,7 @@ export default function LifeCalculator() {
           כמה כיסוי המשפחה שלכם צריכה?
         </h2>
         <p className="mx-auto mt-2 max-w-xl text-[15px] leading-relaxed text-muted">
-          בוחרים הכנסה חודשית רצויה, גיל ומעשן/לא — ומקבלים אומדן כיסוי ופרמיה בזמן אמת.
+          בוחרים הכנסה חודשית רצויה, גיל ומעשן/לא — ומקבלים אומדן כיסוי ופרמיה מיד.
         </p>
       </header>
 
@@ -145,7 +145,7 @@ export default function LifeCalculator() {
               </div>
             </div>
             <p className="mt-3 text-[12px] leading-snug text-muted">
-              אומדן להמחשה בלבד. המחיר הסופי נקבע בחיתום מול חברת הביטוח.
+              הערכה בלבד. המחיר הסופי נקבע בחיתום מול חברת הביטוח.
             </p>
             <button
               type="button"
@@ -166,7 +166,7 @@ export default function LifeCalculator() {
           vertical="life"
           title="קבלת הצעה לביטוח חיים"
           subtitle="סוכן מורשה יתאים לכם כיסוי מדויק לפי הצרכים של המשפחה."
-          summary={`כיסוי ₪${fmt(coverageSum)} · פרמיה ~₪${monthlyPremium}/חודש`}
+          summary={`כיסוי ₪${fmt(coverageSum)} · הערכה בלבד: ~₪${monthlyPremium}/חודש`}
         />
       )}
     </section>

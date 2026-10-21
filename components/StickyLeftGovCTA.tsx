@@ -9,7 +9,7 @@ import GovDataModal from '@/components/GovDataModal';
  * StickyLeftGovCTA — a compact, permanent HORIZONTAL gold badge pinned to the
  * lower-left edge (bottom-28) with a gentle breathing float (animate-nudge-x +
  * pulse-glow) to draw the eye. Sits strictly BELOW the hero card so it never
- * intersects the "סורק הר הביטוח" container, and above the WhatsApp float; the
+ * intersects the "בדיקת הר הביטוח" container, and above the WhatsApp float; the
  * social-proof toast is raised to stack above it. Fully readable Hebrew, no
  * vertical writing-mode. Opens the Gov-data modal; dismissible with a ✕
  * (persisted in sessionStorage).

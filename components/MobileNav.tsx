@@ -9,7 +9,6 @@ import {
   ChevronDown,
   Phone,
   MessageCircle,
-  LogIn,
   Home,
   Plane,
   Mountain,
@@ -26,7 +25,7 @@ import SocialLinks from '@/components/SocialLinks';
 /** Elegant per-category icons for the mobile drawer. */
 const NAV_ICON: Record<string, LucideIcon> = {
   '/': Home,
-  '/travel-insurance': Plane,
+  [TRAVEL_URL]: Plane,
   '/har-habituach': Mountain,
   '/finance': PiggyBank,
   '/health': HeartPulse,
@@ -34,7 +33,7 @@ const NAV_ICON: Record<string, LucideIcon> = {
   '/mortgage': Building2,
   '/business-insurance': Briefcase,
 };
-import { SITE, whatsappHref } from '@/lib/content';
+import { SITE, TRAVEL_URL, whatsappHref } from '@/lib/content';
 import { useBodyScrollLock } from '@/lib/use-body-scroll-lock';
 
 /**
@@ -176,17 +175,7 @@ export default function MobileNav() {
               </a>
             </div>
 
-            <div className="flex items-center justify-between gap-3 border-t border-white/10 px-4 py-3.5">
-              <a
-                href="/admin/leads"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={close}
-                className="inline-flex items-center gap-2 text-[13.5px] font-bold text-white/70 transition-colors hover:text-white"
-              >
-                <LogIn className="h-4 w-4" aria-hidden />
-                כניסת סוכנים
-              </a>
+            <div className="flex items-center justify-end gap-3 border-t border-white/10 px-4 py-3.5">
               <SocialLinks variant="drawer" />
             </div>
           </div>

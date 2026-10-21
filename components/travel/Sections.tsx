@@ -1,17 +1,15 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Phone, Scale, Zap, Headset, ChevronDown, Sparkles, LogIn } from 'lucide-react';
-import { FAQ_ITEMS, SITE, whatsappHref } from '@/lib/content';
-import { Reveal } from './ui';
+import { Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { SITE, AGENT_INFO, HOURS, TRAVEL_URL, whatsappHref } from '@/lib/content';
 import MegaMenu from '@/components/MegaMenu';
 import MobileNav from '@/components/MobileNav';
 import SocialLinks from '@/components/SocialLinks';
-import ClientPortalButton from '@/components/ClientPortalButton';
 import ContactButton from '@/components/ContactButton';
 
 // Footer product links (fuller labels).
 const FOOTER_LINKS = [
-  { href: '/travel-insurance', label: 'ביטוח חו״ל' },
+  { href: TRAVEL_URL, label: 'ביטוח נסיעות לחו״ל' },
   { href: '/har-habituach', label: 'הר הביטוח / עבר ביטוחי' },
   { href: '/finance', label: 'פנסיה, גמל והשתלמות' },
   { href: '/health', label: 'ביטוח בריאות' },
@@ -74,19 +72,6 @@ export function TrustBar() {
               ייעוץ חינם
             </a>
             <ContactButton />
-            {/* divider then "אזור אישי" + staff "כניסת סוכנים" at the far-left */}
-            <span className="mx-0.5 h-6 w-px bg-white/15" aria-hidden />
-            <ClientPortalButton />
-            <a
-              href="/admin/leads"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="כניסת סוכנים — אזור ניהול"
-              className="inline-flex h-fit shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl border border-white/15 bg-white/5 px-3.5 py-2 text-[14px] font-bold text-white/90 transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-bright"
-            >
-              <LogIn className="h-4 w-4" aria-hidden />
-              כניסת סוכנים
-            </a>
           </div>
 
           {/* mobile/tablet hamburger — full nav (incl. sub-categories) + actions */}
@@ -94,91 +79,6 @@ export function TrustBar() {
         </div>
       </div>
     </header>
-  );
-}
-
-/* ---- Why us ------------------------------------------------------ */
-
-const WHY = [
-  {
-    icon: Scale,
-    title: 'השוואה שקופה',
-    text: 'השוואה אובייקטיבית בין החברות המובילות — בלי אותיות קטנות ובלי אינטרסים נסתרים.',
-  },
-  {
-    icon: Zap,
-    title: 'הפקה מיידית',
-    text: 'פוליסה דיגיטלית תוך דקות, ישירות לנייד שלכם, עוד לפני שהגעתם לשדה התעופה.',
-  },
-  {
-    icon: Headset,
-    title: 'ליווי אישי',
-    text: 'אמיר וצוות המומחים זמינים לכל שאלה לפני, במהלך ואחרי הנסיעה — בכל שעה.',
-  },
-];
-
-export function WhyUs() {
-  return (
-    <section className="mx-auto w-full max-w-container px-6 py-14 md:px-10 md:py-16">
-      <div className="mx-auto max-w-2xl text-center">
-        <span className="eyebrow inline-flex items-center gap-1.5 text-[13px]">
-          <Sparkles className="h-4 w-4" aria-hidden />
-          למה Future
-        </span>
-        <h2 className="mt-2 text-[clamp(24px,5vw,30px)] font-bold leading-tight text-ink">
-          חנות ביטוח אחת, שקט נפשי מלא
-        </h2>
-      </div>
-      <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
-        {WHY.map((item, i) => {
-          const Icon = item.icon;
-          return (
-            <Reveal key={item.title} className="glass p-6" delay={i * 80}>
-              <span className="grid h-12 w-12 place-items-center rounded-xl bg-gold-tint text-gold-deep ring-1 ring-gold/30">
-                <Icon className="h-6 w-6" aria-hidden />
-              </span>
-              <h3 className="mt-4 text-[18px] font-bold text-ink">{item.title}</h3>
-              <p className="mt-2 text-[15px] leading-relaxed text-muted">{item.text}</p>
-            </Reveal>
-          );
-        })}
-      </div>
-    </section>
-  );
-}
-
-/* ---- FAQ (native details, CSS-only, crawlable) ------------------- */
-
-export function Faq() {
-  return (
-    <section className="mx-auto w-full max-w-container px-6 py-14 md:px-10 md:py-16">
-      <div className="mx-auto max-w-2xl text-center">
-        <span className="eyebrow text-[13px]">שאלות נפוצות</span>
-        <h2 className="mt-2 text-[clamp(24px,5vw,30px)] font-bold leading-tight text-ink">
-          כל מה שרציתם לדעת
-        </h2>
-      </div>
-      <div className="mx-auto mt-10 max-w-3xl space-y-3">
-        {FAQ_ITEMS.map((item) => (
-          <details key={item.q} className="glass px-1">
-            <summary className="flex items-center justify-between gap-4 p-5 text-start focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">
-              <span className="text-[16px] font-bold text-ink">{item.q}</span>
-              <ChevronDown
-                className="faq-chevron h-5 w-5 shrink-0 text-gold transition-transform"
-                aria-hidden
-              />
-            </summary>
-            <div className="faq-body">
-              <div>
-                <p className="px-5 pb-5 text-[15px] leading-relaxed text-muted">
-                  {item.a}
-                </p>
-              </div>
-            </div>
-          </details>
-        ))}
-      </div>
-    </section>
   );
 }
 
@@ -193,7 +93,7 @@ export function SiteFooter() {
           <div>
             <div className="text-[16px] font-extrabold text-ink">מעדיפים לדבר עם מומחה?</div>
             <div className="mt-0.5 text-[13px] text-muted">
-              צוות Future Insurance זמין לכל שאלה — בלי טפסים, בלי המתנה.
+              זמינים {HOURS.short}.
             </div>
           </div>
           <a
@@ -219,10 +119,32 @@ export function SiteFooter() {
             </span>
           </div>
           <p className="max-w-md text-[13px] leading-relaxed text-muted">
-            סוכנות הביטוח פועלת ברישיון רשות שוק ההון, ביטוח וחיסכון. אין באמור ייעוץ או
-            המלצה אישית.
+            {AGENT_INFO.name}, {AGENT_INFO.title} · רישיון{' '}
+            <span dir="ltr">{AGENT_INFO.license}</span>. אין באמור ייעוץ או המלצה אישית.
           </p>
         </div>
+        <ul className="mt-6 grid grid-cols-1 gap-x-6 gap-y-2 border-t border-navy/10 pt-6 text-[13px] text-muted sm:grid-cols-2 lg:grid-cols-4">
+          <li className="flex items-center gap-2">
+            <Phone className="h-4 w-4 shrink-0 text-gold-deep" aria-hidden />
+            <a href={SITE.phoneHref} dir="ltr" className="font-semibold hover:text-gold-deep">
+              {SITE.phoneDisplay}
+            </a>
+          </li>
+          <li className="flex items-center gap-2">
+            <Mail className="h-4 w-4 shrink-0 text-gold-deep" aria-hidden />
+            <a href={`mailto:${SITE.email}`} dir="ltr" className="font-semibold hover:text-gold-deep">
+              {SITE.email}
+            </a>
+          </li>
+          <li className="flex items-center gap-2">
+            <MapPin className="h-4 w-4 shrink-0 text-gold-deep" aria-hidden />
+            {SITE.address}
+          </li>
+          <li className="flex items-center gap-2">
+            <Clock className="h-4 w-4 shrink-0 text-gold-deep" aria-hidden />
+            {HOURS.full}
+          </li>
+        </ul>
         <nav
           className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 border-t border-navy/10 pt-6 sm:justify-start"
           aria-label="ניווט תחתון — תחומי ביטוח"
@@ -250,6 +172,13 @@ export function SiteFooter() {
             <a href="/accessibility" className="text-[12px] font-semibold text-muted transition-colors hover:text-gold-deep">
               הצהרת נגישות
             </a>
+            <button
+              type="button"
+              data-cookie-settings
+              className="text-[12px] font-semibold text-muted transition-colors hover:text-gold-deep"
+            >
+              הגדרות עוגיות
+            </button>
           </nav>
         </div>
       </div>

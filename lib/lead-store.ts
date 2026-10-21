@@ -45,7 +45,7 @@ async function readAll(): Promise<StoredLead[]> {
 /** Map an internal topic/vertical to a customer-facing product source. */
 export function sourceFromTopic(topic: string): string {
   const t = (topic || '').toLowerCase();
-  if (/(travel|passportcard|harel|clal|migdal)/.test(t)) return 'חו״ל';
+  if (/travel/.test(t)) return 'חו״ל';
   if (/(har|gov|duplicate|car_claims)/.test(t)) return 'הר הביטוח';
   if (/health/.test(t)) return 'בריאות';
   if (/(mortgage|structure)/.test(t)) return 'משכנתא';

@@ -48,7 +48,7 @@ export default function AccessibilityStatement() {
       </div>
 
       <a
-        href="/travel-insurance"
+        href="/"
         className="mt-10 inline-block rounded-xl bg-cta-fill px-5 py-3 text-[15px] font-bold text-navy-deep shadow-md shadow-gold/20"
       >
         חזרה לאתר

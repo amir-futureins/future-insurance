@@ -25,6 +25,16 @@ const nextConfig = {
       // privacy page is ever written, a permanent redirect would already be
       // cached in visitors' browsers and would be painful to undo.
       { source: '/privacy', destination: '/terms', permanent: false },
+
+      // Travel insurance moved to il-ins.co.il. Explicit 301s (not Next's
+      // default 308 for `permanent`) so search engines and ad crawlers treat
+      // them as classic permanent moves. Specific carriers first.
+      { source: '/travel-insurance/harel', destination: 'https://il-ins.co.il/harel/', statusCode: 301 },
+      { source: '/travel-insurance/clal', destination: 'https://il-ins.co.il/clal/', statusCode: 301 },
+      { source: '/travel-insurance/passportcard', destination: 'https://il-ins.co.il/passportcard/', statusCode: 301 },
+      { source: '/travel-insurance/:path*', destination: 'https://il-ins.co.il/', statusCode: 301 },
+      // The travel guides were all travel-insurance articles.
+      { source: '/guides/:path*', destination: 'https://il-ins.co.il/', statusCode: 301 },
     ];
   },
 };

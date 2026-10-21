@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { HeartHandshake, Shield } from 'lucide-react';
 import { whatsappHref } from '@/lib/content';
-import { LIFE_FAQ, relatedArticles, EXPERT_TIPS, AGENCY_REVIEWS } from '@/lib/agency';
+import { LIFE_FAQ, relatedArticles, EXPERT_TIPS} from '@/lib/agency';
 import LifeCalculator from '@/components/verticals/LifeCalculator';
 import PageHero from '@/components/PageHero';
 import { HeroLifeCard } from '@/components/verticals/HeroCards';
@@ -9,7 +9,6 @@ import VideoBlock from '@/components/VideoBlock';
 import FaqSection from '@/components/FaqSection';
 import ArticleGrid from '@/components/ArticleGrid';
 import ExpertTips from '@/components/ExpertTips';
-import SuccessCarousel from '@/components/SuccessCarousel';
 
 export const metadata: Metadata = {
   title: 'ביטוח חיים והגנה משפחתית — חישוב כיסוי מותאם',
@@ -46,7 +45,7 @@ export default function LifePage() {
           </>
         }
         subtitle="ביטוח חיים בגובה הנכון נותן ביטחון כלכלי למשפחה. חשבו כמה כיסוי אתם צריכים — וקבלו אומדן פרמיה מיידי."
-        badges={['🛡️ הגנה משפחתית 2026', '👨‍👩‍👧 כיסוי מותאם אישית', '⚡ אומדן פרמיה מיידי']}
+        badges={['👨‍👩‍👧 כיסוי מותאם אישית', '⚡ אומדן פרמיה מיידי']}
         primary={{ href: '#calculator', label: 'לחישוב הכיסוי' }}
         secondary={{ href: whatsappHref(), label: 'ייעוץ עם סוכן מורשה', external: true, icon: Shield }}
         visual={<HeroLifeCard />}
@@ -64,8 +63,6 @@ export default function LifePage() {
       />
 
       <ExpertTips title="טיפים לבחירת ביטוח חיים" tips={EXPERT_TIPS.life} />
-
-      <SuccessCarousel title="משפחות שבחרו להגן על עצמן" reviews={AGENCY_REVIEWS} />
 
       <ArticleGrid
         title="מדריכי ביטוח חיים והגנה"

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Stethoscope, ShieldCheck, Layers, Check } from 'lucide-react';
 import { whatsappHref } from '@/lib/content';
-import { HEALTH_FAQ, relatedArticles, EXPERT_TIPS, AGENCY_REVIEWS } from '@/lib/agency';
+import { HEALTH_FAQ, relatedArticles, EXPERT_TIPS} from '@/lib/agency';
 import HealthCalculator from '@/components/verticals/HealthCalculator';
 import PageHero from '@/components/PageHero';
 import { HeroHealthCard } from '@/components/verticals/HeroCards';
@@ -22,7 +22,6 @@ const HEALTH_BENEFITS = [
 ];
 import ArticleGrid from '@/components/ArticleGrid';
 import ExpertTips from '@/components/ExpertTips';
-import SuccessCarousel from '@/components/SuccessCarousel';
 
 export const metadata: Metadata = {
   title: 'ביטוח בריאות פרטי — ניתוחים, השתלות ותרופות מחוץ לסל',
@@ -45,7 +44,7 @@ const jsonLd = {
 const GUIDE_POINTS = [
   { title: 'מזהים חפיפות', text: 'ניתוחים גם בקופה וגם בפרטי? לעולם לא תקבלו כפל פיצוי.' },
   { title: 'מבטלים את המיותר', text: 'משאירים כיסוי אחד חכם ומורידים עלות מיותרת.' },
-  { title: 'חוסכים כל חודש', text: 'לקוחות רבים חוסכים מאות שקלים אחרי בדיקה אחת.' },
+  { title: 'בלי לשלם פעמיים', text: 'בודקים חפיפות מול הביטוחים הקיימים לפני שמוסיפים כיסוי.' },
 ];
 
 export default function HealthPage() {
@@ -81,7 +80,7 @@ export default function HealthPage() {
 
       <BounceLeadCta
         heading="משלמים יותר מדי על ביטוח הבריאות?"
-        sub="בדיקה חינם מגלה כפילויות והתאמות — ולרוב חוסכת מאות שקלים בחודש."
+        sub="בדיקה ללא עלות של כפילויות והתאמות בתיק שלכם."
         label="הוזלת ביטוח בריאות עכשיו"
         vertical="health"
         title="הוזלת ביטוח הבריאות שלכם"
@@ -129,8 +128,6 @@ export default function HealthPage() {
       />
 
       <ExpertTips title="טיפים לבחירת ביטוח בריאות" tips={EXPERT_TIPS.health} />
-
-      <SuccessCarousel title="לקוחות שכבר חוסכים איתנו" reviews={AGENCY_REVIEWS} />
 
       <ArticleGrid
         title="מדריכי ביטוח בריאות"
